@@ -33,7 +33,7 @@ Test Output
     ✓ setGFI_ADDRESS() should revert when IDO has already started
 
     ✓ withdraw() should revert when sale is ongoing
-    
+
     ✓ claimStake() should revert when sale is ongoing
 
     ✓ buyStake() should revert when IDO contract does not hold enough GFI to cover the sale
@@ -65,6 +65,7 @@ Test Output
 
 
 GravityIDO after sale functional test OVER SUBSCRIBED
+
     ✓ claimStake() should accept 0.5 GFI_IDO from 3 users, burn it, and return 20,000 GFI to caller (163ms)
 
     ✓ withdraw() should callable by owner. 0.5WETH should go to Treasury, and 39,980,000 GFI should Promotion fund
