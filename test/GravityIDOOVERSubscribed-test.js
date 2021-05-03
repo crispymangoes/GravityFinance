@@ -58,7 +58,7 @@ describe("GravityIDO after sale functional test OVER SUBSCRIBED", function() {
         await network.provider.send("evm_mine");
     });
 
-    it("claimStake() should accept 0.5 GFI_IDO from 3 users, burn it, and return 20,000 GFI to caller", async function() {
+    it("claimStake() should accept 0.5 GFI_IDO from 3 users, burn it, and return 13,333 GFI, and 0.166 WETH to each caller", async function() {
         await gravityIOU.connect(addr2).approve(gravityIDO.address, "5000000000000000000");
         await gravityIDO.connect(addr2).claimStake();
 
@@ -70,6 +70,12 @@ describe("GravityIDO after sale functional test OVER SUBSCRIBED", function() {
 
         expect(await mockGFI.balanceOf(addr2.address)/1000000000000000).to.be.above(13333333); // > 13,333.333 GFI
         expect(await mockWETH.balanceOf(addr2.address)/1000000000000000).to.be.above(166); // > 0.166 WETH
+
+        expect(await mockGFI.balanceOf(addr3.address)/1000000000000000).to.be.above(13333333); // > 13,333.333 GFI
+        expect(await mockWETH.balanceOf(addr3.address)/1000000000000000).to.be.above(166); // > 0.166 WETH
+
+        expect(await mockGFI.balanceOf(addr4.address)/1000000000000000).to.be.above(13333333); // > 13,333.333 GFI
+        expect(await mockWETH.balanceOf(addr4.address)/1000000000000000).to.be.above(166); // > 0.166 WETH
     });
 
     it("withdraw() should callable by owner. 0.5WETH should go to Treasury, and 39,980,000 GFI should Promotion fund", async function() {
