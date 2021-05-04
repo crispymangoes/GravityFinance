@@ -19,29 +19,29 @@ let addr2; // Test user 2
 let addr3; // Test user 3
 let addr4; // Test user 4
 
-describe("GravityIDO presale functional test", function() {
-    beforeEach(async function () {
-        [owner, addr1, addr2, addr3, addr4] = await ethers.getSigners();
-    
-        MockERC20 = await ethers.getContractFactory("MockToken");
-        mockWETH = await MockERC20.deploy(addr1.address, addr2.address, addr3.address, addr4.address);
-        await mockWETH.deployed();  
-    
-        MockGFI = await ethers.getContractFactory("GravityToken");
-        mockGFI = await MockGFI.deploy("Mock Gravity Finance", "MGFI");
-        await mockGFI.deployed();
-    
-        GravityIDO = await ethers.getContractFactory("GravityIDO");
-        gravityIDO = await GravityIDO.deploy(mockWETH.address, mockGFI.address, 0, true);
-        await gravityIDO.deployed();
-    
-        IOU_ADDRESS = await gravityIDO.getIOUAddress();
-    
-        IOUToken = await ethers.getContractFactory("IOUToken");
-        gravityIOU = await IOUToken.attach(IOU_ADDRESS);
-    
-    });
+beforeEach(async function () {
+    [owner, addr1, addr2, addr3, addr4] = await ethers.getSigners();
 
+    MockERC20 = await ethers.getContractFactory("MockToken");
+    mockWETH = await MockERC20.deploy(addr1.address, addr2.address, addr3.address, addr4.address);
+    await mockWETH.deployed();  
+
+    MockGFI = await ethers.getContractFactory("GravityToken");
+    mockGFI = await MockGFI.deploy("Mock Gravity Finance", "MGFI");
+    await mockGFI.deployed();
+
+    GravityIDO = await ethers.getContractFactory("GravityIDO");
+    gravityIDO = await GravityIDO.deploy(mockWETH.address, mockGFI.address, 0, true);
+    await gravityIDO.deployed();
+
+    IOU_ADDRESS = await gravityIDO.getIOUAddress();
+
+    IOUToken = await ethers.getContractFactory("IOUToken");
+    gravityIOU = await IOUToken.attach(IOU_ADDRESS);
+
+});
+
+describe("GravityIDO presale functional test", function() {
     it("Should return IOU address", async function() {
         expect( await gravityIDO.connect(addr1).getIOUAddress()).to.equal(IOU_ADDRESS);
     });
@@ -93,25 +93,6 @@ describe("GravityIDO presale functional test", function() {
 
 describe("GravityIDO during sale functional test", function() {
     beforeEach(async function () {
-        [owner, addr1, addr2, addr3, addr4] = await ethers.getSigners();
-    
-        MockERC20 = await ethers.getContractFactory("MockToken");
-        mockWETH = await MockERC20.deploy(addr1.address, addr2.address, addr3.address, addr4.address);
-        await mockWETH.deployed();  
-    
-        MockGFI = await ethers.getContractFactory("GravityToken");
-        mockGFI = await MockGFI.deploy("Mock Gravity Finance", "MGFI");
-        await mockGFI.deployed();
-    
-        GravityIDO = await ethers.getContractFactory("GravityIDO");
-        gravityIDO = await GravityIDO.deploy(mockWETH.address, mockGFI.address, 0, true);
-        await gravityIDO.deployed();
-    
-        IOU_ADDRESS = await gravityIDO.getIOUAddress();
-    
-        IOUToken = await ethers.getContractFactory("IOUToken");
-        gravityIOU = await IOUToken.attach(IOU_ADDRESS);
-
         //Advance time to during the sale
         await network.provider.send("evm_increaseTime", [600]);
         await network.provider.send("evm_mine");
@@ -184,26 +165,7 @@ describe("GravityIDO during sale functional test", function() {
 });
 
 describe("GravityIDO after sale functional test UNDER SUBSCRIBED", function() {
-    before(async function () { 
-        [owner, addr1, addr2, addr3, addr4] = await ethers.getSigners();
-    
-        MockERC20 = await ethers.getContractFactory("MockToken");
-        mockWETH = await MockERC20.deploy(addr1.address, addr2.address, addr3.address, addr4.address);
-        await mockWETH.deployed();  
-    
-        MockGFI = await ethers.getContractFactory("GravityToken");
-        mockGFI = await MockGFI.deploy("Mock Gravity Finance", "MGFI");
-        await mockGFI.deployed();
-    
-        GravityIDO = await ethers.getContractFactory("GravityIDO");
-        gravityIDO = await GravityIDO.deploy(mockWETH.address, mockGFI.address, 0, true);
-        await gravityIDO.deployed();
-    
-        IOU_ADDRESS = await gravityIDO.getIOUAddress();
-    
-        IOUToken = await ethers.getContractFactory("IOUToken");
-        gravityIOU = await IOUToken.attach(IOU_ADDRESS);
-
+    beforeEach(async function () { 
         //Advance time to during the sale
         await network.provider.send("evm_increaseTime", [600]);
         await network.provider.send("evm_mine");
@@ -223,10 +185,6 @@ describe("GravityIDO after sale functional test UNDER SUBSCRIBED", function() {
         await expect(gravityIDO.connect(addr1).buyStake("250000000000000001")).to.be.reverted;
     });
 
-    it("claimStake() should revert if called before end of 30 min setup window", async function() {
-        await expect(gravityIDO.connect(addr2).claimStake()).to.be.reverted;
-    });
-
     it("claimStake() should revert if caller has no IOUs to claim", async function() {
         //Advance time to after the 30 min setup window
         await network.provider.send("evm_increaseTime", [1800]);
@@ -238,6 +196,10 @@ describe("GravityIDO after sale functional test UNDER SUBSCRIBED", function() {
         //Advance time to after the 30 min setup window
         await network.provider.send("evm_increaseTime", [1800]);
         await network.provider.send("evm_mine");
+        await expect(gravityIDO.connect(addr2).claimStake()).to.be.reverted;
+    });
+
+    it("claimStake() should revert if called before end of 30 min setup window", async function() {
         await expect(gravityIDO.connect(addr2).claimStake()).to.be.reverted;
     });
 
@@ -261,17 +223,7 @@ describe("GravityIDO after sale functional test UNDER SUBSCRIBED", function() {
 });
 
 describe("GravityIDO after sale functional test OVER SUBSCRIBED", function() {
-    before(async function () { 
-        [owner, addr1, addr2, addr3, addr4] = await ethers.getSigners();
-    
-        MockERC20 = await ethers.getContractFactory("MockToken");
-        mockWETH = await MockERC20.deploy(addr1.address, addr2.address, addr3.address, addr4.address);
-        await mockWETH.deployed();  
-    
-        MockGFI = await ethers.getContractFactory("GravityToken");
-        mockGFI = await MockGFI.deploy("Mock Gravity Finance", "MGFI");
-        await mockGFI.deployed();
-    
+    beforeEach(async function () { 
         GravityIDO = await ethers.getContractFactory("GravityIDO");
         gravityIDO = await GravityIDO.deploy(mockWETH.address, mockGFI.address, "40000000000000000000000", true);
         await gravityIDO.deployed();
