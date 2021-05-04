@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/crispy/gravityDev/contracts/GravityIDO.sol": {
-      "lastModificationDate": 1620066608348,
-      "contentHash": "8928912be0d3fc216b1fd43879aeb994",
+      "lastModificationDate": 1620143822618,
+      "contentHash": "4193ec07cd720f5fb7dcac6994856982",
       "sourceName": "contracts/GravityIDO.sol",
       "solcConfig": {
         "version": "0.8.4",

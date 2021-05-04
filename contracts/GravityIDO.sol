@@ -31,7 +31,7 @@ contract GravityIDO is Ownable {
     event ClaimStake(address claimer, uint GFIclaimed, uint WETHreturned); // Emits user address, and how much GFI, WETH they recieved
     event WETHUpdate(uint newTotal); //Emits new total of WETH in IDO contract
     
-    constructor(address _WETH_ADDRESS, address _GFI_ADDRESS, uint _amountForSale){
+    constructor(address _WETH_ADDRESS, address _GFI_ADDRESS, uint _amountForSale, bool _startNow){
         WETH_ADDRESS = _WETH_ADDRESS;
         GFI_ADDRESS = _GFI_ADDRESS;
         WETH = IERC20(WETH_ADDRESS);
@@ -44,6 +44,11 @@ contract GravityIDO is Ownable {
             GFIforSale = _amountForSale;
         }
         WETHifSoldOut = GFIforSale * priceInWEth / (10**18);
+
+        if (_startNow){
+            saleStartTime = block.timestamp + 300; // Start it 5 min after contract creation
+            saleEndTime = saleStartTime + 86400;
+        }
     }
     
     function getIOUAddress() external view returns(address){
@@ -89,6 +94,7 @@ contract GravityIDO is Ownable {
     
     function claimStake() external {
         require(block.timestamp >= saleEndTime, "IDO sale is not over yet!");
+        require(block.timestamp >= (saleEndTime + 1800), "Please wait 30 min after IDO to claim your tokens!");
         uint userBal = IOU.balanceOf(msg.sender);
         require(userBal > 0, "Caller has no GFI_IDO tokens to claim!");
         require(IOU.transferFrom(msg.sender, address(this), userBal), "Failed to transfer IOU to contract!"); //Not sure if this is needed, could just burn the tokens form the user address
