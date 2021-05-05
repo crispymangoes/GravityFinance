@@ -23,9 +23,8 @@ async function main() {
 
     console.log("Transferring sale tokens to IDO...");
     await gravityToken.transfer(gravityIDO.address, "40000000000000000000000000"); //Send 40,000,000 GFI to IDO address
-    let deployerBal = (await gravityToken.balanceOf(deployer.address)).toString();
     console.log("Transferring remaining token balance to contract owner...");
-    await gravityToken.transfer(CONTRACT_OWNER, deployerBal); //Transfer remaining tokens to CONTRACT_OWNER
+    await gravityToken.transfer(CONTRACT_OWNER, "1160000000000000000000000000"); //Transfer remaining tokens to CONTRACT_OWNER
     console.log("Transferring token owenership to contract owner...");
     await gravityToken.transferOwnership(CONTRACT_OWNER);
     console.log("Transferring IDO ownership to contract owner...");
