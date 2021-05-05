@@ -2,7 +2,7 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/crispy/gravityDev/contracts/GravityIDO.sol": {
-      "lastModificationDate": 1620143822618,
+      "lastModificationDate": 1620226031358,
       "contentHash": "4193ec07cd720f5fb7dcac6994856982",
       "sourceName": "contracts/GravityIDO.sol",
       "solcConfig": {
@@ -219,8 +219,8 @@
       ]
     },
     "/home/crispy/gravityDev/contracts/GravityToken.sol": {
-      "lastModificationDate": 1620058266028,
-      "contentHash": "27e388076096e0abde0683016f3ba5ff",
+      "lastModificationDate": 1620226126458,
+      "contentHash": "6567a54219219f2d00db097f6054fdcf",
       "sourceName": "contracts/GravityToken.sol",
       "solcConfig": {
         "version": "0.8.4",

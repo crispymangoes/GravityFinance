@@ -4,11 +4,9 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-//Tim Address
-//0xeb678812778B68a48001B4A9A4A04c4924c33598
 
 contract GravityToken is ERC20, Ownable{
-    
+    address constant CONTRACT_OWNER = 0xeb678812778B68a48001B4A9A4A04c4924c33598;
     address public GOVERNANCE_ADDRESS;
     iGovernance private govenor;
     bool public applyGovernanceForwarding;
