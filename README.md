@@ -1,3 +1,23 @@
+##How to install
+run git clone https://github.com/crispymangoes/GravityFinance.git
+
+cd GravityFinance
+
+run npm install
+
+run npm audit fix // if needed
+
+Now you should be able to run npx hardhat to see all the hardhat options
+
+run npx hardhat compile
+
+run npx hardhat test
+
+run npx hardhat run scripts/deploy.js
+
+^^^above command has an optional network command --network mumbai
+
+That command would deploy the scripts onto the mumbai network
 Test Output
 
   GravityIDO presale functional test
