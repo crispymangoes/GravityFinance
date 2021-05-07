@@ -24,13 +24,21 @@ contract Locking is Ownable {
     IERC20 GFI;
     IERC20 WETH;
     iGovernance Governor;
+    address public GOVERANCE_ADDRESS;
     uint public LockStart;
     uint public LockEnd;
     bool collectFeeORVestOverTime = true; // If the fee logic changes signifigantly, then changing this bool makes it so fees are no longer collectable, but users can withdraw a portion of their stake every Q
-    constructor(address GFI_ADDRESS, address WETH_ADDRESS) {
+    constructor(address GFI_ADDRESS, address WETH_ADDRESS, address _GOVERNANCE_ADDRESS) {
         GFI = IERC20(GFI_ADDRESS);
         WETH = IERC20(WETH_ADDRESS);
+        GOVERANCE_ADDRESS = _GOVERNANCE_ADDRESS;
+        Governor = iGovernance(GOVERANCE_ADDRESS);
         LockStart = block.timestamp;
+    }
+
+    function setGovenorAddress(address _address) external onlyOwner{
+        GOVERANCE_ADDRESS = _address;
+        Governor = iGovernance(GOVERANCE_ADDRESS);
     }
 
     function setBool(bool _bool) external onlyOwner{
