@@ -30,7 +30,8 @@ contract Locking is Ownable {
         GOVERANCE_ADDRESS = _GOVERNANCE_ADDRESS;
         Governor = iGovernance(GOVERANCE_ADDRESS);
         LockStart = block.timestamp;
-        LockEnd = LockStart + 31536000; //One year from contract deployment
+        //LockEnd = LockStart + 31536000; //One year from contract deployment
+        LockEnd = LockStart + 86400;//DEV ONLY
     }
 
     function setGovenorAddress(address _address) external onlyOwner {

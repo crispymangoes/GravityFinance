@@ -322,6 +322,607 @@
       "GravityToken": {
         "src": "contracts/GravityToken.sol:8",
         "version": {
+          "withMetadata": "321f32d67bca52dd7ecfe282946264761454d4213b0e32dc3140c47d44810fcc",
+          "withoutMetadata": "a4bb05ea64dc8934d044d61be8d448b12b9d6a4eca772035602be34ddbdd63f3",
+          "linkedWithoutMetadata": "a4bb05ea64dc8934d044d61be8d448b12b9d6a4eca772035602be34ddbdd63f3"
+        },
+        "inherit": [
+          "Ownable",
+          "ERC20",
+          "IERC20Metadata",
+          "IERC20",
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "(string,string)",
+          "setGovernanceAddress(address)",
+          "changeGovernanceForwarding(bool)",
+          "transfer(address,uint256)",
+          "transferFrom(address,address,uint256)",
+          "burn(uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "GravityToken",
+            "src": "contracts/GravityToken.sol:15"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "GravityToken",
+              "label": "GOVERNANCE_ADDRESS",
+              "type": "t_address",
+              "src": "contracts/GravityToken.sol:11"
+            },
+            {
+              "contract": "GravityToken",
+              "label": "govenor",
+              "type": "t_contract(iGovernance)1617",
+              "src": "contracts/GravityToken.sol:12"
+            },
+            {
+              "contract": "GravityToken",
+              "label": "applyGovernanceForwarding",
+              "type": "t_bool",
+              "src": "contracts/GravityToken.sol:13"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address"
+            },
+            "t_contract(iGovernance)1617": {
+              "label": "contract iGovernance"
+            },
+            "t_bool": {
+              "label": "bool"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "iGovernance": {
+        "src": "contracts/Locking.sol:106",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "claimFee()"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "IOUToken": {
+        "src": "contracts/IOUToken.sol:8",
+        "version": {
+          "withMetadata": "1df73524a2528d84df0cba3ec8cf0f0a2b4138dd8174889a6fabc5eddeb89279",
+          "withoutMetadata": "1d719411a77ba8f8081d9ae63afc5eedc3231f5cec2395495b1cfee54f235509",
+          "linkedWithoutMetadata": "1d719411a77ba8f8081d9ae63afc5eedc3231f5cec2395495b1cfee54f235509"
+        },
+        "inherit": [
+          "Ownable",
+          "ERC20",
+          "IERC20Metadata",
+          "IERC20",
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "(string,string)",
+          "mintIOU(address,uint256)",
+          "burnIOU(address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "IOUToken",
+            "src": "contracts/IOUToken.sol:10"
+          }
+        ],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "Locking": {
+        "src": "contracts/Locking.sol:8",
+        "version": {
+          "withMetadata": "97ae7f774573b60eb5b2dff9f899546659b54db8791a6d518b2a6dce1aeff7d3",
+          "withoutMetadata": "0b57387faab644f68f33cfc2cff9dff9ce1ed20f4917287c4d1ce3c9e36c850e",
+          "linkedWithoutMetadata": "0b57387faab644f68f33cfc2cff9dff9ce1ed20f4917287c4d1ce3c9e36c850e"
+        },
+        "inherit": [
+          "Ownable",
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "(address,address,address)",
+          "setGovenorAddress(address)",
+          "addUser(address,uint256)",
+          "updateWithdrawableFee()",
+          "collectFee()",
+          "claimGFI()",
+          "withdrawAll()"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "Locking",
+            "src": "contracts/Locking.sol:23"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "Locking",
+              "label": "GFIbalance",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Locking.sol:9"
+            },
+            {
+              "contract": "Locking",
+              "label": "withdrawableFee",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Locking.sol:10"
+            },
+            {
+              "contract": "Locking",
+              "label": "users",
+              "type": "t_array(t_address)dyn_storage",
+              "src": "contracts/Locking.sol:11"
+            },
+            {
+              "contract": "Locking",
+              "label": "userCount",
+              "type": "t_uint256",
+              "src": "contracts/Locking.sol:12"
+            },
+            {
+              "contract": "Locking",
+              "label": "totalBalance",
+              "type": "t_uint256",
+              "src": "contracts/Locking.sol:13"
+            },
+            {
+              "contract": "Locking",
+              "label": "lastFeeUpdate",
+              "type": "t_uint256",
+              "src": "contracts/Locking.sol:14"
+            },
+            {
+              "contract": "Locking",
+              "label": "GFI",
+              "type": "t_contract(IERC20)694",
+              "src": "contracts/Locking.sol:15"
+            },
+            {
+              "contract": "Locking",
+              "label": "WETH",
+              "type": "t_contract(IERC20)694",
+              "src": "contracts/Locking.sol:16"
+            },
+            {
+              "contract": "Locking",
+              "label": "Governor",
+              "type": "t_contract(iGovernance)2034",
+              "src": "contracts/Locking.sol:17"
+            },
+            {
+              "contract": "Locking",
+              "label": "GOVERANCE_ADDRESS",
+              "type": "t_address",
+              "src": "contracts/Locking.sol:18"
+            },
+            {
+              "contract": "Locking",
+              "label": "LockStart",
+              "type": "t_uint256",
+              "src": "contracts/Locking.sol:19"
+            },
+            {
+              "contract": "Locking",
+              "label": "LockEnd",
+              "type": "t_uint256",
+              "src": "contracts/Locking.sol:20"
+            },
+            {
+              "contract": "Locking",
+              "label": "stopFeeCollection",
+              "type": "t_bool",
+              "src": "contracts/Locking.sol:21"
+            }
+          ],
+          "types": {
+            "t_mapping(t_address,t_uint256)": {
+              "label": "mapping(address => uint256)"
+            },
+            "t_address": {
+              "label": "address"
+            },
+            "t_uint256": {
+              "label": "uint256"
+            },
+            "t_array(t_address)dyn_storage": {
+              "label": "address[]"
+            },
+            "t_contract(IERC20)694": {
+              "label": "contract IERC20"
+            },
+            "t_contract(iGovernance)2034": {
+              "label": "contract iGovernance"
+            },
+            "t_bool": {
+              "label": "bool"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "MockToken": {
+        "src": "contracts/MockERC20.sol:6",
+        "version": {
+          "withMetadata": "b021684b2e22bfd40f2699cb67f1e3fc6db18d527c4466e701480c43922114d2",
+          "withoutMetadata": "8a66edc0feea9de1e5959d259d22c16e760f120a23e7394733642b86afd82f6a",
+          "linkedWithoutMetadata": "8a66edc0feea9de1e5959d259d22c16e760f120a23e7394733642b86afd82f6a"
+        },
+        "inherit": [
+          "ERC20",
+          "IERC20Metadata",
+          "IERC20",
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "(address,address,address,address)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "MockToken",
+            "src": "contracts/MockERC20.sol:7"
+          }
+        ],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      }
+    },
+    {
+      "Ownable": {
+        "src": "@openzeppelin/contracts/access/Ownable.sol:18",
+        "inherit": [
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "owner()",
+          "renounceOwnership()",
+          "transferOwnership(address)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "Ownable",
+            "src": "@openzeppelin/contracts/access/Ownable.sol:26"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "Ownable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts/access/Ownable.sol:19"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "ERC20": {
+        "src": "@openzeppelin/contracts/token/ERC20/ERC20.sol:33",
+        "version": {
+          "withMetadata": "f131ab53715463769f41008d72e5c6fdc6e91a1716eca96b988c90638acd51d2",
+          "withoutMetadata": "178b1377fc5853149c921b28f53ff2355d7c534d6a236c296423fd3b275859b7",
+          "linkedWithoutMetadata": "178b1377fc5853149c921b28f53ff2355d7c534d6a236c296423fd3b275859b7"
+        },
+        "inherit": [
+          "IERC20Metadata",
+          "IERC20",
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "(string,string)",
+          "name()",
+          "symbol()",
+          "decimals()",
+          "totalSupply()",
+          "balanceOf(address)",
+          "transfer(address,uint256)",
+          "allowance(address,address)",
+          "approve(address,uint256)",
+          "transferFrom(address,address,uint256)",
+          "increaseAllowance(address,uint256)",
+          "decreaseAllowance(address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "ERC20",
+            "src": "@openzeppelin/contracts/token/ERC20/ERC20.sol:52"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "ERC20",
+              "label": "_balances",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "@openzeppelin/contracts/token/ERC20/ERC20.sol:34"
+            },
+            {
+              "contract": "ERC20",
+              "label": "_allowances",
+              "type": "t_mapping(t_address,t_mapping(t_address,t_uint256))",
+              "src": "@openzeppelin/contracts/token/ERC20/ERC20.sol:36"
+            },
+            {
+              "contract": "ERC20",
+              "label": "_totalSupply",
+              "type": "t_uint256",
+              "src": "@openzeppelin/contracts/token/ERC20/ERC20.sol:38"
+            },
+            {
+              "contract": "ERC20",
+              "label": "_name",
+              "type": "t_string_storage",
+              "src": "@openzeppelin/contracts/token/ERC20/ERC20.sol:40"
+            },
+            {
+              "contract": "ERC20",
+              "label": "_symbol",
+              "type": "t_string_storage",
+              "src": "@openzeppelin/contracts/token/ERC20/ERC20.sol:41"
+            }
+          ],
+          "types": {
+            "t_mapping(t_address,t_uint256)": {
+              "label": "mapping(address => uint256)"
+            },
+            "t_address": {
+              "label": "address"
+            },
+            "t_uint256": {
+              "label": "uint256"
+            },
+            "t_mapping(t_address,t_mapping(t_address,t_uint256))": {
+              "label": "mapping(address => mapping(address => uint256))"
+            },
+            "t_string_storage": {
+              "label": "string"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "IERC20": {
+        "src": "@openzeppelin/contracts/token/ERC20/IERC20.sol:8",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "totalSupply()",
+          "balanceOf(address)",
+          "transfer(address,uint256)",
+          "allowance(address,address)",
+          "approve(address,uint256)",
+          "transferFrom(address,address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "IERC20Metadata": {
+        "src": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol:12",
+        "inherit": [
+          "IERC20"
+        ],
+        "libraries": [],
+        "methods": [
+          "name()",
+          "symbol()",
+          "decimals()"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "Context": {
+        "src": "@openzeppelin/contracts/utils/Context.sol:15",
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "GravityIDO": {
+        "src": "contracts/GravityIDO.sol:10",
+        "version": {
+          "withMetadata": "ce79b9a18475e67f8d6e6803255ad0016b10a0c1c85165368da331b1a1151d5a",
+          "withoutMetadata": "542460c078536f2601ef8eb79f773f547d41b6d1ab3a7abb2f4351028e23173e",
+          "linkedWithoutMetadata": "542460c078536f2601ef8eb79f773f547d41b6d1ab3a7abb2f4351028e23173e"
+        },
+        "inherit": [
+          "Ownable",
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "(address,address,uint256,bool)",
+          "getIOUAddress()",
+          "setWETH_ADDRESS(address)",
+          "setGFI_ADDRESS(address)",
+          "getWETH_ADDRESS()",
+          "getGFI_ADDRESS()",
+          "getTotalWETHCollected()",
+          "buyStake(uint256)",
+          "claimStake()",
+          "withdraw()",
+          "withdrawAll()"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "GravityIDO",
+            "src": "contracts/GravityIDO.sol:35"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "saleStartTime",
+            "src": "contracts/GravityIDO.sol:25"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "saleEndTime",
+            "src": "contracts/GravityIDO.sol:26"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "GravityIDO",
+              "label": "WETH",
+              "type": "t_contract(IERC20)694",
+              "src": "contracts/GravityIDO.sol:11"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "GFI",
+              "type": "t_contract(IERC20)694",
+              "src": "contracts/GravityIDO.sol:12"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "IOU",
+              "type": "t_contract(IOUToken)1668",
+              "src": "contracts/GravityIDO.sol:13"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "WETH_ADDRESS",
+              "type": "t_address",
+              "src": "contracts/GravityIDO.sol:14"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "GFI_ADDRESS",
+              "type": "t_address",
+              "src": "contracts/GravityIDO.sol:15"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "totalWETHCollected",
+              "type": "t_uint256",
+              "src": "contracts/GravityIDO.sol:20"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "GFIforSale",
+              "type": "t_uint256",
+              "src": "contracts/GravityIDO.sol:23"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "WETHifSoldOut",
+              "type": "t_uint256",
+              "src": "contracts/GravityIDO.sol:24"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "saleStartTime",
+              "type": "t_uint256",
+              "src": "contracts/GravityIDO.sol:25"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "saleEndTime",
+              "type": "t_uint256",
+              "src": "contracts/GravityIDO.sol:26"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "contributedBal",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/GravityIDO.sol:28"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "ownerShareWithdrawn",
+              "type": "t_bool",
+              "src": "contracts/GravityIDO.sol:29"
+            }
+          ],
+          "types": {
+            "t_contract(IERC20)694": {
+              "label": "contract IERC20"
+            },
+            "t_contract(IOUToken)1668": {
+              "label": "contract IOUToken"
+            },
+            "t_address": {
+              "label": "address"
+            },
+            "t_uint256": {
+              "label": "uint256"
+            },
+            "t_mapping(t_address,t_uint256)": {
+              "label": "mapping(address => uint256)"
+            },
+            "t_bool": {
+              "label": "bool"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "GravityToken": {
+        "src": "contracts/GravityToken.sol:8",
+        "version": {
           "withMetadata": "057ab4925a881037867ddeac3053013263c742c4de92533f03bddf8a3112a90e",
           "withoutMetadata": "a4bb05ea64dc8934d044d61be8d448b12b9d6a4eca772035602be34ddbdd63f3",
           "linkedWithoutMetadata": "a4bb05ea64dc8934d044d61be8d448b12b9d6a4eca772035602be34ddbdd63f3"

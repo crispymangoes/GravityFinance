@@ -292,8 +292,8 @@
       ]
     },
     "/home/ryan/SolidityProjects/GravityFinance/contracts/GravityToken.sol": {
-      "lastModificationDate": 1620266586056,
-      "contentHash": "6567a54219219f2d00db097f6054fdcf",
+      "lastModificationDate": 1620849694328,
+      "contentHash": "b26ff28bdde03134261cd96b716d86b2",
       "sourceName": "contracts/GravityToken.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -330,8 +330,8 @@
       ]
     },
     "/home/ryan/SolidityProjects/GravityFinance/contracts/Locking.sol": {
-      "lastModificationDate": 1620849552751,
-      "contentHash": "505a550d9ea109685f690c5860763746",
+      "lastModificationDate": 1620849973688,
+      "contentHash": "fcf2345831a9e0ba06ea89378f565182",
       "sourceName": "contracts/Locking.sol",
       "solcConfig": {
         "version": "0.8.4",
