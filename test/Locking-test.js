@@ -19,7 +19,7 @@ let addr2; // Test user 2
 let addr3; // Test user 3
 let addr4; // Test user 4
 
-before(async function () {
+beforeEach(async function () {
     [owner, addr1, addr2, addr3, addr4] = await ethers.getSigners();
 
     MockERC20 = await ethers.getContractFactory("MockToken");
@@ -47,8 +47,9 @@ describe("Locking Contract functional test", function() {
     });
 
     it("claimGFI() should work if vesting period is over", async function() {
-        await network.provider.send("evm_setNextBlockTimestamp", [1684031947])
-        await network.provider.send("evm_mine")
+        await network.provider.send("evm_setNextBlockTimestamp", [1684031947]);
+        await network.provider.send("evm_mine");
+        await network.provider.send("evm_mine");
         await locking.connect(addr1).claimGFI();
         let GFIafter = await mockGFI.balanceOf(addr1.address);
         expect(GFIafter).to.equal("100000000");
