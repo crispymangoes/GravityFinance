@@ -14,8 +14,9 @@ Contract Owner Address:  0xeb678812778B68a48001B4A9A4A04c4924c33598
 
 #IDO Times
 
-Start: 1620851162
-End: 
+Start: 1620852463
+
+End: 1620938863
 
 ##How to install
 run git clone https://github.com/crispymangoes/GravityFinance.git

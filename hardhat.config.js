@@ -10,6 +10,8 @@ task("accounts", "Prints the list of accounts", async () => {
 
   for (const account of accounts) {
     console.log(account.address);
+    console.log(account.privateKey)
+
   }
 });
 module.exports = {
