@@ -1,12 +1,14 @@
+/*
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin-upgradeable/contracts/ somethin Initializer.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-contract Governance is Initializer, Ownable{
+contract Governance is Initializable, OwnableUpgradeable{
 
     struct FeeLedger {
         uint totalFeeCollected_LastClaim,
@@ -19,8 +21,8 @@ contract Governance is Initializer, Ownable{
     IERC20 GFI;
     IERC20 WETH;
 
-    Initializer() {
-        ....
+    function initialize() public initializer {
+        __Ownable_init();
     }
 
     function claimFee() external returns(uint){
@@ -52,3 +54,4 @@ contract Governance is Initializer, Ownable{
         return feeAllocation;
     }
 }
+*/
