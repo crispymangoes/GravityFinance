@@ -39,6 +39,10 @@ contract Locking is Ownable {
         Governor = iGovernance(GOVERANCE_ADDRESS);
     }
 
+    function setFeeCollectionBool(bool _bool) external onlyOwner {
+        stopFeeCollection = _bool;
+    }
+
     /** @dev Allows owner to add new allowances for users
      * Address must not have an existing GFIbalance
      */
