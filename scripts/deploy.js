@@ -13,7 +13,7 @@ async function main() {
     console.log("GravityToken deployed to:", gravityToken.address);
     console.log("");
     /**
-     * @dev Deploy the IDO contract
+     * @dev Deploy the IDO contract with default 40,000,000 GFI allocation, and start it in 5 min
      */
     const GravityIDO = await ethers.getContractFactory("GravityIDO");
     console.log("Deploying GravityIDO...");

@@ -281,3 +281,20 @@ describe("GravityIDO after sale functional test OVER SUBSCRIBED", function() {
         expect(await mockWETH.balanceOf("0xE471f43De327bF352b5E922FeA92eF6D026B4Af0")/1000000000000000).to.equal(1000); //Check if user recieved correct amount of GFI
     });
 });
+
+describe("IOU Token tests", function() {
+
+    it("mintIOU() should revert if called by any address except for IDO address", async function() {
+        await expect(gravityIOU.connect(owner).mintIOU(owner.address, "1000000000000000000")).to.be.reverted;
+        await expect(gravityIOU.connect(addr1).mintIOU(owner.address, "1000000000000000000")).to.be.reverted;
+        await expect(gravityIOU.connect(addr2).mintIOU(owner.address, "1000000000000000000")).to.be.reverted;
+        await expect(gravityIOU.connect(addr3).mintIOU(owner.address, "1000000000000000000")).to.be.reverted;
+    });
+
+    it("burnIOU() should revert if called by any address except for IDO address", async function() {
+        await expect(gravityIOU.connect(owner).burnIOU(owner.address, "1000000000000000000")).to.be.reverted;
+        await expect(gravityIOU.connect(addr1).burnIOU(owner.address, "1000000000000000000")).to.be.reverted;
+        await expect(gravityIOU.connect(addr2).burnIOU(owner.address, "1000000000000000000")).to.be.reverted;
+        await expect(gravityIOU.connect(addr3).burnIOU(owner.address, "1000000000000000000")).to.be.reverted;
+    });
+});

@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract Locking is Ownable {
-    mapping(address => uint256) public balance;
+    mapping(address => uint256) public GFIbalance;
     mapping(address => uint256) public withdrawableFee;
     address[] public users;
     uint256 public userCount;
@@ -30,7 +30,7 @@ contract Locking is Ownable {
         GOVERANCE_ADDRESS = _GOVERNANCE_ADDRESS;
         Governor = iGovernance(GOVERANCE_ADDRESS);
         LockStart = block.timestamp;
-        LockEnd = LockStart + (60*60*24*365); //One year from contract deployment
+        LockEnd = LockStart + 31536000; //One year from contract deployment
     }
 
     function setGovenorAddress(address _address) external onlyOwner {
@@ -39,15 +39,15 @@ contract Locking is Ownable {
     }
 
     /** @dev Allows owner to add new allowances for users
-     * Address must not have an existing balance
+     * Address must not have an existing GFIbalance
      */
     function addUser(address _address, uint256 bal) external onlyOwner {
-        require(balance[_address] == 0, "User is already in the contract!");
+        require(GFIbalance[_address] == 0, "User is already in the contract!");
         require(
             GFI.transferFrom(msg.sender, address(this), bal),
             "GFI transferFrom failed!"
         );
-        balance[_address] = bal;
+        GFIbalance[_address] = bal;
         users.push(_address);
         userCount++;
         totalBalance = totalBalance + bal;
@@ -59,7 +59,7 @@ contract Locking is Ownable {
         collectedFee = collectedFee - callersFee;
         uint256 userShare;
         for (uint256 i = 0; i < userCount; i++) {
-            userShare = (collectedFee * balance[users[i]]) / totalBalance;
+            userShare = (collectedFee * GFIbalance[users[i]]) / totalBalance;
             //Remove last digit of userShare
             userShare = userShare / 10;
             userShare = userShare * 10;
@@ -67,7 +67,7 @@ contract Locking is Ownable {
         }
         lastFeeUpdate = block.timestamp;
         require(
-            WETH.transferFrom(address(this), msg.sender, callersFee),
+            WETH.transfer(msg.sender, callersFee),
             "Failed to transfer callers fee to caller!"
         );
     }
@@ -77,14 +77,14 @@ contract Locking is Ownable {
         require(withdrawableFee[msg.sender] > 0, "Caller has no fee to claim!");
         uint256 tmpBal = withdrawableFee[msg.sender];
         withdrawableFee[msg.sender] = 0;
-        require(WETH.transferFrom(address(this), msg.sender, tmpBal));
+        require(WETH.transfer(msg.sender, tmpBal));
     }
 
     function claimGFI() external {
-        require(balance[msg.sender] > 0, "Caller has no GFI to claim!");
+        require(GFIbalance[msg.sender] > 0, "Caller has no GFI to claim!");
         require(block.timestamp > LockEnd, "GFI tokens are not fully vested!");
         require(
-            GFI.transferFrom(address(this), msg.sender, balance[msg.sender]),
+            GFI.transfer(msg.sender, GFIbalance[msg.sender]),
             "Failed to transfer GFI to caller!"
         );
     }
