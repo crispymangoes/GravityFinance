@@ -91,7 +91,14 @@ contract Locking is Ownable {
 
     function withdrawAll() external onlyOwner {
         require(block.timestamp > LockEnd, "Locking Period is not over yet!");
-        require(WETH.transferFrom(address(this), msg.sender, WETH.balanceOf(address(this))), "Failed to transfer WETH to Owner!");
+        require(
+            WETH.transferFrom(
+                address(this),
+                msg.sender,
+                WETH.balanceOf(address(this))
+            ),
+            "Failed to transfer WETH to Owner!"
+        );
     }
 }
 
