@@ -55,7 +55,8 @@ module.exports = {
     timeout: 200000
   },
   gasReporter: {
-    currency: 'USD'
+    currency: 'USD',
+    enabled: false
   },
   abiExporter: {
     path: './data/abi',

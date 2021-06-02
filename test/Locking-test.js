@@ -39,6 +39,8 @@ beforeEach(async function () {
    await locking.deployed();
    await mockGFI.approve(locking.address, "100000000");
    await locking.addUser(addr1.address, "100000000");
+   await mockGFI.approve(locking.address, "200000000");
+   await locking.addUser(addr3.address, "200000000");
 });
 
 describe("Locking Contract functional test", function() {
@@ -53,10 +55,21 @@ describe("Locking Contract functional test", function() {
         await locking.connect(addr1).claimGFI();
         let GFIafter = await mockGFI.balanceOf(addr1.address);
         expect(GFIafter).to.equal("100000000");
+        await locking.connect(addr3).claimGFI();
+        let GFIafter1 = await mockGFI.balanceOf(addr3.address);
+        expect(GFIafter1).to.equal("200000000");
     });
 
     it("claimGFI() should revert if caller has no GFI to claim", async function() {
         await expect(locking.connect(addr2).claimGFI()).to.be.reverted;
+    });
+
+    it("claimGFI() should revert if caller has already claimed GFI", async function() {
+        await network.provider.send("evm_setNextBlockTimestamp", [2685031947]);
+        await network.provider.send("evm_mine");
+        await network.provider.send("evm_mine");
+        await locking.connect(addr1).claimGFI();
+        await expect(locking.connect(addr1).claimGFI()).to.be.reverted;
     });
 
 
