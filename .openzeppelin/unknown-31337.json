@@ -119,8 +119,8 @@
       }
     },
     "23aa0e819e563bcf78a947229fd69a59a80809747573ae32c10952d2ab9690fe": {
-      "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
-      "txHash": "0xc64d2a7db63a30ec972ff05997105d25bc1351be91ad3956cc0bd198affba38c",
+      "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
+      "txHash": "0x5d7bc03dfa2aa4c2b14fe14ae4e3c9064464b78c8517608444f2f1b7dd1cff09",
       "layout": {
         "storage": [
           {
@@ -180,7 +180,7 @@
           {
             "contract": "Governance",
             "label": "GFI",
-            "type": "t_contract(iGravityToken)3868",
+            "type": "t_contract(iGravityToken)3832",
             "src": "contracts/Governance.sol:21"
           },
           {
@@ -226,7 +226,7 @@
               }
             ]
           },
-          "t_contract(iGravityToken)3868": {
+          "t_contract(iGravityToken)3832": {
             "label": "contract iGravityToken"
           },
           "t_contract(IERC20)916": {
@@ -815,10 +815,20 @@
       "address": "0xfbC22278A96299D91d41C453234d97b4F5Eb9B2d",
       "kind": "transparent",
       "txHash": "0x25b6ee598da32d039287b1d57ae06cd060bfc15b13822efa7892d0012885e5c7"
+    },
+    {
+      "address": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
+      "kind": "transparent",
+      "txHash": "0x348fcb89a3f33323e4ea6106d660f0db3860f8206bb6735ec9f90d77efc4de1f"
+    },
+    {
+      "address": "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
+      "kind": "transparent",
+      "txHash": "0x44400f5bc4fb731d5be3b80f1bb24a2f770a74421f425dc4a5af0709a41defeb"
     }
   ],
   "admin": {
-    "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-    "txHash": "0xac3ee1337e91718e0940022d645bbf25bdc4a2ccc16b80e9acc7c37a4b65fcad"
+    "address": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
+    "txHash": "0xbe78f8a14e41f9e18684112edf9fa301f31681488b0744fa5e12acbde82fbba9"
   }
 }

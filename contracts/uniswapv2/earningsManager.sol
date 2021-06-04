@@ -80,7 +80,7 @@ contract EarningsManager {
         Governor.depositFee(0,0);
     }
 
-    function setSwapPath(address[] path_token0_weth, address[] path_token0_wbtc, address[] path_token1_weth, address[] path_token1_wbtc) external{
+    //function setSwapPath(address[] path_token0_weth, address[] path_token0_wbtc, address[] path_token1_weth, address[] path_token1_wbtc) external{
 
-    }
+    //}
 }
