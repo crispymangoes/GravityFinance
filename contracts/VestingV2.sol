@@ -8,6 +8,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 contract VestingV2 is Ownable {
     mapping(address => uint256) public GFIbalance;
     mapping(address => uint256) public withdrawableFee;
+    uint256 callersShare = 100; //Caller of update fee get 1/1000 of the collected fee
     address[] public users;
     uint256 public userCount;
     uint256 public totalBalance;
@@ -56,6 +57,10 @@ contract VestingV2 is Ownable {
         return lastFeeUpdate;
     }
 
+    function setCallersShare(uint256 _share) external onlyOwner{
+        callersShare = _share;
+    }
+
     /** @dev Allows owner to add new allowances for users
      * Address must not have an existing GFIbalance
      */
@@ -73,10 +78,10 @@ contract VestingV2 is Ownable {
         periodAmount[_address] = periodAmount[_address] * 10; // Zero out the last decimal
     }
 
-    function updateWithdrawableFee() external {
+    function updateWithdrawableFee() external{
         require(stopFeeCollection, "Fee distribution has been turned off!");
         uint256 collectedFee = Governor.claimFee();
-        uint256 callersFee = collectedFee / 100;
+        uint256 callersFee = collectedFee / callersShare;
         collectedFee = collectedFee - callersFee;
         uint256 userShare;
         for (uint256 i = 0; i < userCount; i++) {
@@ -107,6 +112,7 @@ contract VestingV2 is Ownable {
         if ( block.timestamp > LockEnd){
         uint256 tmpBal = GFIbalance[msg.sender];
         GFIbalance[msg.sender] = 0;
+        totalBalance = totalBalance - tmpBal;
         require(
             GFI.transfer(msg.sender, tmpBal),
             "Failed to transfer GFI to caller!"
@@ -118,6 +124,7 @@ contract VestingV2 is Ownable {
                 if(!subVestingPeriodClaimed[msg.sender][i]){
                     subVestingPeriodClaimed[msg.sender][i] = true;
                     GFIbalance[msg.sender] = GFIbalance[msg.sender] - periodAmount[msg.sender];
+                    totalBalance = totalBalance - periodAmount[msg.sender];
                     require(GFI.transfer(msg.sender, periodAmount[msg.sender]));
                 }
                 i++;

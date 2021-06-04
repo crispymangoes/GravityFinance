@@ -82,7 +82,6 @@ describe("Governance Contract functional test", function() {
         await governance.connect(addr4).withdrawFee();
 
         expect((await mockWETH.balanceOf(addr4.address) - wETHbal).toString()).to.equal("750000000000000000");
-        //TODO check that if a transfer/transferFrom fails, the feeledger value is not updated
     });
 
     it("govAuthTransfer() and govAuthTransferFrom() should revert when caller is not the token contract", async function() {
@@ -96,4 +95,6 @@ describe("Governance Contract functional test", function() {
         await mockGFI.connect(addr2).approve(owner.address, "300000000000000000000000001");
         await expect( mockGFI.connect(owner).transferFrom(addr2.address, addr1.address, "300000000000000000000000001")).to.be.reverted;
     });
+
+    //TODO Add test to see if delegateFee works as expected
 });

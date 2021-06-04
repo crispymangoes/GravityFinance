@@ -143,6 +143,40 @@ contract Governance is Initializable, OwnableUpgradeable {
         return feeAllocation;
     }
 
+    function delegateFee(address reciever) public returns (uint256) {
+        require(GFI.balanceOf(msg.sender) > 0, "User has no GFI");
+        uint256 supply;
+        uint256 balance;
+
+        //Pick the greatest supply and the lowest user balance
+        uint256 currentBalance = GFI.balanceOf(msg.sender);
+        if (currentBalance > feeLedger[msg.sender].userBalance_LastClaim) {
+            balance = feeLedger[msg.sender].userBalance_LastClaim;
+        } else {
+            balance = currentBalance;
+        }
+
+        uint256 currentSupply = GFI.totalSupply();
+        if (currentSupply < feeLedger[msg.sender].totalSupply_LastClaim) {
+            supply = feeLedger[msg.sender].totalSupply_LastClaim;
+        } else {
+            supply = currentSupply;
+        }
+
+        uint256 feeAllocation =
+            ((totalFeeCollected -
+                feeLedger[msg.sender].totalFeeCollected_LastClaim) * balance) /
+                supply;
+        feeLedger[msg.sender].totalFeeCollected_LastClaim = totalFeeCollected;
+        feeLedger[msg.sender].totalSupply_LastClaim = currentSupply;
+        feeLedger[msg.sender].userBalance_LastClaim = currentBalance;
+        //Add any extra fees they need to collect
+        feeAllocation = feeAllocation + feeBalance[msg.sender];
+        feeBalance[msg.sender] = 0;
+        require(WETH.transfer(reciever, feeAllocation));
+        return feeAllocation;
+    }
+
     function withdrawFee() external {
         uint256 feeAllocation = feeBalance[msg.sender];
         feeBalance[msg.sender] = 0;

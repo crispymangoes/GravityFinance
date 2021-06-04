@@ -18,9 +18,10 @@ let addr1; // Test user 1
 let addr2; // Test user 2
 let addr3; // Test user 3
 let addr4; // Test user 4
+let addr5;
 
 beforeEach(async function () {
-    [owner, addr1, addr2, addr3, addr4] = await ethers.getSigners();
+    [owner, addr1, addr2, addr3, addr4, addr5] = await ethers.getSigners();
 
     MockERC20 = await ethers.getContractFactory("MockToken");
     mockWETH = await MockERC20.deploy(addr1.address, addr2.address, addr3.address, addr4.address);
@@ -45,6 +46,20 @@ beforeEach(async function () {
    await vesting.addUser(addr1.address, "100000000");
    await mockGFI.approve(vesting.address, "200000000");
    await vesting.addUser(addr3.address, "200000000");
+
+   await mockGFI.approve(vesting.address, "5000000000000000000000000");
+   await vesting.addUser(addr4.address, "5000000000000000000000000");
+   await mockGFI.approve(vesting.address, "195000000000000000000000000");
+   await vesting.addUser(addr2.address, "195000000000000000000000000");
+
+   //Just to remove wETH bal for addr4
+   await mockWETH.connect(addr4).transfer(owner.address, "10000000000000000000");
+
+   await vesting.setGovenorAddress(governance.address);
+   await mockWETH.connect(addr2).approve(governance.address, "10000000000000000000");
+   await vesting.setFeeCollectionBool(true);
+   await governance.updateFee(vesting.address);
+   await governance.connect(addr2).depositFee("10000000000000000000", "0");
 });
 
 describe("VestingV2 Contract functional test", function() {
@@ -146,7 +161,7 @@ describe("VestingV2 Contract functional test", function() {
     });
 
     it("claimGFI() should revert if caller has no GFI to claim", async function() {
-        await expect(vesting.connect(addr2).claimGFI()).to.be.reverted;
+        await expect(vesting.connect(addr5).claimGFI()).to.be.reverted;
     });
 
     it("claimGFI() should revert if caller has already claimed GFI", async function() {
@@ -154,5 +169,14 @@ describe("VestingV2 Contract functional test", function() {
         await network.provider.send("evm_mine");
         await vesting.connect(addr1).claimGFI();
         await expect(vesting.connect(addr1).claimGFI()).to.be.reverted;
+    });
+    it("updateWithdrawableFee() should send 1% of the rewards to caller and update fee ledger for GFI owners in contract", async function() {
+        await vesting.connect(addr5).updateWithdrawableFee();
+        await vesting.connect(addr4).collectFee();
+        await vesting.connect(addr2).collectFee();
+        console.log("5,000,000 GFI with 10wETH fees collected ", (await mockWETH.balanceOf(addr4.address)).toString());
+        console.log("UpdateFee Caller Bal ", (await mockWETH.balanceOf(addr5.address)).toString());
+        console.log("195,000,000 GFI with 10wETH fees collected ", (await mockWETH.balanceOf(addr2.address)).toString());
+        console.log("Vesting wETH Balance Remaining ", (await mockWETH.balanceOf(vesting.address)).toString());
     });
 });
