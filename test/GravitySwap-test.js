@@ -70,9 +70,11 @@ describe("Swap Exchange Contracts functional test", function () {
         //let Pair = await ethers.getContractFactory("UniswapV2Pair");
         //let pair = await Pair.attach(pairAddress);
         //console.log((await pair.getReserves()).toString());
-        await mockWETH.approve(swapRouter.address, "100000000000000000000");
-        await mockWBTC.approve(swapRouter.address, "100000000000000000000");
-        await swapRouter.addLiquidity(mockWETH.address, mockWBTC.address, "1000000000000000000", "1000000000000000000", "900000000000000000", "900000000000000000", addr1.address, 1654341846);
+
+        await mockWETH.connect(addr1).approve(swapRouter.address, "100000000000000000000");
+        await mockWBTC.connect(addr1).approve(swapRouter.address, "100000000000000000000");
+        await swapRouter.connect(addr1).addLiquidity(mockWETH.address, mockWBTC.address, "100000000000000000", "100000000000000000", "90000000000000000", "90000000000000000", addr1.address, 1654341846);
+        
         /*await expect(factory.createPair(...tokens))
       .to.emit(factory, 'PairCreated')
       .withArgs(TEST_ADDRESSES[0], TEST_ADDRESSES[1], create2Address, bigNumberify(1))*/
