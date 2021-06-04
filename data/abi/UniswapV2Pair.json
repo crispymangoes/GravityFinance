@@ -462,6 +462,11 @@
         "internalType": "address",
         "name": "wbtc",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "router",
+        "type": "address"
       }
     ],
     "name": "initialize",
@@ -610,6 +615,19 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "router",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",

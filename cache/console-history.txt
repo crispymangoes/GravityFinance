@@ -1,3 +1,16 @@
+await calhash.getInitHash()
+const calhash = await CalHash.deploy()
+const CalHash = await ethers.getContractFactory("CalHash")
+.exit
+await calhash.getInitHash()
+const calhash = await CalHash.deploy()
+const CalHash = await ethers.getContractFactory("CalHash")
+.exit
+await calhash.getInitHash()
+const calhash = await CalHash.deploy()
+const CalHash = await ethers.getContractFactory("CalHash")
+const pair = await Pair.deploy()
+const Pair = await ethers.getContractFactory("UniswapV2Pair")
 .exit
 await calhash.getInitHash()
 const calhash = await CalHash.deploy()

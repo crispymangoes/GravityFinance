@@ -45,6 +45,7 @@ contract UniswapV2Pair is UniswapV2ERC20 {
     address public EM_ADDRESS;
     iGovernance Governor;
     bool public paused;
+    address public router;
 
     modifier lock() {
         require(unlocked == 1, 'UniswapV2: LOCKED');
@@ -84,13 +85,13 @@ contract UniswapV2Pair is UniswapV2ERC20 {
     }
 
     // called once by the factory at time of deployment
-    function initialize(address _token0, address _token1, address governor, address weth, address wbtc) external {
+    function initialize(address _token0, address _token1, address governor, address weth, address wbtc, address router) external {
         require(msg.sender == factory, 'UniswapV2: FORBIDDEN'); // sufficient check
         token0 = _token0;
         token1 = _token1;
         //NEW CODE
         Governor = iGovernance(governor);
-        EarningsManager EMtmp = new EarningsManager(governor, weth, wbtc);
+        EarningsManager EMtmp = new EarningsManager(governor, weth, wbtc, router);
         EM_ADDRESS = address(EMtmp);
         EM = iEarningsManager(EM_ADDRESS);
         emit EarningsManagerCreation(address(this), EM_ADDRESS);

@@ -15,6 +15,11 @@
         "internalType": "address",
         "name": "wbtc",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "router",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -23,6 +28,32 @@
   {
     "inputs": [],
     "name": "GOVERNOR_ADDRESS",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "LOGISTICS_ADDRESS",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "ROUTER_ADDRESS",
     "outputs": [
       {
         "internalType": "address",
@@ -164,6 +195,19 @@
   {
     "inputs": [],
     "name": "manageFees",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "factoryAddress",
+        "type": "address"
+      }
+    ],
+    "name": "updateSwapPaths",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

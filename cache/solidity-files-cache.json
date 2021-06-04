@@ -296,8 +296,8 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/MockERC20.sol": {
-      "lastModificationDate": 1621529611250,
-      "contentHash": "c2bb5bfa49a6a935f3475d1898486591",
+      "lastModificationDate": 1622813876870,
+      "contentHash": "50b23491261d04c5de3854365f45040e",
       "sourceName": "contracts/MockERC20.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -589,8 +589,8 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/UniswapV2Router02.sol": {
-      "lastModificationDate": 1622783505450,
-      "contentHash": "8116b3f8befff61a6be670a2762fed58",
+      "lastModificationDate": 1622787185470,
+      "contentHash": "36fa9f4b964f35864919ed3bb3c71bf8",
       "sourceName": "contracts/uniswapv2/UniswapV2Router02.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -631,8 +631,8 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/libraries/UniswapV2Library.sol": {
-      "lastModificationDate": 1622785601130,
-      "contentHash": "4f433c15e56d23db70064927023b1ea4",
+      "lastModificationDate": 1622843194106,
+      "contentHash": "a5b038ac51d8846d939439af6d3b11b1",
       "sourceName": "contracts/uniswapv2/libraries/UniswapV2Library.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -702,8 +702,8 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/UniswapV2Pair.sol": {
-      "lastModificationDate": 1622785394150,
-      "contentHash": "47bac8364ae09bd04513dfabda15cda2",
+      "lastModificationDate": 1622831064176,
+      "contentHash": "d2c87d0f0ebe2b320da9e0b0a8ce1098",
       "sourceName": "contracts/uniswapv2/UniswapV2Pair.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -852,8 +852,8 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/UniswapV2Factory.sol": {
-      "lastModificationDate": 1622785379920,
-      "contentHash": "32ab4e92a61030e99c6a00004b4203aa",
+      "lastModificationDate": 1622831062236,
+      "contentHash": "518a9eecaa761a3b3e51e91a5ec88ab4",
       "sourceName": "contracts/uniswapv2/UniswapV2Factory.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -1403,8 +1403,8 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/earningsManager.sol": {
-      "lastModificationDate": 1622779335890,
-      "contentHash": "6d08d17379737cc7521781745530aaa7",
+      "lastModificationDate": 1622843121586,
+      "contentHash": "09cf67b52dcf9904c76bf70230e32c22",
       "sourceName": "contracts/uniswapv2/earningsManager.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -1432,7 +1432,10 @@
         "../interfaces/OZ_IERC20.sol",
         "./interfaces/iGovernance.sol",
         "./interfaces/IERC20.sol",
-        "./interfaces/IUniswapV2Pair.sol"
+        "./interfaces/IUniswapV2Pair.sol",
+        "./interfaces/IUniswapV2Factory.sol",
+        "./interfaces/IUniswapV2Router02.sol",
+        "./interfaces/iLogistics.sol"
       ],
       "versionPragmas": [
         "=0.6.12"
@@ -1442,8 +1445,8 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/CalHash.sol": {
-      "lastModificationDate": 1622785355720,
-      "contentHash": "eb18b0cfabb7afb6603ea2cafd08ca0d",
+      "lastModificationDate": 1622843055696,
+      "contentHash": "00ddeff1fcc656ae6db95bd412dd07d0",
       "sourceName": "contracts/CalHash.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -1475,6 +1478,81 @@
       ],
       "artifacts": [
         "CalHash"
+      ]
+    },
+    "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/Logistics.sol": {
+      "lastModificationDate": 1622842951386,
+      "contentHash": "45ac88f566d7c963460472b553a93ec3",
+      "sourceName": "contracts/uniswapv2/Logistics.sol",
+      "solcConfig": {
+        "version": "0.6.12",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../interfaces/OZ_IERC20.sol",
+        "./interfaces/iGovernance.sol",
+        "./interfaces/IERC20.sol",
+        "./interfaces/IUniswapV2Pair.sol",
+        "./interfaces/IUniswapV2Factory.sol",
+        "./interfaces/IUniswapV2Router02.sol"
+      ],
+      "versionPragmas": [
+        "=0.6.12"
+      ],
+      "artifacts": [
+        "Logistics"
+      ]
+    },
+    "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/interfaces/iLogistics.sol": {
+      "lastModificationDate": 1622842956746,
+      "contentHash": "d9695ee0633092ccd1e0e2571958b2b4",
+      "sourceName": "contracts/uniswapv2/interfaces/iLogistics.sol",
+      "solcConfig": {
+        "version": "0.6.12",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.6.0"
+      ],
+      "artifacts": [
+        "iLogistics"
       ]
     }
   }

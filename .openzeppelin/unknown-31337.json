@@ -180,7 +180,7 @@
           {
             "contract": "Governance",
             "label": "GFI",
-            "type": "t_contract(iGravityToken)3832",
+            "type": "t_contract(iGravityToken)3822",
             "src": "contracts/Governance.sol:21"
           },
           {
@@ -226,7 +226,7 @@
               }
             ]
           },
-          "t_contract(iGravityToken)3832": {
+          "t_contract(iGravityToken)3822": {
             "label": "contract iGravityToken"
           },
           "t_contract(IERC20)916": {
@@ -702,11 +702,6 @@
       "txHash": "0xb2039b8a9c55dbe832584df621d261e97868d2cbaf6d403474125421a43897c0"
     },
     {
-      "address": "0x0B306BF915C4d645ff596e518fAf3F9669b97016",
-      "kind": "transparent",
-      "txHash": "0xcb81ba26601daf07bc001bf7aadf78e4776e00fe6d15cee00b0714da3e15601b"
-    },
-    {
       "address": "0x4A679253410272dd5232B3Ff7cF5dbB88f295319",
       "kind": "transparent",
       "txHash": "0x21a33bda686839f4baa9ce8bff1d7ad9b74fc3380c68811e86539b563c0d9d51"
@@ -740,11 +735,6 @@
       "address": "0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1",
       "kind": "transparent",
       "txHash": "0x3b2d6e81c26665ac1b47c50b7bbd54988580ff972ab0a8a9ff2abc16b89c48e0"
-    },
-    {
-      "address": "0x09635F643e140090A9A8Dcd712eD6285858ceBef",
-      "kind": "transparent",
-      "txHash": "0x0efa52d6fd033f8d481905e9f7c5971dd57faf3b71f294ba2b598fc6c8846182"
     },
     {
       "address": "0x95401dc811bb5740090279Ba06cfA8fcF6113778",
@@ -787,9 +777,9 @@
       "txHash": "0x817f774ec9e6743f73844961b4b105d21f088673318b8a3faf5c74c0aa9321bd"
     },
     {
-      "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+      "address": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
       "kind": "transparent",
-      "txHash": "0x7da0f4be570e9ae37381b9ac950e9403c370c8485fec57ea2250f95c2a4e3cbc"
+      "txHash": "0x348fcb89a3f33323e4ea6106d660f0db3860f8206bb6735ec9f90d77efc4de1f"
     },
     {
       "address": "0x59b670e9fA9D0A427751Af201D676719a970857b",
@@ -817,9 +807,19 @@
       "txHash": "0x25b6ee598da32d039287b1d57ae06cd060bfc15b13822efa7892d0012885e5c7"
     },
     {
-      "address": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
+      "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
       "kind": "transparent",
-      "txHash": "0x348fcb89a3f33323e4ea6106d660f0db3860f8206bb6735ec9f90d77efc4de1f"
+      "txHash": "0x7da0f4be570e9ae37381b9ac950e9403c370c8485fec57ea2250f95c2a4e3cbc"
+    },
+    {
+      "address": "0x0B306BF915C4d645ff596e518fAf3F9669b97016",
+      "kind": "transparent",
+      "txHash": "0xcb81ba26601daf07bc001bf7aadf78e4776e00fe6d15cee00b0714da3e15601b"
+    },
+    {
+      "address": "0x09635F643e140090A9A8Dcd712eD6285858ceBef",
+      "kind": "transparent",
+      "txHash": "0x0efa52d6fd033f8d481905e9f7c5971dd57faf3b71f294ba2b598fc6c8846182"
     },
     {
       "address": "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
