@@ -2,6 +2,2655 @@
   "version": "3.2",
   "log": [
     {
+      "OwnableUpgradeable": {
+        "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:19",
+        "inherit": [
+          "ContextUpgradeable",
+          "Initializable"
+        ],
+        "libraries": [],
+        "methods": [
+          "owner()",
+          "renounceOwnership()",
+          "transferOwnership(address)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:20"
+            },
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "__gap",
+              "type": "t_array(t_uint256)49_storage",
+              "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:74"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address"
+            },
+            "t_array(t_uint256)49_storage": {
+              "label": "uint256[49]"
+            },
+            "t_uint256": {
+              "label": "uint256"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "Initializable": {
+        "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:18",
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:23"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:28"
+            }
+          ],
+          "types": {
+            "t_bool": {
+              "label": "bool"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "ContextUpgradeable": {
+        "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:16",
+        "inherit": [
+          "Initializable"
+        ],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [
+            {
+              "contract": "ContextUpgradeable",
+              "label": "__gap",
+              "type": "t_array(t_uint256)50_storage",
+              "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:31"
+            }
+          ],
+          "types": {
+            "t_array(t_uint256)50_storage": {
+              "label": "uint256[50]"
+            },
+            "t_uint256": {
+              "label": "uint256"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "Ownable": {
+        "src": "@openzeppelin/contracts/access/Ownable.sol:18",
+        "inherit": [
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "owner()",
+          "renounceOwnership()",
+          "transferOwnership(address)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "Ownable",
+            "src": "@openzeppelin/contracts/access/Ownable.sol:26"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "Ownable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts/access/Ownable.sol:19"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "ERC20": {
+        "src": "@openzeppelin/contracts/token/ERC20/ERC20.sol:33",
+        "version": {
+          "withMetadata": "f131ab53715463769f41008d72e5c6fdc6e91a1716eca96b988c90638acd51d2",
+          "withoutMetadata": "178b1377fc5853149c921b28f53ff2355d7c534d6a236c296423fd3b275859b7",
+          "linkedWithoutMetadata": "178b1377fc5853149c921b28f53ff2355d7c534d6a236c296423fd3b275859b7"
+        },
+        "inherit": [
+          "IERC20Metadata",
+          "IERC20",
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "(string,string)",
+          "name()",
+          "symbol()",
+          "decimals()",
+          "totalSupply()",
+          "balanceOf(address)",
+          "transfer(address,uint256)",
+          "allowance(address,address)",
+          "approve(address,uint256)",
+          "transferFrom(address,address,uint256)",
+          "increaseAllowance(address,uint256)",
+          "decreaseAllowance(address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "ERC20",
+            "src": "@openzeppelin/contracts/token/ERC20/ERC20.sol:52"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "ERC20",
+              "label": "_balances",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "@openzeppelin/contracts/token/ERC20/ERC20.sol:34"
+            },
+            {
+              "contract": "ERC20",
+              "label": "_allowances",
+              "type": "t_mapping(t_address,t_mapping(t_address,t_uint256))",
+              "src": "@openzeppelin/contracts/token/ERC20/ERC20.sol:36"
+            },
+            {
+              "contract": "ERC20",
+              "label": "_totalSupply",
+              "type": "t_uint256",
+              "src": "@openzeppelin/contracts/token/ERC20/ERC20.sol:38"
+            },
+            {
+              "contract": "ERC20",
+              "label": "_name",
+              "type": "t_string_storage",
+              "src": "@openzeppelin/contracts/token/ERC20/ERC20.sol:40"
+            },
+            {
+              "contract": "ERC20",
+              "label": "_symbol",
+              "type": "t_string_storage",
+              "src": "@openzeppelin/contracts/token/ERC20/ERC20.sol:41"
+            }
+          ],
+          "types": {
+            "t_mapping(t_address,t_uint256)": {
+              "label": "mapping(address => uint256)"
+            },
+            "t_address": {
+              "label": "address"
+            },
+            "t_uint256": {
+              "label": "uint256"
+            },
+            "t_mapping(t_address,t_mapping(t_address,t_uint256))": {
+              "label": "mapping(address => mapping(address => uint256))"
+            },
+            "t_string_storage": {
+              "label": "string"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "IERC20": {
+        "src": "@openzeppelin/contracts/token/ERC20/IERC20.sol:8",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "totalSupply()",
+          "balanceOf(address)",
+          "transfer(address,uint256)",
+          "allowance(address,address)",
+          "approve(address,uint256)",
+          "transferFrom(address,address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "IERC20Metadata": {
+        "src": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol:12",
+        "inherit": [
+          "IERC20"
+        ],
+        "libraries": [],
+        "methods": [
+          "name()",
+          "symbol()",
+          "decimals()"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "Context": {
+        "src": "@openzeppelin/contracts/utils/Context.sol:15",
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "Governance": {
+        "src": "contracts/Governance.sol:11",
+        "version": {
+          "withMetadata": "b51b70a01ddd6f094b08d4473ad03fecdd6b73f4957f48d5fd79f86e919cbd6f",
+          "withoutMetadata": "23aa0e819e563bcf78a947229fd69a59a80809747573ae32c10952d2ab9690fe",
+          "linkedWithoutMetadata": "23aa0e819e563bcf78a947229fd69a59a80809747573ae32c10952d2ab9690fe"
+        },
+        "inherit": [
+          "OwnableUpgradeable",
+          "ContextUpgradeable",
+          "Initializable"
+        ],
+        "libraries": [],
+        "methods": [
+          "initialize(address,address,address)",
+          "updateFee(address)",
+          "claimFee()",
+          "delegateFee(address)",
+          "withdrawFee()",
+          "govAuthTransfer(address,address,uint256)",
+          "govAuthTransferFrom(address,address,address,uint256)",
+          "depositFee(uint256,uint256)",
+          "claimBTC(uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [
+            {
+              "contract": "Governance",
+              "label": "feeBalance",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Governance.sol:12"
+            },
+            {
+              "contract": "Governance",
+              "label": "tokenAddress",
+              "type": "t_address",
+              "src": "contracts/Governance.sol:13"
+            },
+            {
+              "contract": "Governance",
+              "label": "feeLedger",
+              "type": "t_mapping(t_address,t_struct(FeeLedger)989_storage)",
+              "src": "contracts/Governance.sol:19"
+            },
+            {
+              "contract": "Governance",
+              "label": "totalFeeCollected",
+              "type": "t_uint256",
+              "src": "contracts/Governance.sol:20"
+            },
+            {
+              "contract": "Governance",
+              "label": "GFI",
+              "type": "t_contract(iGravityToken)3822",
+              "src": "contracts/Governance.sol:21"
+            },
+            {
+              "contract": "Governance",
+              "label": "WETH",
+              "type": "t_contract(IERC20)916",
+              "src": "contracts/Governance.sol:22"
+            },
+            {
+              "contract": "Governance",
+              "label": "WBTC",
+              "type": "t_contract(IERC20)916",
+              "src": "contracts/Governance.sol:23"
+            }
+          ],
+          "types": {
+            "t_mapping(t_address,t_uint256)": {
+              "label": "mapping(address => uint256)"
+            },
+            "t_address": {
+              "label": "address"
+            },
+            "t_uint256": {
+              "label": "uint256"
+            },
+            "t_mapping(t_address,t_struct(FeeLedger)989_storage)": {
+              "label": "mapping(address => struct Governance.FeeLedger)"
+            },
+            "t_struct(FeeLedger)989_storage": {
+              "label": "struct Governance.FeeLedger",
+              "members": [
+                {
+                  "label": "totalFeeCollected_LastClaim",
+                  "type": "t_uint256"
+                },
+                {
+                  "label": "totalSupply_LastClaim",
+                  "type": "t_uint256"
+                },
+                {
+                  "label": "userBalance_LastClaim",
+                  "type": "t_uint256"
+                }
+              ]
+            },
+            "t_contract(iGravityToken)3822": {
+              "label": "contract iGravityToken"
+            },
+            "t_contract(IERC20)916": {
+              "label": "contract IERC20"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "GravityIDO": {
+        "src": "contracts/GravityIDO.sol:10",
+        "version": {
+          "withMetadata": "ce79b9a18475e67f8d6e6803255ad0016b10a0c1c85165368da331b1a1151d5a",
+          "withoutMetadata": "542460c078536f2601ef8eb79f773f547d41b6d1ab3a7abb2f4351028e23173e",
+          "linkedWithoutMetadata": "542460c078536f2601ef8eb79f773f547d41b6d1ab3a7abb2f4351028e23173e"
+        },
+        "inherit": [
+          "Ownable",
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "(address,address,uint256,bool)",
+          "getIOUAddress()",
+          "setWETH_ADDRESS(address)",
+          "setGFI_ADDRESS(address)",
+          "getWETH_ADDRESS()",
+          "getGFI_ADDRESS()",
+          "getTotalWETHCollected()",
+          "buyStake(uint256)",
+          "claimStake()",
+          "withdraw()",
+          "withdrawAll()"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "GravityIDO",
+            "src": "contracts/GravityIDO.sol:35"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "saleStartTime",
+            "src": "contracts/GravityIDO.sol:25"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "saleEndTime",
+            "src": "contracts/GravityIDO.sol:26"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "GravityIDO",
+              "label": "WETH",
+              "type": "t_contract(IERC20)916",
+              "src": "contracts/GravityIDO.sol:11"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "GFI",
+              "type": "t_contract(IERC20)916",
+              "src": "contracts/GravityIDO.sol:12"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "IOU",
+              "type": "t_contract(IOUToken)2739",
+              "src": "contracts/GravityIDO.sol:13"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "WETH_ADDRESS",
+              "type": "t_address",
+              "src": "contracts/GravityIDO.sol:14"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "GFI_ADDRESS",
+              "type": "t_address",
+              "src": "contracts/GravityIDO.sol:15"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "totalWETHCollected",
+              "type": "t_uint256",
+              "src": "contracts/GravityIDO.sol:20"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "GFIforSale",
+              "type": "t_uint256",
+              "src": "contracts/GravityIDO.sol:23"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "WETHifSoldOut",
+              "type": "t_uint256",
+              "src": "contracts/GravityIDO.sol:24"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "saleStartTime",
+              "type": "t_uint256",
+              "src": "contracts/GravityIDO.sol:25"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "saleEndTime",
+              "type": "t_uint256",
+              "src": "contracts/GravityIDO.sol:26"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "contributedBal",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/GravityIDO.sol:28"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "ownerShareWithdrawn",
+              "type": "t_bool",
+              "src": "contracts/GravityIDO.sol:29"
+            }
+          ],
+          "types": {
+            "t_contract(IERC20)916": {
+              "label": "contract IERC20"
+            },
+            "t_contract(IOUToken)2739": {
+              "label": "contract IOUToken"
+            },
+            "t_address": {
+              "label": "address"
+            },
+            "t_uint256": {
+              "label": "uint256"
+            },
+            "t_mapping(t_address,t_uint256)": {
+              "label": "mapping(address => uint256)"
+            },
+            "t_bool": {
+              "label": "bool"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "GravityToken": {
+        "src": "contracts/GravityToken.sol:8",
+        "version": {
+          "withMetadata": "321f32d67bca52dd7ecfe282946264761454d4213b0e32dc3140c47d44810fcc",
+          "withoutMetadata": "a4bb05ea64dc8934d044d61be8d448b12b9d6a4eca772035602be34ddbdd63f3",
+          "linkedWithoutMetadata": "a4bb05ea64dc8934d044d61be8d448b12b9d6a4eca772035602be34ddbdd63f3"
+        },
+        "inherit": [
+          "Ownable",
+          "ERC20",
+          "IERC20Metadata",
+          "IERC20",
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "(string,string)",
+          "setGovernanceAddress(address)",
+          "changeGovernanceForwarding(bool)",
+          "transfer(address,uint256)",
+          "transferFrom(address,address,uint256)",
+          "burn(uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "GravityToken",
+            "src": "contracts/GravityToken.sol:15"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "GravityToken",
+              "label": "GOVERNANCE_ADDRESS",
+              "type": "t_address",
+              "src": "contracts/GravityToken.sol:11"
+            },
+            {
+              "contract": "GravityToken",
+              "label": "govenor",
+              "type": "t_contract(iGovernance)2688",
+              "src": "contracts/GravityToken.sol:12"
+            },
+            {
+              "contract": "GravityToken",
+              "label": "applyGovernanceForwarding",
+              "type": "t_bool",
+              "src": "contracts/GravityToken.sol:13"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address"
+            },
+            "t_contract(iGovernance)2688": {
+              "label": "contract iGovernance"
+            },
+            "t_bool": {
+              "label": "bool"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "iGovernance": {
+        "src": "contracts/VestingV2.sol:154",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "claimFee()"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "IOUToken": {
+        "src": "contracts/IOUToken.sol:8",
+        "version": {
+          "withMetadata": "1df73524a2528d84df0cba3ec8cf0f0a2b4138dd8174889a6fabc5eddeb89279",
+          "withoutMetadata": "1d719411a77ba8f8081d9ae63afc5eedc3231f5cec2395495b1cfee54f235509",
+          "linkedWithoutMetadata": "1d719411a77ba8f8081d9ae63afc5eedc3231f5cec2395495b1cfee54f235509"
+        },
+        "inherit": [
+          "Ownable",
+          "ERC20",
+          "IERC20Metadata",
+          "IERC20",
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "(string,string)",
+          "mintIOU(address,uint256)",
+          "burnIOU(address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "IOUToken",
+            "src": "contracts/IOUToken.sol:10"
+          }
+        ],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "Locking": {
+        "src": "contracts/Locking.sol:8",
+        "version": {
+          "withMetadata": "3097941a9413c5de01c5029645ed00189bade1626ec6edd030a0d2f0d15fa6e0",
+          "withoutMetadata": "d62cb4160a536b99be8503d501b6b91489ede66bcb51aaedcebe9f747f28e0bd",
+          "linkedWithoutMetadata": "d62cb4160a536b99be8503d501b6b91489ede66bcb51aaedcebe9f747f28e0bd"
+        },
+        "inherit": [
+          "Ownable",
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "(address,address,address)",
+          "setGovenorAddress(address)",
+          "setFeeCollectionBool(bool)",
+          "getLastFeeUpdate()",
+          "addUser(address,uint256)",
+          "updateWithdrawableFee()",
+          "collectFee()",
+          "claimGFI()",
+          "withdrawAll()"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "Locking",
+            "src": "contracts/Locking.sol:23"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "Locking",
+              "label": "GFIbalance",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Locking.sol:9"
+            },
+            {
+              "contract": "Locking",
+              "label": "withdrawableFee",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Locking.sol:10"
+            },
+            {
+              "contract": "Locking",
+              "label": "users",
+              "type": "t_array(t_address)dyn_storage",
+              "src": "contracts/Locking.sol:11"
+            },
+            {
+              "contract": "Locking",
+              "label": "userCount",
+              "type": "t_uint256",
+              "src": "contracts/Locking.sol:12"
+            },
+            {
+              "contract": "Locking",
+              "label": "totalBalance",
+              "type": "t_uint256",
+              "src": "contracts/Locking.sol:13"
+            },
+            {
+              "contract": "Locking",
+              "label": "lastFeeUpdate",
+              "type": "t_uint256",
+              "src": "contracts/Locking.sol:14"
+            },
+            {
+              "contract": "Locking",
+              "label": "GFI",
+              "type": "t_contract(IERC20)916",
+              "src": "contracts/Locking.sol:15"
+            },
+            {
+              "contract": "Locking",
+              "label": "WETH",
+              "type": "t_contract(IERC20)916",
+              "src": "contracts/Locking.sol:16"
+            },
+            {
+              "contract": "Locking",
+              "label": "Governor",
+              "type": "t_contract(iGovernance)3164",
+              "src": "contracts/Locking.sol:17"
+            },
+            {
+              "contract": "Locking",
+              "label": "GOVERANCE_ADDRESS",
+              "type": "t_address",
+              "src": "contracts/Locking.sol:18"
+            },
+            {
+              "contract": "Locking",
+              "label": "LockStart",
+              "type": "t_uint256",
+              "src": "contracts/Locking.sol:19"
+            },
+            {
+              "contract": "Locking",
+              "label": "LockEnd",
+              "type": "t_uint256",
+              "src": "contracts/Locking.sol:20"
+            },
+            {
+              "contract": "Locking",
+              "label": "stopFeeCollection",
+              "type": "t_bool",
+              "src": "contracts/Locking.sol:21"
+            }
+          ],
+          "types": {
+            "t_mapping(t_address,t_uint256)": {
+              "label": "mapping(address => uint256)"
+            },
+            "t_address": {
+              "label": "address"
+            },
+            "t_uint256": {
+              "label": "uint256"
+            },
+            "t_array(t_address)dyn_storage": {
+              "label": "address[]"
+            },
+            "t_contract(IERC20)916": {
+              "label": "contract IERC20"
+            },
+            "t_contract(iGovernance)3164": {
+              "label": "contract iGovernance"
+            },
+            "t_bool": {
+              "label": "bool"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "MockToken": {
+        "src": "contracts/MockERC20.sol:6",
+        "version": {
+          "withMetadata": "a7b2a31cd735b3101b7b1f51e909195177495612157257cab525a4948fb969da",
+          "withoutMetadata": "4a9c490c255236d792ddd8a3117180277449e210dd9166df0c64e906ad630b1e",
+          "linkedWithoutMetadata": "4a9c490c255236d792ddd8a3117180277449e210dd9166df0c64e906ad630b1e"
+        },
+        "inherit": [
+          "ERC20",
+          "IERC20Metadata",
+          "IERC20",
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "(address,address,address,address)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "MockToken",
+            "src": "contracts/MockERC20.sol:7"
+          }
+        ],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "VestingV2": {
+        "src": "contracts/VestingV2.sol:8",
+        "version": {
+          "withMetadata": "17891c1d8f5c1deb56e0b334beba34d78139697078df9b7ae68c75c4a71296ea",
+          "withoutMetadata": "3bdf0c07d5f062e0559d78f28379533711e37221bec52b3bdac2bbc4ec7c3dca",
+          "linkedWithoutMetadata": "3bdf0c07d5f062e0559d78f28379533711e37221bec52b3bdac2bbc4ec7c3dca"
+        },
+        "inherit": [
+          "Ownable",
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "(address,address,address,uint256,uint256)",
+          "setGovenorAddress(address)",
+          "setFeeCollectionBool(bool)",
+          "getLastFeeUpdate()",
+          "setCallersShare(uint256)",
+          "addUser(address,uint256)",
+          "updateWithdrawableFee()",
+          "collectFee()",
+          "claimGFI()",
+          "withdrawAll()"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "VestingV2",
+            "src": "contracts/VestingV2.sol:27"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "callersShare",
+            "src": "contracts/VestingV2.sol:11"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "VestingV2",
+              "label": "GFIbalance",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/VestingV2.sol:9"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "withdrawableFee",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/VestingV2.sol:10"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "callersShare",
+              "type": "t_uint256",
+              "src": "contracts/VestingV2.sol:11"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "users",
+              "type": "t_array(t_address)dyn_storage",
+              "src": "contracts/VestingV2.sol:12"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "userCount",
+              "type": "t_uint256",
+              "src": "contracts/VestingV2.sol:13"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "totalBalance",
+              "type": "t_uint256",
+              "src": "contracts/VestingV2.sol:14"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "lastFeeUpdate",
+              "type": "t_uint256",
+              "src": "contracts/VestingV2.sol:15"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "subVestingPeriodTimeStamp",
+              "type": "t_array(t_uint256)10_storage",
+              "src": "contracts/VestingV2.sol:16"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "subVestingPeriodClaimed",
+              "type": "t_mapping(t_address,t_array(t_bool)10_storage)",
+              "src": "contracts/VestingV2.sol:17"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "periodAmount",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/VestingV2.sol:18"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "GFI",
+              "type": "t_contract(IERC20)916",
+              "src": "contracts/VestingV2.sol:19"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "WETH",
+              "type": "t_contract(IERC20)916",
+              "src": "contracts/VestingV2.sol:20"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "Governor",
+              "type": "t_contract(iGovernance)3799",
+              "src": "contracts/VestingV2.sol:21"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "GOVERANCE_ADDRESS",
+              "type": "t_address",
+              "src": "contracts/VestingV2.sol:22"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "LockStart",
+              "type": "t_uint256",
+              "src": "contracts/VestingV2.sol:23"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "LockEnd",
+              "type": "t_uint256",
+              "src": "contracts/VestingV2.sol:24"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "stopFeeCollection",
+              "type": "t_bool",
+              "src": "contracts/VestingV2.sol:25"
+            }
+          ],
+          "types": {
+            "t_mapping(t_address,t_uint256)": {
+              "label": "mapping(address => uint256)"
+            },
+            "t_address": {
+              "label": "address"
+            },
+            "t_uint256": {
+              "label": "uint256"
+            },
+            "t_array(t_address)dyn_storage": {
+              "label": "address[]"
+            },
+            "t_array(t_uint256)10_storage": {
+              "label": "uint256[10]"
+            },
+            "t_mapping(t_address,t_array(t_bool)10_storage)": {
+              "label": "mapping(address => bool[10])"
+            },
+            "t_array(t_bool)10_storage": {
+              "label": "bool[10]"
+            },
+            "t_bool": {
+              "label": "bool"
+            },
+            "t_contract(IERC20)916": {
+              "label": "contract IERC20"
+            },
+            "t_contract(iGovernance)3799": {
+              "label": "contract iGovernance"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "iGravityToken": {
+        "src": "contracts/interfaces/iGravityToken.sol:7",
+        "inherit": [
+          "IERC20"
+        ],
+        "libraries": [],
+        "methods": [
+          "setGovernanceAddress(address)",
+          "changeGovernanceForwarding(bool)",
+          "burn(uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "PathOracle": {
+        "src": "contracts/uniswapv2/PathOracle.sol:8",
+        "version": {
+          "withMetadata": "2f126aec0d47da2f85696f496a4a1488f17d8cf8c33f5e7ab5182632030ab9ca",
+          "withoutMetadata": "2ead7a373acfb79854b26f67390341ddc1007ca20180eecd07cb48d69f057a00",
+          "linkedWithoutMetadata": "2ead7a373acfb79854b26f67390341ddc1007ca20180eecd07cb48d69f057a00"
+        },
+        "inherit": [
+          "Ownable",
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "(address[],uint256,address)",
+          "alterPath(address,address)",
+          "appendPath(address,address)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "PathOracle",
+            "src": "contracts/uniswapv2/PathOracle.sol:16"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "PathOracle",
+              "label": "pathMap",
+              "type": "t_mapping(t_address,t_address)",
+              "src": "contracts/uniswapv2/PathOracle.sol:9"
+            },
+            {
+              "contract": "PathOracle",
+              "label": "favoredAssets",
+              "type": "t_array(t_address)dyn_storage",
+              "src": "contracts/uniswapv2/PathOracle.sol:10"
+            },
+            {
+              "contract": "PathOracle",
+              "label": "favoredLength",
+              "type": "t_uint256",
+              "src": "contracts/uniswapv2/PathOracle.sol:11"
+            },
+            {
+              "contract": "PathOracle",
+              "label": "FACTORY_ADDRESS",
+              "type": "t_address",
+              "src": "contracts/uniswapv2/PathOracle.sol:12"
+            },
+            {
+              "contract": "PathOracle",
+              "label": "Factory",
+              "type": "t_contract(IUniswapV2Factory)4233",
+              "src": "contracts/uniswapv2/PathOracle.sol:13"
+            }
+          ],
+          "types": {
+            "t_mapping(t_address,t_address)": {
+              "label": "mapping(address => address)"
+            },
+            "t_address": {
+              "label": "address"
+            },
+            "t_array(t_address)dyn_storage": {
+              "label": "address[]"
+            },
+            "t_uint256": {
+              "label": "uint256"
+            },
+            "t_contract(IUniswapV2Factory)4233": {
+              "label": "contract IUniswapV2Factory"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "PriceOracle": {
+        "src": "contracts/uniswapv2/PriceOracle.sol:9",
+        "version": {
+          "withMetadata": "510a24a5da8251117beeda3a56d51c170d27fec482af4c5d40c8964bea8f2184",
+          "withoutMetadata": "02d492e957ad9c85b6cc593fcc331b30a76b6a3a19a33d9fda249b85f598e3c0",
+          "linkedWithoutMetadata": "02d492e957ad9c85b6cc593fcc331b30a76b6a3a19a33d9fda249b85f598e3c0"
+        },
+        "inherit": [
+          "Ownable",
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "getMinAmount(address,uint256,address)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [
+            {
+              "contract": "PriceOracle",
+              "label": "pairPricing",
+              "type": "t_mapping(t_address,t_struct(Oracle)4043_storage)",
+              "src": "contracts/uniswapv2/PriceOracle.sol:17"
+            }
+          ],
+          "types": {
+            "t_mapping(t_address,t_struct(Oracle)4043_storage)": {
+              "label": "mapping(address => struct PriceOracle.Oracle)"
+            },
+            "t_address": {
+              "label": "address"
+            },
+            "t_struct(Oracle)4043_storage": {
+              "label": "struct PriceOracle.Oracle",
+              "members": [
+                {
+                  "label": "cumulative0",
+                  "type": "t_array(t_uint256)2_storage"
+                },
+                {
+                  "label": "cumulative1",
+                  "type": "t_array(t_uint256)2_storage"
+                },
+                {
+                  "label": "timestamp",
+                  "type": "t_array(t_uint256)2_storage"
+                },
+                {
+                  "label": "oldIndex",
+                  "type": "t_uint256"
+                }
+              ]
+            },
+            "t_array(t_uint256)2_storage": {
+              "label": "uint256[2]"
+            },
+            "t_uint256": {
+              "label": "uint256"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "IERC20Uniswap": {
+        "src": "contracts/uniswapv2/interfaces/IERC20.sol:5",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "name()",
+          "symbol()",
+          "decimals()",
+          "totalSupply()",
+          "balanceOf(address)",
+          "allowance(address,address)",
+          "approve(address,uint256)",
+          "transfer(address,uint256)",
+          "transferFrom(address,address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "IUniswapV2Callee": {
+        "src": "contracts/uniswapv2/interfaces/IUniswapV2Callee.sol:5",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "uniswapV2Call(address,uint256,uint256,bytes)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "IUniswapV2Factory": {
+        "src": "contracts/uniswapv2/interfaces/IUniswapV2Factory.sol:5",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "feeTo()",
+          "feeToSetter()",
+          "migrator()",
+          "getPair(address,address)",
+          "allPairs(uint256)",
+          "allPairsLength()",
+          "createPair(address,address)",
+          "setFeeTo(address)",
+          "setFeeToSetter(address)",
+          "setMigrator(address)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "IUniswapV2Pair": {
+        "src": "contracts/uniswapv2/interfaces/IUniswapV2Pair.sol:5",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "name()",
+          "symbol()",
+          "decimals()",
+          "totalSupply()",
+          "balanceOf(address)",
+          "allowance(address,address)",
+          "approve(address,uint256)",
+          "transfer(address,uint256)",
+          "transferFrom(address,address,uint256)",
+          "DOMAIN_SEPARATOR()",
+          "PERMIT_TYPEHASH()",
+          "nonces(address)",
+          "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)",
+          "MINIMUM_LIQUIDITY()",
+          "factory()",
+          "token0()",
+          "token1()",
+          "getReserves()",
+          "price0CumulativeLast()",
+          "price1CumulativeLast()",
+          "kLast()",
+          "mint(address)",
+          "burn(address)",
+          "swap(uint256,uint256,address,bytes)",
+          "skim(address)",
+          "sync()",
+          "initialize(address,address)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "IUniswapV2Router01": {
+        "src": "contracts/uniswapv2/interfaces/IUniswapV2Router01.sol:5",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "factory()",
+          "WETH()",
+          "addLiquidity(address,address,uint256,uint256,uint256,uint256,address,uint256)",
+          "addLiquidityETH(address,uint256,uint256,uint256,address,uint256)",
+          "removeLiquidity(address,address,uint256,uint256,uint256,address,uint256)",
+          "removeLiquidityETH(address,uint256,uint256,uint256,address,uint256)",
+          "removeLiquidityWithPermit(address,address,uint256,uint256,uint256,address,uint256,bool,uint8,bytes32,bytes32)",
+          "removeLiquidityETHWithPermit(address,uint256,uint256,uint256,address,uint256,bool,uint8,bytes32,bytes32)",
+          "swapExactTokensForTokens(uint256,uint256,address[],address,uint256)",
+          "swapTokensForExactTokens(uint256,uint256,address[],address,uint256)",
+          "swapExactETHForTokens(uint256,address[],address,uint256)",
+          "swapTokensForExactETH(uint256,uint256,address[],address,uint256)",
+          "swapExactTokensForETH(uint256,uint256,address[],address,uint256)",
+          "swapETHForExactTokens(uint256,address[],address,uint256)",
+          "quote(uint256,uint256,uint256)",
+          "getAmountOut(uint256,uint256,uint256)",
+          "getAmountIn(uint256,uint256,uint256)",
+          "getAmountsOut(uint256,address[])",
+          "getAmountsIn(uint256,address[])"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "IUniswapV2Router02": {
+        "src": "contracts/uniswapv2/interfaces/IUniswapV2Router02.sol:7",
+        "inherit": [
+          "IUniswapV2Router01"
+        ],
+        "libraries": [],
+        "methods": [
+          "removeLiquidityETHSupportingFeeOnTransferTokens(address,uint256,uint256,uint256,address,uint256)",
+          "removeLiquidityETHWithPermitSupportingFeeOnTransferTokens(address,uint256,uint256,uint256,address,uint256,bool,uint8,bytes32,bytes32)",
+          "swapExactTokensForTokensSupportingFeeOnTransferTokens(uint256,uint256,address[],address,uint256)",
+          "swapExactETHForTokensSupportingFeeOnTransferTokens(uint256,address[],address,uint256)",
+          "swapExactTokensForETHSupportingFeeOnTransferTokens(uint256,uint256,address[],address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "IWETH": {
+        "src": "contracts/uniswapv2/interfaces/IWETH.sol:5",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "deposit()",
+          "transfer(address,uint256)",
+          "withdraw(uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "TransferHelper": {
+        "src": "contracts/uniswapv2/libraries/TransferHelper.sol:6",
+        "version": {
+          "withMetadata": "0eff975a96b48a051f95a29f40e0bc7d029542ec51fee8455ee6ac94f241b0b8",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      }
+    },
+    {
+      "OwnableUpgradeable": {
+        "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:19",
+        "inherit": [
+          "ContextUpgradeable",
+          "Initializable"
+        ],
+        "libraries": [],
+        "methods": [
+          "owner()",
+          "renounceOwnership()",
+          "transferOwnership(address)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:20"
+            },
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "__gap",
+              "type": "t_array(t_uint256)49_storage",
+              "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:74"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address"
+            },
+            "t_array(t_uint256)49_storage": {
+              "label": "uint256[49]"
+            },
+            "t_uint256": {
+              "label": "uint256"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "Initializable": {
+        "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:18",
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:23"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:28"
+            }
+          ],
+          "types": {
+            "t_bool": {
+              "label": "bool"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "ContextUpgradeable": {
+        "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:16",
+        "inherit": [
+          "Initializable"
+        ],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [
+            {
+              "contract": "ContextUpgradeable",
+              "label": "__gap",
+              "type": "t_array(t_uint256)50_storage",
+              "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:31"
+            }
+          ],
+          "types": {
+            "t_array(t_uint256)50_storage": {
+              "label": "uint256[50]"
+            },
+            "t_uint256": {
+              "label": "uint256"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "Ownable": {
+        "src": "@openzeppelin/contracts/access/Ownable.sol:18",
+        "inherit": [
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "owner()",
+          "renounceOwnership()",
+          "transferOwnership(address)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "Ownable",
+            "src": "@openzeppelin/contracts/access/Ownable.sol:26"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "Ownable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts/access/Ownable.sol:19"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "ERC20": {
+        "src": "@openzeppelin/contracts/token/ERC20/ERC20.sol:33",
+        "version": {
+          "withMetadata": "f131ab53715463769f41008d72e5c6fdc6e91a1716eca96b988c90638acd51d2",
+          "withoutMetadata": "178b1377fc5853149c921b28f53ff2355d7c534d6a236c296423fd3b275859b7",
+          "linkedWithoutMetadata": "178b1377fc5853149c921b28f53ff2355d7c534d6a236c296423fd3b275859b7"
+        },
+        "inherit": [
+          "IERC20Metadata",
+          "IERC20",
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "(string,string)",
+          "name()",
+          "symbol()",
+          "decimals()",
+          "totalSupply()",
+          "balanceOf(address)",
+          "transfer(address,uint256)",
+          "allowance(address,address)",
+          "approve(address,uint256)",
+          "transferFrom(address,address,uint256)",
+          "increaseAllowance(address,uint256)",
+          "decreaseAllowance(address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "ERC20",
+            "src": "@openzeppelin/contracts/token/ERC20/ERC20.sol:52"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "ERC20",
+              "label": "_balances",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "@openzeppelin/contracts/token/ERC20/ERC20.sol:34"
+            },
+            {
+              "contract": "ERC20",
+              "label": "_allowances",
+              "type": "t_mapping(t_address,t_mapping(t_address,t_uint256))",
+              "src": "@openzeppelin/contracts/token/ERC20/ERC20.sol:36"
+            },
+            {
+              "contract": "ERC20",
+              "label": "_totalSupply",
+              "type": "t_uint256",
+              "src": "@openzeppelin/contracts/token/ERC20/ERC20.sol:38"
+            },
+            {
+              "contract": "ERC20",
+              "label": "_name",
+              "type": "t_string_storage",
+              "src": "@openzeppelin/contracts/token/ERC20/ERC20.sol:40"
+            },
+            {
+              "contract": "ERC20",
+              "label": "_symbol",
+              "type": "t_string_storage",
+              "src": "@openzeppelin/contracts/token/ERC20/ERC20.sol:41"
+            }
+          ],
+          "types": {
+            "t_mapping(t_address,t_uint256)": {
+              "label": "mapping(address => uint256)"
+            },
+            "t_address": {
+              "label": "address"
+            },
+            "t_uint256": {
+              "label": "uint256"
+            },
+            "t_mapping(t_address,t_mapping(t_address,t_uint256))": {
+              "label": "mapping(address => mapping(address => uint256))"
+            },
+            "t_string_storage": {
+              "label": "string"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "IERC20": {
+        "src": "@openzeppelin/contracts/token/ERC20/IERC20.sol:8",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "totalSupply()",
+          "balanceOf(address)",
+          "transfer(address,uint256)",
+          "allowance(address,address)",
+          "approve(address,uint256)",
+          "transferFrom(address,address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "IERC20Metadata": {
+        "src": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol:12",
+        "inherit": [
+          "IERC20"
+        ],
+        "libraries": [],
+        "methods": [
+          "name()",
+          "symbol()",
+          "decimals()"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "Context": {
+        "src": "@openzeppelin/contracts/utils/Context.sol:15",
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "Governance": {
+        "src": "contracts/Governance.sol:11",
+        "version": {
+          "withMetadata": "b51b70a01ddd6f094b08d4473ad03fecdd6b73f4957f48d5fd79f86e919cbd6f",
+          "withoutMetadata": "23aa0e819e563bcf78a947229fd69a59a80809747573ae32c10952d2ab9690fe",
+          "linkedWithoutMetadata": "23aa0e819e563bcf78a947229fd69a59a80809747573ae32c10952d2ab9690fe"
+        },
+        "inherit": [
+          "OwnableUpgradeable",
+          "ContextUpgradeable",
+          "Initializable"
+        ],
+        "libraries": [],
+        "methods": [
+          "initialize(address,address,address)",
+          "updateFee(address)",
+          "claimFee()",
+          "delegateFee(address)",
+          "withdrawFee()",
+          "govAuthTransfer(address,address,uint256)",
+          "govAuthTransferFrom(address,address,address,uint256)",
+          "depositFee(uint256,uint256)",
+          "claimBTC(uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [
+            {
+              "contract": "Governance",
+              "label": "feeBalance",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Governance.sol:12"
+            },
+            {
+              "contract": "Governance",
+              "label": "tokenAddress",
+              "type": "t_address",
+              "src": "contracts/Governance.sol:13"
+            },
+            {
+              "contract": "Governance",
+              "label": "feeLedger",
+              "type": "t_mapping(t_address,t_struct(FeeLedger)989_storage)",
+              "src": "contracts/Governance.sol:19"
+            },
+            {
+              "contract": "Governance",
+              "label": "totalFeeCollected",
+              "type": "t_uint256",
+              "src": "contracts/Governance.sol:20"
+            },
+            {
+              "contract": "Governance",
+              "label": "GFI",
+              "type": "t_contract(iGravityToken)3822",
+              "src": "contracts/Governance.sol:21"
+            },
+            {
+              "contract": "Governance",
+              "label": "WETH",
+              "type": "t_contract(IERC20)916",
+              "src": "contracts/Governance.sol:22"
+            },
+            {
+              "contract": "Governance",
+              "label": "WBTC",
+              "type": "t_contract(IERC20)916",
+              "src": "contracts/Governance.sol:23"
+            }
+          ],
+          "types": {
+            "t_mapping(t_address,t_uint256)": {
+              "label": "mapping(address => uint256)"
+            },
+            "t_address": {
+              "label": "address"
+            },
+            "t_uint256": {
+              "label": "uint256"
+            },
+            "t_mapping(t_address,t_struct(FeeLedger)989_storage)": {
+              "label": "mapping(address => struct Governance.FeeLedger)"
+            },
+            "t_struct(FeeLedger)989_storage": {
+              "label": "struct Governance.FeeLedger",
+              "members": [
+                {
+                  "label": "totalFeeCollected_LastClaim",
+                  "type": "t_uint256"
+                },
+                {
+                  "label": "totalSupply_LastClaim",
+                  "type": "t_uint256"
+                },
+                {
+                  "label": "userBalance_LastClaim",
+                  "type": "t_uint256"
+                }
+              ]
+            },
+            "t_contract(iGravityToken)3822": {
+              "label": "contract iGravityToken"
+            },
+            "t_contract(IERC20)916": {
+              "label": "contract IERC20"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "GravityIDO": {
+        "src": "contracts/GravityIDO.sol:10",
+        "version": {
+          "withMetadata": "ce79b9a18475e67f8d6e6803255ad0016b10a0c1c85165368da331b1a1151d5a",
+          "withoutMetadata": "542460c078536f2601ef8eb79f773f547d41b6d1ab3a7abb2f4351028e23173e",
+          "linkedWithoutMetadata": "542460c078536f2601ef8eb79f773f547d41b6d1ab3a7abb2f4351028e23173e"
+        },
+        "inherit": [
+          "Ownable",
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "(address,address,uint256,bool)",
+          "getIOUAddress()",
+          "setWETH_ADDRESS(address)",
+          "setGFI_ADDRESS(address)",
+          "getWETH_ADDRESS()",
+          "getGFI_ADDRESS()",
+          "getTotalWETHCollected()",
+          "buyStake(uint256)",
+          "claimStake()",
+          "withdraw()",
+          "withdrawAll()"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "GravityIDO",
+            "src": "contracts/GravityIDO.sol:35"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "saleStartTime",
+            "src": "contracts/GravityIDO.sol:25"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "saleEndTime",
+            "src": "contracts/GravityIDO.sol:26"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "GravityIDO",
+              "label": "WETH",
+              "type": "t_contract(IERC20)916",
+              "src": "contracts/GravityIDO.sol:11"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "GFI",
+              "type": "t_contract(IERC20)916",
+              "src": "contracts/GravityIDO.sol:12"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "IOU",
+              "type": "t_contract(IOUToken)2739",
+              "src": "contracts/GravityIDO.sol:13"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "WETH_ADDRESS",
+              "type": "t_address",
+              "src": "contracts/GravityIDO.sol:14"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "GFI_ADDRESS",
+              "type": "t_address",
+              "src": "contracts/GravityIDO.sol:15"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "totalWETHCollected",
+              "type": "t_uint256",
+              "src": "contracts/GravityIDO.sol:20"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "GFIforSale",
+              "type": "t_uint256",
+              "src": "contracts/GravityIDO.sol:23"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "WETHifSoldOut",
+              "type": "t_uint256",
+              "src": "contracts/GravityIDO.sol:24"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "saleStartTime",
+              "type": "t_uint256",
+              "src": "contracts/GravityIDO.sol:25"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "saleEndTime",
+              "type": "t_uint256",
+              "src": "contracts/GravityIDO.sol:26"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "contributedBal",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/GravityIDO.sol:28"
+            },
+            {
+              "contract": "GravityIDO",
+              "label": "ownerShareWithdrawn",
+              "type": "t_bool",
+              "src": "contracts/GravityIDO.sol:29"
+            }
+          ],
+          "types": {
+            "t_contract(IERC20)916": {
+              "label": "contract IERC20"
+            },
+            "t_contract(IOUToken)2739": {
+              "label": "contract IOUToken"
+            },
+            "t_address": {
+              "label": "address"
+            },
+            "t_uint256": {
+              "label": "uint256"
+            },
+            "t_mapping(t_address,t_uint256)": {
+              "label": "mapping(address => uint256)"
+            },
+            "t_bool": {
+              "label": "bool"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "GravityToken": {
+        "src": "contracts/GravityToken.sol:8",
+        "version": {
+          "withMetadata": "321f32d67bca52dd7ecfe282946264761454d4213b0e32dc3140c47d44810fcc",
+          "withoutMetadata": "a4bb05ea64dc8934d044d61be8d448b12b9d6a4eca772035602be34ddbdd63f3",
+          "linkedWithoutMetadata": "a4bb05ea64dc8934d044d61be8d448b12b9d6a4eca772035602be34ddbdd63f3"
+        },
+        "inherit": [
+          "Ownable",
+          "ERC20",
+          "IERC20Metadata",
+          "IERC20",
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "(string,string)",
+          "setGovernanceAddress(address)",
+          "changeGovernanceForwarding(bool)",
+          "transfer(address,uint256)",
+          "transferFrom(address,address,uint256)",
+          "burn(uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "GravityToken",
+            "src": "contracts/GravityToken.sol:15"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "GravityToken",
+              "label": "GOVERNANCE_ADDRESS",
+              "type": "t_address",
+              "src": "contracts/GravityToken.sol:11"
+            },
+            {
+              "contract": "GravityToken",
+              "label": "govenor",
+              "type": "t_contract(iGovernance)2688",
+              "src": "contracts/GravityToken.sol:12"
+            },
+            {
+              "contract": "GravityToken",
+              "label": "applyGovernanceForwarding",
+              "type": "t_bool",
+              "src": "contracts/GravityToken.sol:13"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address"
+            },
+            "t_contract(iGovernance)2688": {
+              "label": "contract iGovernance"
+            },
+            "t_bool": {
+              "label": "bool"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "iGovernance": {
+        "src": "contracts/VestingV2.sol:154",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "claimFee()"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "IOUToken": {
+        "src": "contracts/IOUToken.sol:8",
+        "version": {
+          "withMetadata": "1df73524a2528d84df0cba3ec8cf0f0a2b4138dd8174889a6fabc5eddeb89279",
+          "withoutMetadata": "1d719411a77ba8f8081d9ae63afc5eedc3231f5cec2395495b1cfee54f235509",
+          "linkedWithoutMetadata": "1d719411a77ba8f8081d9ae63afc5eedc3231f5cec2395495b1cfee54f235509"
+        },
+        "inherit": [
+          "Ownable",
+          "ERC20",
+          "IERC20Metadata",
+          "IERC20",
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "(string,string)",
+          "mintIOU(address,uint256)",
+          "burnIOU(address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "IOUToken",
+            "src": "contracts/IOUToken.sol:10"
+          }
+        ],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "Locking": {
+        "src": "contracts/Locking.sol:8",
+        "version": {
+          "withMetadata": "3097941a9413c5de01c5029645ed00189bade1626ec6edd030a0d2f0d15fa6e0",
+          "withoutMetadata": "d62cb4160a536b99be8503d501b6b91489ede66bcb51aaedcebe9f747f28e0bd",
+          "linkedWithoutMetadata": "d62cb4160a536b99be8503d501b6b91489ede66bcb51aaedcebe9f747f28e0bd"
+        },
+        "inherit": [
+          "Ownable",
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "(address,address,address)",
+          "setGovenorAddress(address)",
+          "setFeeCollectionBool(bool)",
+          "getLastFeeUpdate()",
+          "addUser(address,uint256)",
+          "updateWithdrawableFee()",
+          "collectFee()",
+          "claimGFI()",
+          "withdrawAll()"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "Locking",
+            "src": "contracts/Locking.sol:23"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "Locking",
+              "label": "GFIbalance",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Locking.sol:9"
+            },
+            {
+              "contract": "Locking",
+              "label": "withdrawableFee",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/Locking.sol:10"
+            },
+            {
+              "contract": "Locking",
+              "label": "users",
+              "type": "t_array(t_address)dyn_storage",
+              "src": "contracts/Locking.sol:11"
+            },
+            {
+              "contract": "Locking",
+              "label": "userCount",
+              "type": "t_uint256",
+              "src": "contracts/Locking.sol:12"
+            },
+            {
+              "contract": "Locking",
+              "label": "totalBalance",
+              "type": "t_uint256",
+              "src": "contracts/Locking.sol:13"
+            },
+            {
+              "contract": "Locking",
+              "label": "lastFeeUpdate",
+              "type": "t_uint256",
+              "src": "contracts/Locking.sol:14"
+            },
+            {
+              "contract": "Locking",
+              "label": "GFI",
+              "type": "t_contract(IERC20)916",
+              "src": "contracts/Locking.sol:15"
+            },
+            {
+              "contract": "Locking",
+              "label": "WETH",
+              "type": "t_contract(IERC20)916",
+              "src": "contracts/Locking.sol:16"
+            },
+            {
+              "contract": "Locking",
+              "label": "Governor",
+              "type": "t_contract(iGovernance)3164",
+              "src": "contracts/Locking.sol:17"
+            },
+            {
+              "contract": "Locking",
+              "label": "GOVERANCE_ADDRESS",
+              "type": "t_address",
+              "src": "contracts/Locking.sol:18"
+            },
+            {
+              "contract": "Locking",
+              "label": "LockStart",
+              "type": "t_uint256",
+              "src": "contracts/Locking.sol:19"
+            },
+            {
+              "contract": "Locking",
+              "label": "LockEnd",
+              "type": "t_uint256",
+              "src": "contracts/Locking.sol:20"
+            },
+            {
+              "contract": "Locking",
+              "label": "stopFeeCollection",
+              "type": "t_bool",
+              "src": "contracts/Locking.sol:21"
+            }
+          ],
+          "types": {
+            "t_mapping(t_address,t_uint256)": {
+              "label": "mapping(address => uint256)"
+            },
+            "t_address": {
+              "label": "address"
+            },
+            "t_uint256": {
+              "label": "uint256"
+            },
+            "t_array(t_address)dyn_storage": {
+              "label": "address[]"
+            },
+            "t_contract(IERC20)916": {
+              "label": "contract IERC20"
+            },
+            "t_contract(iGovernance)3164": {
+              "label": "contract iGovernance"
+            },
+            "t_bool": {
+              "label": "bool"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "MockToken": {
+        "src": "contracts/MockERC20.sol:6",
+        "version": {
+          "withMetadata": "a7b2a31cd735b3101b7b1f51e909195177495612157257cab525a4948fb969da",
+          "withoutMetadata": "4a9c490c255236d792ddd8a3117180277449e210dd9166df0c64e906ad630b1e",
+          "linkedWithoutMetadata": "4a9c490c255236d792ddd8a3117180277449e210dd9166df0c64e906ad630b1e"
+        },
+        "inherit": [
+          "ERC20",
+          "IERC20Metadata",
+          "IERC20",
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "(address,address,address,address)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "MockToken",
+            "src": "contracts/MockERC20.sol:7"
+          }
+        ],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "VestingV2": {
+        "src": "contracts/VestingV2.sol:8",
+        "version": {
+          "withMetadata": "17891c1d8f5c1deb56e0b334beba34d78139697078df9b7ae68c75c4a71296ea",
+          "withoutMetadata": "3bdf0c07d5f062e0559d78f28379533711e37221bec52b3bdac2bbc4ec7c3dca",
+          "linkedWithoutMetadata": "3bdf0c07d5f062e0559d78f28379533711e37221bec52b3bdac2bbc4ec7c3dca"
+        },
+        "inherit": [
+          "Ownable",
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "(address,address,address,uint256,uint256)",
+          "setGovenorAddress(address)",
+          "setFeeCollectionBool(bool)",
+          "getLastFeeUpdate()",
+          "setCallersShare(uint256)",
+          "addUser(address,uint256)",
+          "updateWithdrawableFee()",
+          "collectFee()",
+          "claimGFI()",
+          "withdrawAll()"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "VestingV2",
+            "src": "contracts/VestingV2.sol:27"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "callersShare",
+            "src": "contracts/VestingV2.sol:11"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "VestingV2",
+              "label": "GFIbalance",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/VestingV2.sol:9"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "withdrawableFee",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/VestingV2.sol:10"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "callersShare",
+              "type": "t_uint256",
+              "src": "contracts/VestingV2.sol:11"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "users",
+              "type": "t_array(t_address)dyn_storage",
+              "src": "contracts/VestingV2.sol:12"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "userCount",
+              "type": "t_uint256",
+              "src": "contracts/VestingV2.sol:13"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "totalBalance",
+              "type": "t_uint256",
+              "src": "contracts/VestingV2.sol:14"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "lastFeeUpdate",
+              "type": "t_uint256",
+              "src": "contracts/VestingV2.sol:15"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "subVestingPeriodTimeStamp",
+              "type": "t_array(t_uint256)10_storage",
+              "src": "contracts/VestingV2.sol:16"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "subVestingPeriodClaimed",
+              "type": "t_mapping(t_address,t_array(t_bool)10_storage)",
+              "src": "contracts/VestingV2.sol:17"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "periodAmount",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts/VestingV2.sol:18"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "GFI",
+              "type": "t_contract(IERC20)916",
+              "src": "contracts/VestingV2.sol:19"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "WETH",
+              "type": "t_contract(IERC20)916",
+              "src": "contracts/VestingV2.sol:20"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "Governor",
+              "type": "t_contract(iGovernance)3799",
+              "src": "contracts/VestingV2.sol:21"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "GOVERANCE_ADDRESS",
+              "type": "t_address",
+              "src": "contracts/VestingV2.sol:22"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "LockStart",
+              "type": "t_uint256",
+              "src": "contracts/VestingV2.sol:23"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "LockEnd",
+              "type": "t_uint256",
+              "src": "contracts/VestingV2.sol:24"
+            },
+            {
+              "contract": "VestingV2",
+              "label": "stopFeeCollection",
+              "type": "t_bool",
+              "src": "contracts/VestingV2.sol:25"
+            }
+          ],
+          "types": {
+            "t_mapping(t_address,t_uint256)": {
+              "label": "mapping(address => uint256)"
+            },
+            "t_address": {
+              "label": "address"
+            },
+            "t_uint256": {
+              "label": "uint256"
+            },
+            "t_array(t_address)dyn_storage": {
+              "label": "address[]"
+            },
+            "t_array(t_uint256)10_storage": {
+              "label": "uint256[10]"
+            },
+            "t_mapping(t_address,t_array(t_bool)10_storage)": {
+              "label": "mapping(address => bool[10])"
+            },
+            "t_array(t_bool)10_storage": {
+              "label": "bool[10]"
+            },
+            "t_bool": {
+              "label": "bool"
+            },
+            "t_contract(IERC20)916": {
+              "label": "contract IERC20"
+            },
+            "t_contract(iGovernance)3799": {
+              "label": "contract iGovernance"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "iGravityToken": {
+        "src": "contracts/interfaces/iGravityToken.sol:7",
+        "inherit": [
+          "IERC20"
+        ],
+        "libraries": [],
+        "methods": [
+          "setGovernanceAddress(address)",
+          "changeGovernanceForwarding(bool)",
+          "burn(uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "PathOracle": {
+        "src": "contracts/uniswapv2/PathOracle.sol:8",
+        "version": {
+          "withMetadata": "2f126aec0d47da2f85696f496a4a1488f17d8cf8c33f5e7ab5182632030ab9ca",
+          "withoutMetadata": "2ead7a373acfb79854b26f67390341ddc1007ca20180eecd07cb48d69f057a00",
+          "linkedWithoutMetadata": "2ead7a373acfb79854b26f67390341ddc1007ca20180eecd07cb48d69f057a00"
+        },
+        "inherit": [
+          "Ownable",
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "(address[],uint256,address)",
+          "alterPath(address,address)",
+          "appendPath(address,address)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "PathOracle",
+            "src": "contracts/uniswapv2/PathOracle.sol:16"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "PathOracle",
+              "label": "pathMap",
+              "type": "t_mapping(t_address,t_address)",
+              "src": "contracts/uniswapv2/PathOracle.sol:9"
+            },
+            {
+              "contract": "PathOracle",
+              "label": "favoredAssets",
+              "type": "t_array(t_address)dyn_storage",
+              "src": "contracts/uniswapv2/PathOracle.sol:10"
+            },
+            {
+              "contract": "PathOracle",
+              "label": "favoredLength",
+              "type": "t_uint256",
+              "src": "contracts/uniswapv2/PathOracle.sol:11"
+            },
+            {
+              "contract": "PathOracle",
+              "label": "FACTORY_ADDRESS",
+              "type": "t_address",
+              "src": "contracts/uniswapv2/PathOracle.sol:12"
+            },
+            {
+              "contract": "PathOracle",
+              "label": "Factory",
+              "type": "t_contract(IUniswapV2Factory)4200",
+              "src": "contracts/uniswapv2/PathOracle.sol:13"
+            }
+          ],
+          "types": {
+            "t_mapping(t_address,t_address)": {
+              "label": "mapping(address => address)"
+            },
+            "t_address": {
+              "label": "address"
+            },
+            "t_array(t_address)dyn_storage": {
+              "label": "address[]"
+            },
+            "t_uint256": {
+              "label": "uint256"
+            },
+            "t_contract(IUniswapV2Factory)4200": {
+              "label": "contract IUniswapV2Factory"
+            }
+          },
+          "layoutVersion": "1.1"
+        }
+      },
+      "PriceOracle": {
+        "src": "contracts/uniswapv2/PriceOracle.sol:9",
+        "version": {
+          "withMetadata": "985e16a0498e4f452eb065e249c9d75afc4f4c6f5c74018b661304b60aed1a5a",
+          "withoutMetadata": "142268a8f535855a2f2f9b83232f5de46435abb4fda2169e79a70711282442ac",
+          "linkedWithoutMetadata": "142268a8f535855a2f2f9b83232f5de46435abb4fda2169e79a70711282442ac"
+        },
+        "inherit": [
+          "Ownable",
+          "Context"
+        ],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "IERC20Uniswap": {
+        "src": "contracts/uniswapv2/interfaces/IERC20.sol:5",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "name()",
+          "symbol()",
+          "decimals()",
+          "totalSupply()",
+          "balanceOf(address)",
+          "allowance(address,address)",
+          "approve(address,uint256)",
+          "transfer(address,uint256)",
+          "transferFrom(address,address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "IUniswapV2Callee": {
+        "src": "contracts/uniswapv2/interfaces/IUniswapV2Callee.sol:5",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "uniswapV2Call(address,uint256,uint256,bytes)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "IUniswapV2Factory": {
+        "src": "contracts/uniswapv2/interfaces/IUniswapV2Factory.sol:5",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "feeTo()",
+          "feeToSetter()",
+          "migrator()",
+          "getPair(address,address)",
+          "allPairs(uint256)",
+          "allPairsLength()",
+          "createPair(address,address)",
+          "setFeeTo(address)",
+          "setFeeToSetter(address)",
+          "setMigrator(address)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "IUniswapV2Pair": {
+        "src": "contracts/uniswapv2/interfaces/IUniswapV2Pair.sol:5",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "name()",
+          "symbol()",
+          "decimals()",
+          "totalSupply()",
+          "balanceOf(address)",
+          "allowance(address,address)",
+          "approve(address,uint256)",
+          "transfer(address,uint256)",
+          "transferFrom(address,address,uint256)",
+          "DOMAIN_SEPARATOR()",
+          "PERMIT_TYPEHASH()",
+          "nonces(address)",
+          "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)",
+          "MINIMUM_LIQUIDITY()",
+          "factory()",
+          "token0()",
+          "token1()",
+          "getReserves()",
+          "price0CumulativeLast()",
+          "price1CumulativeLast()",
+          "kLast()",
+          "mint(address)",
+          "burn(address)",
+          "swap(uint256,uint256,address,bytes)",
+          "skim(address)",
+          "sync()",
+          "initialize(address,address)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "IUniswapV2Router01": {
+        "src": "contracts/uniswapv2/interfaces/IUniswapV2Router01.sol:5",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "factory()",
+          "WETH()",
+          "addLiquidity(address,address,uint256,uint256,uint256,uint256,address,uint256)",
+          "addLiquidityETH(address,uint256,uint256,uint256,address,uint256)",
+          "removeLiquidity(address,address,uint256,uint256,uint256,address,uint256)",
+          "removeLiquidityETH(address,uint256,uint256,uint256,address,uint256)",
+          "removeLiquidityWithPermit(address,address,uint256,uint256,uint256,address,uint256,bool,uint8,bytes32,bytes32)",
+          "removeLiquidityETHWithPermit(address,uint256,uint256,uint256,address,uint256,bool,uint8,bytes32,bytes32)",
+          "swapExactTokensForTokens(uint256,uint256,address[],address,uint256)",
+          "swapTokensForExactTokens(uint256,uint256,address[],address,uint256)",
+          "swapExactETHForTokens(uint256,address[],address,uint256)",
+          "swapTokensForExactETH(uint256,uint256,address[],address,uint256)",
+          "swapExactTokensForETH(uint256,uint256,address[],address,uint256)",
+          "swapETHForExactTokens(uint256,address[],address,uint256)",
+          "quote(uint256,uint256,uint256)",
+          "getAmountOut(uint256,uint256,uint256)",
+          "getAmountIn(uint256,uint256,uint256)",
+          "getAmountsOut(uint256,address[])",
+          "getAmountsIn(uint256,address[])"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "IUniswapV2Router02": {
+        "src": "contracts/uniswapv2/interfaces/IUniswapV2Router02.sol:7",
+        "inherit": [
+          "IUniswapV2Router01"
+        ],
+        "libraries": [],
+        "methods": [
+          "removeLiquidityETHSupportingFeeOnTransferTokens(address,uint256,uint256,uint256,address,uint256)",
+          "removeLiquidityETHWithPermitSupportingFeeOnTransferTokens(address,uint256,uint256,uint256,address,uint256,bool,uint8,bytes32,bytes32)",
+          "swapExactTokensForTokensSupportingFeeOnTransferTokens(uint256,uint256,address[],address,uint256)",
+          "swapExactETHForTokensSupportingFeeOnTransferTokens(uint256,address[],address,uint256)",
+          "swapExactTokensForETHSupportingFeeOnTransferTokens(uint256,uint256,address[],address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "IWETH": {
+        "src": "contracts/uniswapv2/interfaces/IWETH.sol:5",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "deposit()",
+          "transfer(address,uint256)",
+          "withdraw(uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      },
+      "TransferHelper": {
+        "src": "contracts/uniswapv2/libraries/TransferHelper.sol:6",
+        "version": {
+          "withMetadata": "0eff975a96b48a051f95a29f40e0bc7d029542ec51fee8455ee6ac94f241b0b8",
+          "withoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db",
+          "linkedWithoutMetadata": "a64c6cf9c6ba9368f5132c93a0196b3204a7963dbb4dd05dfddb4ab23126b8db"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1"
+        }
+      }
+    },
+    {
       "CalHash": {
         "src": "contracts/CalHash.sol:5",
         "version": {
