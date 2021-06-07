@@ -18,7 +18,7 @@ contract EarningsManager {
     address public GOVERNOR_ADDRESS;
     address public ROUTER_ADDRESS;
     //address public LOGISTICS_ADDRESS;
-    address[10] public swapPath; 
+    address[10] public swapPath; //Paths will only ever be 4 long unless algo is upgraded
     mapping(address => uint) public lastCumulative0;
     mapping(address => uint) public lastCumulative1;
     uint lastTimeStamp;
