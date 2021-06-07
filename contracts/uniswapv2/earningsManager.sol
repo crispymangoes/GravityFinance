@@ -8,7 +8,7 @@ import "./interfaces/IERC20.sol";
 import "./interfaces/IUniswapV2Pair.sol";
 import "./interfaces/IUniswapV2Factory.sol";
 import "./interfaces/IUniswapV2Router02.sol";
-import "./interfaces/iLogistics.sol";
+import "./interfaces/IPathOracle.sol";
 
 //TODO make it so that the governance address is passed into the factory on craetion, then it is relayed to the pair contract and to this contract, and initialized in the
 contract EarningsManager {
@@ -17,20 +17,21 @@ contract EarningsManager {
     address public WBTC_ADDRESS;
     address public GOVERNOR_ADDRESS;
     address public ROUTER_ADDRESS;
-    address public LOGISTICS_ADDRESS;
-    address[2] public SWAP_PATH_token0_WETH;
-    address[2] public SWAP_PATH_token0_WBTC;
-    address[2] public SWAP_PATH_token1_WETH;
-    address[2] public SWAP_PATH_token1_WBTC;
-    //Three swaps is the max you will have
-    //SwapPath[3] public SWAP_PATH_EARNINGS; // the swap path to convert GFI earnings(wETH) to Liquidity assets
-    //SwapPath[3] public SWAP_PATH_FEES; // the swap path to convert pool fees(token0 and token1) into wETH and wBTC
+    //address public LOGISTICS_ADDRESS;
+    address[10] public swapPath; 
+    mapping(address => uint) public lastCumulative0;
+    mapping(address => uint) public lastCumulative1;
+    uint lastTimeStamp;
+    uint public swapCount;//Number of assets in swap path
+    uint public slippage;
+
 
     OZ_IERC20 WETH;
     OZ_IERC20 WBTC;
     iGovernance Governor;
     IUniswapV2Pair LiquidityPool;
-    iLogistics logistics = iLogistics(LOGISTICS_ADDRESS);
+    IUniswapV2Factory Factory;
+    IPathOracle PathOracle;
     
 
     modifier onlySwap() {
@@ -44,10 +45,14 @@ contract EarningsManager {
         address governor,
         address weth,
         address wbtc,
-        address router
+        address router,
+        address pathOracle
     ) public {
         SWAP_ADDRESS = msg.sender;
         LiquidityPool = IUniswapV2Pair(SWAP_ADDRESS);
+        Factory = IUniswapV2Factory(LiquidityPool.factory());
+        PathOracle = IPathOracle(pathOracle);
+        PathOracle.appendPath(LiquidityPool.token0(), LiquidityPool.token1());
         GOVERNOR_ADDRESS = governor;
         Governor = iGovernance(GOVERNOR_ADDRESS);
         WETH_ADDRESS = weth;
@@ -55,14 +60,89 @@ contract EarningsManager {
         WETH = OZ_IERC20(WETH_ADDRESS);
         WBTC = OZ_IERC20(WBTC_ADDRESS);
         ROUTER_ADDRESS = router;
-        //logistics.createSwapPaths(LiquidityPool.factory(), WETH_ADDRESS, WBTC_ADDRESS, LiquidityPool.token0(), LiquidityPool.token1());
-        //logistics.updateOracles(LiquidityPool.factory());
+        slippage = 95;
 
     }
 
 
-    function updateSwapPaths(address factoryAddress) external onlySwap {
-        logistics.createSwapPaths(LiquidityPool.factory(), WETH_ADDRESS, WBTC_ADDRESS, LiquidityPool.token0(), LiquidityPool.token1());
+    function updateSwapPath() external onlySwap {
+        //Set the swapPath here by using path oracle to go through the path.
+        //first need to check what the first swap of is if using asset A or asset B, if the first swap is the other asset, the use that asset to start the swapPath\
+        address token0 = LiquidityPool.token0();
+        address token1 = LiquidityPool.token1();
+        if(PathOracle.stepPath(token0) == token1){
+            swapPath[0] = token0;
+            swapPath[1] = token1;
+        }
+        else if(PathOracle.stepPath(token1) == token0){
+            swapPath[0] = token1;
+            swapPath[1] = token0;
+        }
+        else{
+            require(false, "Path does not exist!");
+        }
+        bool done;
+        uint i = 2;
+        swapCount = 2;
+        while (i < 10){ //Max amount of assets in the swap is 10
+            if(!done){
+                if(swapPath[i-1] == WETH_ADDRESS || swapPath[i-1] == WBTC_ADDRESS){//If the previous path went to wETH or wBTC, then set done to true, this makes it so that the next iteration adds address(0) as the path
+                    done = true;
+                }
+                swapPath[i] = PathOracle.stepPath(swapPath[i-1]);
+                swapCount++;
+            }
+            else {
+                swapPath[i] = address(0);
+            }
+        }
+        updatePrice();
+    }
+
+    function checkPrice() external returns(uint timeTillValid) {
+        if (lastTimeStamp + 600 < block.timestamp){
+            //10 min window has already passed, so update all cumulatives
+            timeTillValid = 300; //wait 5 min
+            updatePrice();
+        }
+        else if (lastTimeStamp + 300 > block.timestamp){
+            //Current prices have not matured, so wait until they do
+            timeTillValid = (lastTimeStamp + 300) - block.timestamp;
+        }
+        else {
+            //If we made it here, then we are in a time frame where the cumulatives are valid, so use them
+            timeTillValid = 0; //return a zero, so that the calling function knows it is oaky to use the cumulatives to trade
+        }
+    }
+
+    function updatePrice() internal {
+        address pairAddress;
+        for (uint i=0; i<swapCount-1; i++){
+            pairAddress = Factory.getPair(swapPath[i], swapPath[i+1]);
+            lastCumulative0[pairAddress] = IUniswapV2Pair(pairAddress).price0CumulativeLast();
+            lastCumulative1[pairAddress] = IUniswapV2Pair(pairAddress).price1CumulativeLast();
+        }
+        lastTimeStamp = block.timestamp;
+    }
+
+    function calculateMinAmount(address from, address to, uint amount) internal returns(uint minAmount){
+        //Make sure prices are up to date
+        if(lastTimeStamp + 600 > block.timestamp && lastTimeStamp + 300 < block.timestamp){
+            uint TWAP;
+            IUniswapV2Pair Pair = IUniswapV2Pair(Factory.getPair(from, to));
+            require(address(Pair) != address(0), "Pair does not exist!");
+            if(Pair.token0() == from){ //Swapping token0 for token1 use cumulative0
+                TWAP = (Pair.price0CumulativeLast() - lastCumulative0[address(Pair)]) / (block.timestamp - lastTimeStamp);
+                minAmount = slippage * TWAP * amount / 100; //Pair price must be within 5% to swap
+            }
+        }
+        else {
+            updatePrice();
+        }
+    }
+
+    function changeSlippage(uint _slippage) external onlySwap{
+        slippage = _slippage;
     }
 
     function manageEarnings(address caller) external onlySwap {
@@ -73,65 +153,44 @@ contract EarningsManager {
         //Then go through normal liquidity deposit route and recieve LP tokens
         //Once normal LP liquidity is done, then have this contract burn it's LP tokens, so it would call a special function in the pair contract that only this contract can call
         //Use LPToken.balanceOf(address(this))
+
+        /** Basically manageFees but in reverse. If the last element isn't wETH, then go to the 2nd to last, and that should be wETH */
     }
 
     function manageFees() external onlySwap {
-        //Function that takes all fees from asset swaps and converts them into half wETH and half wBTC
-
-        //first check if any of the assets are wBTC or wETH, if one is, then swap the other one into that asset(wETH or wBTC)
-        // If neither is, or the pair is both of them, then just exchange the one with a smaller amount into the other
-
-        //Now that you have 1 asset, divide your total in 2, then remove the last 0 place. Then take one half and
-        // convert it into wBTC and the other into wETH.
-
-        //If one of the assets was wETH or wBTC, then convert the other into wETH or wBTC, then divide that in half and buy the other one you need
-
-        //If the two assets are wBTC and wETH, then I think you do the same thing as the line above cuz they won't be evenly valued
         address t0 = LiquidityPool.token0();
         address t1 = LiquidityPool.token1();
         OZ_IERC20 token0 = OZ_IERC20(t0);
         OZ_IERC20 token1 = OZ_IERC20(t1);
+        OZ_IERC20 token;
         address pairAddress;
-        uint256 token1Bal = token1.balanceOf(address(this));
-        if (
-            address(token0) == WETH_ADDRESS || address(token0) == WBTC_ADDRESS
-        ) {
-            //Convert token1 into whatever token0 is
-            address[] memory path = new address[](2);
-            pairAddress = IUniswapV2Factory(LiquidityPool.factory()).getPair(
-                t1,
-                t0
-            );
-            if (pairAddress != address(0)) {
-                //Means we found a valid swap pair on Gravity
-
-                require(
-                    token1.approve(ROUTER_ADDRESS, token1Bal),
-                    "Failed to approve Router to spend token1"
+        uint tokenBal;
+        address[] memory path = new address[](2);
+        require(token0.balanceOf(address(this)) > 0 || token1.balanceOf(address(this)) > 0, "There are no fees to convert to wETH/wBTC" );
+        for (uint i=0; i<swapCount-1; i++){
+            token = OZ_IERC20(swapPath[i]);
+            tokenBal = token.balanceOf(address(this));
+            if(swapPath[i] == WETH_ADDRESS || swapPath[i] == WBTC_ADDRESS){tokenBal/2;} //Only swap half the tokens if swapping from wETH or wBTC
+            require(
+                    token.approve(ROUTER_ADDRESS, tokenBal),
+                    "Failed to approve Router to spend tokens"
                 );
-                path[0] = t1;
-                path[1] = t0;
-                IUniswapV2Router02(ROUTER_ADDRESS).swapExactTokensForTokens(
-                    token1Bal,
-                    0,
+            path[0] = swapPath[i]; //from
+            path[1] = swapPath[i+1]; //to
+            IUniswapV2Router02(ROUTER_ADDRESS).swapExactTokensForTokens(
+                    tokenBal,
+                    calculateMinAmount(swapPath[i], swapPath[i+1], tokenBal),
                     path,
                     address(this),
                     block.timestamp
                 );
-            }
-        } else if (
-            address(token1) == WETH_ADDRESS || address(token1) == WBTC_ADDRESS
-        ) {
-            //convert token0 into whatever token1 is
-        } else {
-            //Neither token 0 nor 1 are WETH or WBTC, so convert token1 into token0 or token0 into token1, depending on which one has a pair with wBTC or wETH
         }
-        //require(token0.approve(address(UniswapV2Router02), amountIn), 'approve failed.');
-
-        Governor.depositFee(0, 0);
+        token0 = OZ_IERC20(WETH_ADDRESS);
+        token1 = OZ_IERC20(WBTC_ADDRESS);
+        uint token0Bal = token0.balanceOf(address(this));
+        uint token1Bal = token1.balanceOf(address(this));
+        token0.approve(GOVERNOR_ADDRESS, token0Bal);
+        token1.approve(GOVERNOR_ADDRESS, token1Bal);
+        Governor.depositFee(token0Bal, token1Bal); 
     }
-
-    //function setSwapPath(address[] path_token0_weth, address[] path_token0_wbtc, address[] path_token1_weth, address[] path_token1_wbtc) external{
-
-    //}
 }

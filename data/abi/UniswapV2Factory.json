@@ -20,6 +20,11 @@
         "internalType": "address",
         "name": "_wbtc",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_pathOracle",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -199,6 +204,19 @@
       }
     ],
     "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "pathOracle",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {

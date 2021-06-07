@@ -85,13 +85,13 @@ contract UniswapV2Pair is UniswapV2ERC20 {
     }
 
     // called once by the factory at time of deployment
-    function initialize(address _token0, address _token1, address governor, address weth, address wbtc, address router) external {
+    function initialize(address _token0, address _token1, address governor, address weth, address wbtc, address router, address pathOracle) external {
         require(msg.sender == factory, 'UniswapV2: FORBIDDEN'); // sufficient check
         token0 = _token0;
         token1 = _token1;
         //NEW CODE
         Governor = iGovernance(governor);
-        EarningsManager EMtmp = new EarningsManager(governor, weth, wbtc, router);
+        EarningsManager EMtmp = new EarningsManager(governor, weth, wbtc, router, pathOracle);
         EM_ADDRESS = address(EMtmp);
         EM = iEarningsManager(EM_ADDRESS);
         emit EarningsManagerCreation(address(this), EM_ADDRESS);
@@ -110,17 +110,32 @@ contract UniswapV2Pair is UniswapV2ERC20 {
     }
 
     //TODO ADD FUNCTION THAT CALLS THE GOVERNANCE CONTRACT DELEGATEFEE() AND THEN CALLS A FUNCTION IN THE FEE MANAGER TO HANDLE THAT FEE
-    function handleEarnings() external {
+    function handleEarnings() external returns(uint priceValid){
         if(IUniswapV2Factory(factory).feeToSetter() != address(0)){require(msg.sender == IUniswapV2Factory(factory).feeToSetter(), "Only Factory Owner can call this function!");}
         require(token0 == GFI_ADDRESS || token1 == GFI_ADDRESS, "Swap contract must have GFI as one of it's assets to claim earnings");
         Governor.delegateFee(EM_ADDRESS); //Calculates WETH fees earned by GFI in contract
-        EM.manageEarnings(msg.sender);
+        //TODO need to check if checkPrice returns a zero
+        priceValid = EM.checkPrice();
+        if(priceValid == 0){
+            EM.manageEarnings(msg.sender);
+        }
     }
 
     //TODO function that calls manageFee() in EarningsManager contract
-    function handleFees() external {
+    function handleFees() external returns(uint priceValid){
         if(IUniswapV2Factory(factory).feeToSetter() != address(0)){require(msg.sender == IUniswapV2Factory(factory).feeToSetter(), "Only Factory Owner can call this function!");}
-        EM.manageFees();
+        //TODO need to check if checkPrice returns a zero
+        priceValid = EM.checkPrice();
+        if(priceValid == 0){
+            EM.manageFees();
+        }
+    }
+
+    //TODO add in a function to change EM parameters like the slippage
+    function updateEM(uint _slippage) external {
+        if(IUniswapV2Factory(factory).feeToSetter() != address(0)){require(msg.sender == IUniswapV2Factory(factory).feeToSetter(), "Only Factory Owner can call this function!");}
+        EM.changeSlippage(_slippage);
+        EM.updateSwapPath();
     }
 
     // update reserves and, on the first call per block, price accumulators

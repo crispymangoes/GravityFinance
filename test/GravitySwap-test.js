@@ -26,10 +26,12 @@ before(async function () {
     MockERC20 = await ethers.getContractFactory("MockToken");
     mockWETH = await MockERC20.deploy(addr1.address, addr2.address, addr3.address, addr4.address);
     await mockWETH.deployed();
+    console.log("WETH Address: ", mockWETH.address);
 
     MockERC20 = await ethers.getContractFactory("MockToken");
     mockWBTC = await MockERC20.deploy(addr1.address, addr2.address, addr3.address, addr4.address);
     await mockWBTC.deployed();
+    console.log("WBTC Address: ", mockWBTC.address);
 
     MockERC20 = await ethers.getContractFactory("MockToken");
     mockUSDC = await MockERC20.deploy(addr1.address, addr2.address, addr3.address, addr4.address);
@@ -42,6 +44,7 @@ before(async function () {
     MockGFI = await ethers.getContractFactory("GravityToken");
     mockGFI = await MockGFI.deploy("Mock Gravity Finance", "MGFI");
     await mockGFI.deployed();
+    console.log("GFI Address: ", mockGFI.address);
 
     MockWMATIC = await ethers.getContractFactory("GravityToken");
     mockWMATIC = await MockWMATIC.deploy("Mock Gravity Finance", "MGFI");
@@ -51,9 +54,15 @@ before(async function () {
     governance = await upgrades.deployProxy(Governance, [mockGFI.address, mockWETH.address, mockWBTC.address], { initializer: 'initialize' });
     await governance.deployed();
     
+    PathOracle = await ethers.getContractFactory("PathOracle");
+    pathOracle = await PathOracle.deploy([mockWETH.address, mockWBTC.address, mockGFI.address, mockUSDC.address, mockDAI.address], 5);
+    await pathOracle.deployed();
+
     SwapFactory = await ethers.getContractFactory("UniswapV2Factory");
-    swapFactory = await SwapFactory.deploy(owner.address, governance.address, mockWETH.address, mockWBTC.address);
+    swapFactory = await SwapFactory.deploy(owner.address, governance.address, mockWETH.address, mockWBTC.address, pathOracle.address);
     await swapFactory.deployed();
+
+    await pathOracle.setFactory(swapFactory.address);
 
     SwapRouter = await ethers.getContractFactory("UniswapV2Router02");
     swapRouter = await SwapRouter.deploy(swapFactory.address, mockWMATIC.address);
@@ -215,7 +224,35 @@ describe("Swap Exchange Contracts functional test", function () {
         console.log("Added to  GFI/wBTC at: ", pairAddress);
 
     });
+
+    it("Check Pathing", async function () {
+        
+        //Create DAI/GFI Pair
+        let pairAddress;
+        await mockGFI.transfer(addr1.address, "1000000000000000000000");
+        await mockGFI.connect(addr1).approve(swapRouter.address, "1000000000000000000000");
+        await mockDAI.connect(addr1).approve(swapRouter.address, "100000000000000000000");
+        await swapRouter.connect(addr1).addLiquidity(mockGFI.address, mockDAI.address, "1000000000000000000000", "100000000000000000000", "990000000000000000000", "99000000000000000000", addr1.address, 1654341846);
+        pairAddress = await swapFactory.getPair(mockGFI.address, mockDAI.address);
+        console.log("Created  GFI/DAI at: ", pairAddress);
+
+        pairAddress = await swapFactory.getPair(mockWETH.address, mockWBTC.address);
+        let pathMap = await pathOracle.pathMap(mockDAI.address);
+        console.log("DAI -> wBTC PATH: ", await pathOracle.pathMap(mockDAI.address), " -> ", await pathOracle.pathMap(mockGFI.address));
+        //WRAPPED ETH DOESNT HAVE A PATH SET, BUT IT SHOULD GO TO WRAPPED BTC
+        await pathOracle.alterPath(mockWETH.address, mockWBTC.address);
+        console.log(await pathOracle.pathMap(mockWETH.address));
+
+        //Check to make sure that a completely random pair fails to create a path(use SUSHI and LINK)
+        //Then add a pool that creates a path
+        //Then update the path and see if it works
+        
+
+    });
+
     //ADD TEST TO CHECK IF REQUIRE STATEMENT ON LINE 257(Pair contract) works
     //ADD TEST TO SEE IF PAUSING WORKS
+
+
 
 });

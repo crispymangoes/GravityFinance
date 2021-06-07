@@ -72,7 +72,17 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "oldIndex",
+        "name": "cumulative0",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "cumulative1",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timestamp",
         "type": "uint256"
       }
     ],

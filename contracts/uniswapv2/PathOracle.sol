@@ -5,6 +5,9 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import './interfaces/IUniswapV2Factory.sol';
 
+/*
+* NOTE OWNER SHOULD CALL alterPath(weth, wbtc) after deployment to set the final path properly
+*/
 contract PathOracle is Ownable {
     mapping(address => address) public pathMap;
     address[] public favoredAssets;
@@ -13,15 +16,22 @@ contract PathOracle is Ownable {
     IUniswapV2Factory Factory;
 
 
-    constructor(address[] memory _favored, uint _favoredLength, address _factory) {
+    constructor(address[] memory _favored, uint _favoredLength) {
         favoredAssets = _favored;
         favoredLength = _favoredLength;
-        FACTORY_ADDRESS  =_factory;
-        Factory = IUniswapV2Factory(FACTORY_ADDRESS);
     }
 
     function alterPath(address fromAsset, address toAsset) external onlyOwner {
         pathMap[fromAsset] = toAsset;
+    }
+
+    function stepPath(address from) external view returns(address to){
+        to = pathMap[from];
+    }
+
+    function setFactory(address _address) external onlyOwner {
+        FACTORY_ADDRESS = _address;
+        Factory = IUniswapV2Factory(FACTORY_ADDRESS);
     }
 
 

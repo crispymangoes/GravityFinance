@@ -8,10 +8,9 @@ import './interfaces/IUniswapV2Pair.sol';
 
 contract PriceOracle is Ownable {
     struct Oracle{
-        uint[2] cumulative0;
-        uint[2] cumulative1;
-        uint[2] timestamp;
-        uint oldIndex;
+        uint cumulative0;
+        uint cumulative1;
+        uint timestamp;
     }
 
     mapping(address => Oracle) public pairPricing;

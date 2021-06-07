@@ -13,17 +13,19 @@ contract UniswapV2Factory is IUniswapV2Factory {
     address public governor;
     address public weth;
     address public wbtc;
+    address public pathOracle;
 
     mapping(address => mapping(address => address)) public override getPair;
     address[] public override allPairs;
 
     event PairCreated(address indexed token0, address indexed token1, address pair, uint);
 
-    constructor(address _feeToSetter, address _governor, address _weth, address _wbtc) public {
+    constructor(address _feeToSetter, address _governor, address _weth, address _wbtc, address _pathOracle) public {
         feeToSetter = _feeToSetter;
         governor = _governor;
         weth = _weth;
         wbtc = _wbtc;
+        pathOracle = _pathOracle;
     }
 
     function allPairsLength() external override view returns (uint) {
@@ -45,7 +47,7 @@ contract UniswapV2Factory is IUniswapV2Factory {
         assembly {
             pair := create2(0, add(bytecode, 32), mload(bytecode), salt)
         }
-        UniswapV2Pair(pair).initialize(token0, token1, governor, weth, wbtc, router);
+        UniswapV2Pair(pair).initialize(token0, token1, governor, weth, wbtc, router, pathOracle);
         getPair[token0][token1] = pair;
         getPair[token1][token0] = pair; // populate mapping in the reverse direction
         allPairs.push(pair);

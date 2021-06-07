@@ -631,8 +631,8 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/libraries/UniswapV2Library.sol": {
-      "lastModificationDate": 1622843194106,
-      "contentHash": "a5b038ac51d8846d939439af6d3b11b1",
+      "lastModificationDate": 1623034628500,
+      "contentHash": "b49c4e2e5e2f8524758dd61a310a7709",
       "sourceName": "contracts/uniswapv2/libraries/UniswapV2Library.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -702,8 +702,8 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/UniswapV2Pair.sol": {
-      "lastModificationDate": 1622831064176,
-      "contentHash": "d2c87d0f0ebe2b320da9e0b0a8ce1098",
+      "lastModificationDate": 1623034294380,
+      "contentHash": "f4e03cc0a00f8715ee36522a402d8268",
       "sourceName": "contracts/uniswapv2/UniswapV2Pair.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -852,8 +852,8 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/UniswapV2Factory.sol": {
-      "lastModificationDate": 1622831062236,
-      "contentHash": "518a9eecaa761a3b3e51e91a5ec88ab4",
+      "lastModificationDate": 1623026442920,
+      "contentHash": "b56b7932433481b8dec742723c8b014e",
       "sourceName": "contracts/uniswapv2/UniswapV2Factory.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -1369,8 +1369,8 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/interfaces/iEarningsManager.sol": {
-      "lastModificationDate": 1622765808840,
-      "contentHash": "abd4a662c5adf61c425e6b97f5a05349",
+      "lastModificationDate": 1623034285950,
+      "contentHash": "984bf3718e940fff193a608322f91a77",
       "sourceName": "contracts/uniswapv2/interfaces/iEarningsManager.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -1403,8 +1403,8 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/earningsManager.sol": {
-      "lastModificationDate": 1622843121586,
-      "contentHash": "09cf67b52dcf9904c76bf70230e32c22",
+      "lastModificationDate": 1623034234590,
+      "contentHash": "dc7829e533bd978f632b534dd902d001",
       "sourceName": "contracts/uniswapv2/earningsManager.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -1435,7 +1435,7 @@
         "./interfaces/IUniswapV2Pair.sol",
         "./interfaces/IUniswapV2Factory.sol",
         "./interfaces/IUniswapV2Router02.sol",
-        "./interfaces/iLogistics.sol"
+        "./interfaces/IPathOracle.sol"
       ],
       "versionPragmas": [
         "=0.6.12"
@@ -1521,43 +1521,9 @@
         "Logistics"
       ]
     },
-    "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/interfaces/iLogistics.sol": {
-      "lastModificationDate": 1622842956746,
-      "contentHash": "d9695ee0633092ccd1e0e2571958b2b4",
-      "sourceName": "contracts/uniswapv2/interfaces/iLogistics.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 1000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.6.0"
-      ],
-      "artifacts": [
-        "iLogistics"
-      ]
-    },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/PriceOracle.sol": {
-      "lastModificationDate": 1623006685350,
-      "contentHash": "678a6ae316cb5300dc9044f06995af68",
+      "lastModificationDate": 1623008544450,
+      "contentHash": "c26a401de34c93b9f6f95d1f5c8ba6bc",
       "sourceName": "contracts/uniswapv2/PriceOracle.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -1593,8 +1559,8 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/PathOracle.sol": {
-      "lastModificationDate": 1623001393280,
-      "contentHash": "3504eab77e4fc673f5e4f0ec50fcadc5",
+      "lastModificationDate": 1623034819760,
+      "contentHash": "4055e25745a3fc82a6242f6757d342a7",
       "sourceName": "contracts/uniswapv2/PathOracle.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -1627,6 +1593,40 @@
       ],
       "artifacts": [
         "PathOracle"
+      ]
+    },
+    "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/interfaces/IPathOracle.sol": {
+      "lastModificationDate": 1623030229400,
+      "contentHash": "46e665cf06c5e349fda1f12addc1991c",
+      "sourceName": "contracts/uniswapv2/interfaces/IPathOracle.sol",
+      "solcConfig": {
+        "version": "0.6.12",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.6.0"
+      ],
+      "artifacts": [
+        "IPathOracle"
       ]
     }
   }

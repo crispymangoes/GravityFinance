@@ -9,4 +9,7 @@ interface iEarningsManager {
      */
     function manageEarnings(address caller) external;
     function manageFees() external;
+    function changeSlippage(uint _slippage) external;
+    function checkPrice() external returns(uint timeTillValid);
+    function updateSwapPath() external;
 }

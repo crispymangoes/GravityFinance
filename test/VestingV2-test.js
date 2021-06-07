@@ -39,6 +39,8 @@ beforeEach(async function () {
     governance = await upgrades.deployProxy(Governance, [mockGFI.address, mockWETH.address, mockWBTC.address], {initializer: 'initialize'});
     await governance.deployed();
 
+    await mockGFI.setGovernanceAddress(governance.address);
+
    Vesting = await ethers.getContractFactory("VestingV2");
    vesting = await Vesting.deploy(mockGFI.address, mockWETH.address, mockWETH.address, 1622530800, 2592000); //final mockWETH address is just subbing in for the Goverance contract
    await vesting.deployed();

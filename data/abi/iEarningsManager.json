@@ -2,6 +2,32 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_slippage",
+        "type": "uint256"
+      }
+    ],
+    "name": "changeSlippage",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "checkPrice",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "timeTillValid",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "caller",
         "type": "address"
@@ -15,6 +41,13 @@
   {
     "inputs": [],
     "name": "manageFees",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "updateSwapPath",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
