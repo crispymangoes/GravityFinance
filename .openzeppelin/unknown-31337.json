@@ -118,9 +118,9 @@
         }
       }
     },
-    "23aa0e819e563bcf78a947229fd69a59a80809747573ae32c10952d2ab9690fe": {
+    "05361139637bdd021c8b77ce6ce018fbbe94539d4b26de5683ff915683e3ec02": {
       "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
-      "txHash": "0x5d7bc03dfa2aa4c2b14fe14ae4e3c9064464b78c8517608444f2f1b7dd1cff09",
+      "txHash": "0xabb1a189d63e4f974fec38810583e9aef0019c83de24ab82efbbbadf220f19a9",
       "layout": {
         "storage": [
           {
@@ -849,7 +849,7 @@
     {
       "address": "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
       "kind": "transparent",
-      "txHash": "0x44400f5bc4fb731d5be3b80f1bb24a2f770a74421f425dc4a5af0709a41defeb"
+      "txHash": "0x4888559e2fba2f6a55dfb5561e38a3fd1de371065b3d776709fd0a12ae8faa22"
     }
   ],
   "admin": {

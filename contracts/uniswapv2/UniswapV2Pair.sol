@@ -153,27 +153,6 @@ contract UniswapV2Pair is UniswapV2ERC20 {
         blockTimestampLast = blockTimestamp;
         emit Sync(reserve0, reserve1);
     }
-    //TODO Remove _mintFee logic
-    // if fee is on, mint liquidity equivalent to 1/6th of the growth in sqrt(k)
-    function _mintFee(uint112 _reserve0, uint112 _reserve1) private returns (bool feeOn) {
-        address feeTo = IUniswapV2Factory(factory).feeTo();
-        feeOn = feeTo != address(0);
-        uint _kLast = kLast; // gas savings
-        if (feeOn) {
-            if (_kLast != 0) {
-                uint rootK = Math.sqrt(uint(_reserve0).mul(_reserve1));
-                uint rootKLast = Math.sqrt(_kLast);
-                if (rootK > rootKLast) {
-                    uint numerator = totalSupply.mul(rootK.sub(rootKLast));
-                    uint denominator = rootK.mul(5).add(rootKLast);
-                    uint liquidity = numerator / denominator;
-                    if (liquidity > 0) _mint(feeTo, liquidity);
-                }
-            }
-        } else if (_kLast != 0) {
-            kLast = 0;
-        }
-    }
 
     // this low-level function should be called from a contract which performs important safety checks
     function mint(address to) external lock returns (uint liquidity) {
@@ -184,7 +163,7 @@ contract UniswapV2Pair is UniswapV2ERC20 {
         uint amount0 = balance0.sub(_reserve0);
         uint amount1 = balance1.sub(_reserve1);
 
-        bool feeOn = _mintFee(_reserve0, _reserve1);
+        bool feeOn;
         uint _totalSupply = totalSupply; // gas savings, must be defined here since totalSupply can update in _mintFee
         if (_totalSupply == 0) {
             address migrator = IUniswapV2Factory(factory).migrator();
@@ -216,7 +195,7 @@ contract UniswapV2Pair is UniswapV2ERC20 {
         uint balance1 = IERC20Uniswap(_token1).balanceOf(address(this));
         uint liquidity = balanceOf[address(this)];
 
-        bool feeOn = _mintFee(_reserve0, _reserve1);
+        bool feeOn;
         uint _totalSupply = totalSupply; // gas savings, must be defined here since totalSupply can update in _mintFee
         amount0 = liquidity.mul(balance0) / _totalSupply; // using balances ensures pro-rata distribution
         amount1 = liquidity.mul(balance1) / _totalSupply; // using balances ensures pro-rata distribution

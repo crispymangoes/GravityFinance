@@ -21,19 +21,29 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "from",
+        "name": "token0",
         "type": "address"
-      }
-    ],
-    "name": "stepPath",
-    "outputs": [
+      },
       {
         "internalType": "address",
-        "name": "to",
+        "name": "token1",
         "type": "address"
       }
     ],
-    "stateMutability": "view",
+    "name": "updateSwapPath",
+    "outputs": [
+      {
+        "internalType": "address[10]",
+        "name": "swapPath",
+        "type": "address[10]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "swapCount",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]

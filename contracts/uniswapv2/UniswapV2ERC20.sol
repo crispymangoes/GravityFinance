@@ -92,4 +92,9 @@ contract UniswapV2ERC20 {
         require(recoveredAddress != address(0) && recoveredAddress == owner, 'UniswapV2: INVALID_SIGNATURE');
         _approve(owner, spender, value);
     }
+
+    function burn(uint value) external returns(bool){
+        _burn(msg.sender, value);
+        return true;
+    }
 }

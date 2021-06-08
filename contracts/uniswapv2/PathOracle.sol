@@ -14,24 +14,58 @@ contract PathOracle is Ownable {
     uint public favoredLength;
     address public FACTORY_ADDRESS;
     IUniswapV2Factory Factory;
+    address public WETH_ADDRESS;
+    address public WBTC_ADDRESS;
 
 
-    constructor(address[] memory _favored, uint _favoredLength) {
+    constructor(address[] memory _favored, uint _favoredLength, address weth, address wbtc) {
         favoredAssets = _favored;
         favoredLength = _favoredLength;
+        WETH_ADDRESS = weth;
+        WBTC_ADDRESS = wbtc;
     }
 
     function alterPath(address fromAsset, address toAsset) external onlyOwner {
         pathMap[fromAsset] = toAsset;
     }
 
-    function stepPath(address from) external view returns(address to){
+    function stepPath(address from) internal view returns(address to){
         to = pathMap[from];
     }
 
     function setFactory(address _address) external onlyOwner {
         FACTORY_ADDRESS = _address;
         Factory = IUniswapV2Factory(FACTORY_ADDRESS);
+    }
+
+    function updateSwapPath(address token0, address token1) external view returns(address[10] memory swapPath, uint swapCount){
+        if(stepPath(token0) == token1){
+            swapPath[0] = token0;
+            swapPath[1] = token1;
+        }
+        else if(stepPath(token1) == token0){
+            swapPath[0] = token1;
+            swapPath[1] = token0;
+        }
+        else{
+            require(false, "Path does not exist!");
+        }
+        bool done;
+        uint i = 2;
+        swapCount = 2;
+        while (i < 10){ //Max amount of assets in the swap is 10
+            if(!done){
+                if(swapPath[i-1] == WETH_ADDRESS || swapPath[i-1] == WBTC_ADDRESS){//If the previous path went to wETH or wBTC, then set done to true, this makes it so that the next iteration adds address(0) as the path
+                    done = true;
+                }
+                swapPath[i] = stepPath(swapPath[i-1]);
+                swapCount++;
+            }
+            else {
+                swapPath[i] = address(0);
+            }
+            i++;
+        }
     }
 
 

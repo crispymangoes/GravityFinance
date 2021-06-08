@@ -236,19 +236,6 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_feeTo",
-        "type": "address"
-      }
-    ],
-    "name": "setFeeTo",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
         "name": "_feeToSetter",
         "type": "address"
       }

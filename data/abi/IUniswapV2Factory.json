@@ -157,19 +157,6 @@
         "type": "address"
       }
     ],
-    "name": "setFeeTo",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
     "name": "setFeeToSetter",
     "outputs": [],
     "stateMutability": "nonpayable",
