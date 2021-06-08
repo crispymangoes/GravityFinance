@@ -631,8 +631,8 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/libraries/UniswapV2Library.sol": {
-      "lastModificationDate": 1623034628500,
-      "contentHash": "b49c4e2e5e2f8524758dd61a310a7709",
+      "lastModificationDate": 1623109099520,
+      "contentHash": "a456a73aa89cae3d80412e7d3c0044d7",
       "sourceName": "contracts/uniswapv2/libraries/UniswapV2Library.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -1403,8 +1403,8 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/earningsManager.sol": {
-      "lastModificationDate": 1623034234590,
-      "contentHash": "dc7829e533bd978f632b534dd902d001",
+      "lastModificationDate": 1623109068660,
+      "contentHash": "9b58b26b76f77d75e9a7b571078c0c3a",
       "sourceName": "contracts/uniswapv2/earningsManager.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -1430,6 +1430,7 @@
       },
       "imports": [
         "../interfaces/OZ_IERC20.sol",
+        "./libraries/SafeMath.sol",
         "./interfaces/iGovernance.sol",
         "./interfaces/IERC20.sol",
         "./interfaces/IUniswapV2Pair.sol",
@@ -1559,8 +1560,8 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/PathOracle.sol": {
-      "lastModificationDate": 1623034819760,
-      "contentHash": "4055e25745a3fc82a6242f6757d342a7",
+      "lastModificationDate": 1623036354590,
+      "contentHash": "d682f529b8b2e63f932c0fc4f22897db",
       "sourceName": "contracts/uniswapv2/PathOracle.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -1628,6 +1629,36 @@
       "artifacts": [
         "IPathOracle"
       ]
+    },
+    "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/libraries/UniswapV2OracleLibrary.sol": {
+      "lastModificationDate": 1623108310230,
+      "contentHash": "d41d8cd98f00b204e9800998ecf8427e",
+      "sourceName": "contracts/uniswapv2/libraries/UniswapV2OracleLibrary.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [],
+      "artifacts": []
     }
   }
 }

@@ -3,6 +3,7 @@
 pragma solidity =0.6.12;
 
 import "../interfaces/OZ_IERC20.sol";
+import './libraries/SafeMath.sol';
 import "./interfaces/iGovernance.sol";
 import "./interfaces/IERC20.sol";
 import "./interfaces/IUniswapV2Pair.sol";
@@ -11,7 +12,10 @@ import "./interfaces/IUniswapV2Router02.sol";
 import "./interfaces/IPathOracle.sol";
 
 //TODO make it so that the governance address is passed into the factory on craetion, then it is relayed to the pair contract and to this contract, and initialized in the
+//TODO before any thing using the current pair cumulative, make sure getReserves() LastTimeStamp is equal to the current block.timestamp
+//TODO maybe make it a modifier????
 contract EarningsManager {
+    using SafeMathUniswap  for uint;
     address public SWAP_ADDRESS;
     address public WETH_ADDRESS;
     address public WBTC_ADDRESS;
@@ -21,7 +25,7 @@ contract EarningsManager {
     address[10] public swapPath; //Paths will only ever be 4 long unless algo is upgraded
     mapping(address => uint) public lastCumulative0;
     mapping(address => uint) public lastCumulative1;
-    uint lastTimeStamp;
+    uint public lastTimeStamp;
     uint public swapCount;//Number of assets in swap path
     uint public slippage;
 
@@ -95,6 +99,7 @@ contract EarningsManager {
             else {
                 swapPath[i] = address(0);
             }
+            i++;
         }
         updatePrice();
     }
@@ -115,34 +120,41 @@ contract EarningsManager {
         }
     }
 
-    function updatePrice() internal {
+    function updatePrice() internal{
         address pairAddress;
         for (uint i=0; i<swapCount-1; i++){
             pairAddress = Factory.getPair(swapPath[i], swapPath[i+1]);
+            syncSwap(pairAddress);
             lastCumulative0[pairAddress] = IUniswapV2Pair(pairAddress).price0CumulativeLast();
             lastCumulative1[pairAddress] = IUniswapV2Pair(pairAddress).price1CumulativeLast();
         }
         lastTimeStamp = block.timestamp;
     }
-
-    function calculateMinAmount(address from, address to, uint amount) internal returns(uint minAmount){
-        //Make sure prices are up to date
-        if(lastTimeStamp + 600 > block.timestamp && lastTimeStamp + 300 < block.timestamp){
-            uint TWAP;
-            IUniswapV2Pair Pair = IUniswapV2Pair(Factory.getPair(from, to));
-            require(address(Pair) != address(0), "Pair does not exist!");
-            if(Pair.token0() == from){ //Swapping token0 for token1 use cumulative0
-                TWAP = (Pair.price0CumulativeLast() - lastCumulative0[address(Pair)]) / (block.timestamp - lastTimeStamp);
-                minAmount = slippage * TWAP * amount / 100; //Pair price must be within 5% to swap
-            }
+    //TODO is returning an absolutely massive number not correct
+    function calculateMinAmount(address from, address to, uint amount) public view returns(uint minAmount){
+        uint TWAP;
+        IUniswapV2Pair Pair = IUniswapV2Pair(Factory.getPair(from, to));
+        require(address(Pair) != address(0), "Pair does not exist!");
+        //syncSwap(address(Pair));
+        if(Pair.token0() == from){ //Swapping token0 for token1 use cumulative0
+            TWAP = 10**9 * (Pair.price0CumulativeLast() - lastCumulative0[address(Pair)]) / (block.timestamp - lastTimeStamp);
+            minAmount = slippage * TWAP * amount / 10**11; //Pair price must be within 5% to swap
         }
-        else {
-            updatePrice();
+        else{ //Swapping token1 for token0 use cumulative1
+            TWAP = 10**9 * (Pair.price1CumulativeLast() - lastCumulative1[address(Pair)]) / (block.timestamp - lastTimeStamp);
+            minAmount = slippage * TWAP * amount / 10**11; //Pair price must be within 5% to swap
         }
     }
 
     function changeSlippage(uint _slippage) external onlySwap{
         slippage = _slippage;
+    }
+
+    function syncSwap(address pairAddress) internal {
+        (uint112 A, uint112 B, uint32 timeStamp) = IUniswapV2Pair(pairAddress).getReserves();
+        if (block.timestamp != timeStamp){
+            IUniswapV2Pair(pairAddress).sync();
+        }
     }
 
     function manageEarnings(address caller) external onlySwap {
@@ -158,39 +170,45 @@ contract EarningsManager {
     }
 
     function manageFees() external onlySwap {
-        address t0 = LiquidityPool.token0();
-        address t1 = LiquidityPool.token1();
-        OZ_IERC20 token0 = OZ_IERC20(t0);
-        OZ_IERC20 token1 = OZ_IERC20(t1);
-        OZ_IERC20 token;
-        address pairAddress;
-        uint tokenBal;
-        address[] memory path = new address[](2);
-        require(token0.balanceOf(address(this)) > 0 || token1.balanceOf(address(this)) > 0, "There are no fees to convert to wETH/wBTC" );
-        for (uint i=0; i<swapCount-1; i++){
-            token = OZ_IERC20(swapPath[i]);
-            tokenBal = token.balanceOf(address(this));
-            if(swapPath[i] == WETH_ADDRESS || swapPath[i] == WBTC_ADDRESS){tokenBal/2;} //Only swap half the tokens if swapping from wETH or wBTC
-            require(
-                    token.approve(ROUTER_ADDRESS, tokenBal),
-                    "Failed to approve Router to spend tokens"
-                );
-            path[0] = swapPath[i]; //from
-            path[1] = swapPath[i+1]; //to
-            IUniswapV2Router02(ROUTER_ADDRESS).swapExactTokensForTokens(
-                    tokenBal,
-                    calculateMinAmount(swapPath[i], swapPath[i+1], tokenBal),
-                    path,
-                    address(this),
-                    block.timestamp
-                );
+        //Make sure prices are valid, if not then call check prices
+        if(lastTimeStamp + 600 > block.timestamp && lastTimeStamp + 300 < block.timestamp){
+            address t0 = LiquidityPool.token0();
+            address t1 = LiquidityPool.token1();
+            OZ_IERC20 token0 = OZ_IERC20(t0);
+            OZ_IERC20 token1 = OZ_IERC20(t1);
+            OZ_IERC20 token;
+            address pairAddress;
+            uint tokenBal;
+            address[] memory path = new address[](2);
+            require(token0.balanceOf(address(this)) > 0 || token1.balanceOf(address(this)) > 0, "There are no fees to convert to wETH/wBTC" );
+            for (uint i=0; i<swapCount-1; i++){
+                token = OZ_IERC20(swapPath[i]);
+                tokenBal = token.balanceOf(address(this));
+                if(swapPath[i] == WETH_ADDRESS || swapPath[i] == WBTC_ADDRESS){tokenBal = tokenBal/2;} //Only swap half the tokens if swapping from wETH or wBTC
+                require(
+                        token.approve(ROUTER_ADDRESS, tokenBal),
+                        "Failed to approve Router to spend tokens"
+                    );
+                path[0] = swapPath[i]; //from
+                path[1] = swapPath[i+1]; //to
+                IUniswapV2Router02(ROUTER_ADDRESS).swapExactTokensForTokens(
+                        tokenBal,
+                        0,//calculateMinAmount(swapPath[i], swapPath[i+1], tokenBal),
+                        path,
+                        address(this),
+                        block.timestamp
+                    );
+            }
+            token0 = OZ_IERC20(WETH_ADDRESS);
+            token1 = OZ_IERC20(WBTC_ADDRESS);
+            uint token0Bal = token0.balanceOf(address(this));
+            uint token1Bal = token1.balanceOf(address(this));
+            token0.approve(GOVERNOR_ADDRESS, token0Bal);
+            token1.approve(GOVERNOR_ADDRESS, token1Bal);
+            Governor.depositFee(token0Bal, token1Bal); 
         }
-        token0 = OZ_IERC20(WETH_ADDRESS);
-        token1 = OZ_IERC20(WBTC_ADDRESS);
-        uint token0Bal = token0.balanceOf(address(this));
-        uint token1Bal = token1.balanceOf(address(this));
-        token0.approve(GOVERNOR_ADDRESS, token0Bal);
-        token1.approve(GOVERNOR_ADDRESS, token1Bal);
-        Governor.depositFee(token0Bal, token1Bal); 
+        else {
+            updatePrice();
+        }
     }
 }

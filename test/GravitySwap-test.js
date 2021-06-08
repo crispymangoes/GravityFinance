@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { ethers, network, upgrades } = require("hardhat");
+const { ethers, network, upgrades, getBlockNumber } = require("hardhat");
 const { isCallTrace } = require("hardhat/internal/hardhat-network/stack-traces/message-trace");
 
 let MockERC20;
@@ -20,35 +20,45 @@ let addr3; // Test user 3
 let addr4; // Test user 4
 let addr5;
 
+let WETH;
+let WBTC;
+let GFI;
+let USDC;
+let DAI;
+let WMATIC;
+
 before(async function () {
     [owner, addr1, addr2, addr3, addr4, addr5] = await ethers.getSigners();
 
     MockERC20 = await ethers.getContractFactory("MockToken");
     mockWETH = await MockERC20.deploy(addr1.address, addr2.address, addr3.address, addr4.address);
     await mockWETH.deployed();
-    console.log("WETH Address: ", mockWETH.address);
+    WETH = mockWETH.address;
 
     MockERC20 = await ethers.getContractFactory("MockToken");
     mockWBTC = await MockERC20.deploy(addr1.address, addr2.address, addr3.address, addr4.address);
     await mockWBTC.deployed();
-    console.log("WBTC Address: ", mockWBTC.address);
+    WBTC = mockWBTC.address;
 
     MockERC20 = await ethers.getContractFactory("MockToken");
     mockUSDC = await MockERC20.deploy(addr1.address, addr2.address, addr3.address, addr4.address);
     await mockUSDC.deployed();
+    USDC = mockUSDC.address;
 
     MockERC20 = await ethers.getContractFactory("MockToken");
     mockDAI = await MockERC20.deploy(addr1.address, addr2.address, addr3.address, addr4.address);
     await mockDAI.deployed();
+    DAI = mockDAI.address;
 
     MockGFI = await ethers.getContractFactory("GravityToken");
     mockGFI = await MockGFI.deploy("Mock Gravity Finance", "MGFI");
     await mockGFI.deployed();
-    console.log("GFI Address: ", mockGFI.address);
+    GFI = mockGFI.address;
 
-    MockWMATIC = await ethers.getContractFactory("GravityToken");
-    mockWMATIC = await MockWMATIC.deploy("Mock Gravity Finance", "MGFI");
+    MockWMATIC = await ethers.getContractFactory("MockToken");
+    mockWMATIC = await MockWMATIC.deploy(addr1.address, addr2.address, addr3.address, addr4.address);
     await mockWMATIC.deployed();
+    WMATIC = mockWMATIC.address;
 
     Governance = await ethers.getContractFactory("Governance");
     governance = await upgrades.deployProxy(Governance, [mockGFI.address, mockWETH.address, mockWBTC.address], { initializer: 'initialize' });
@@ -57,6 +67,7 @@ before(async function () {
     PathOracle = await ethers.getContractFactory("PathOracle");
     pathOracle = await PathOracle.deploy([mockWETH.address, mockWBTC.address, mockGFI.address, mockUSDC.address, mockDAI.address], 5);
     await pathOracle.deployed();
+    await pathOracle.alterPath(WETH, WBTC);
 
     SwapFactory = await ethers.getContractFactory("UniswapV2Factory");
     swapFactory = await SwapFactory.deploy(owner.address, governance.address, mockWETH.address, mockWBTC.address, pathOracle.address);
@@ -236,17 +247,70 @@ describe("Swap Exchange Contracts functional test", function () {
         pairAddress = await swapFactory.getPair(mockGFI.address, mockDAI.address);
         console.log("Created  GFI/DAI at: ", pairAddress);
 
-        pairAddress = await swapFactory.getPair(mockWETH.address, mockWBTC.address);
-        let pathMap = await pathOracle.pathMap(mockDAI.address);
-        console.log("DAI -> wBTC PATH: ", await pathOracle.pathMap(mockDAI.address), " -> ", await pathOracle.pathMap(mockGFI.address));
-        //WRAPPED ETH DOESNT HAVE A PATH SET, BUT IT SHOULD GO TO WRAPPED BTC
-        await pathOracle.alterPath(mockWETH.address, mockWBTC.address);
-        console.log(await pathOracle.pathMap(mockWETH.address));
+        expect(await pathOracle.pathMap(mockDAI.address)).to.equal(GFI);
+        expect(await pathOracle.pathMap(mockGFI.address)).to.equal(WBTC);
+        expect(await pathOracle.pathMap(mockWBTC.address)).to.equal(WETH);
+        expect(await pathOracle.pathMap(mockWETH.address)).to.equal(WBTC);
 
         //Check to make sure that a completely random pair fails to create a path(use SUSHI and LINK)
         //Then add a pool that creates a path
         //Then update the path and see if it works
         
+
+    });
+
+    it("Check Fee Logic", async function () {
+        let pairAddress;
+        let Pair;
+        let pair;
+        let EMforPair;
+
+        pairAddress = await swapFactory.getPair(mockDAI.address, mockGFI.address);
+        Pair = await ethers.getContractFactory("UniswapV2Pair");
+        pair = await Pair.attach(pairAddress);
+        EMforPair = await pair.EM_ADDRESS();
+        console.log("Earnings Manager for pair: ", EMforPair);
+        console.log("GFI Balance of Earnings Manager: ", Number((await mockGFI.balanceOf(EMforPair)).toString())/10**18);
+        console.log("DAI Balance of Earnings Manager: ", Number((await mockDAI.balanceOf(EMforPair)).toString())/10**18);
+        await mockGFI.transfer(addr4.address, "1000000000000000000000");
+        await mockGFI.connect(addr4).approve(swapRouter.address, "10000000000000000000000000");
+        await mockDAI.connect(addr4).approve(swapRouter.address, "1000000000000000000000000");
+        let path1 = [mockDAI.address, mockGFI.address];
+        let path2 = [mockGFI.address, mockDAI.address];
+        var i;
+        for (i = 0; i < 100; i++) {
+            await swapRouter.connect(addr4).swapExactTokensForTokens("100000000000000000000", "90000000000000000000", path1, addr4.address, 1654341846);
+            await swapRouter.connect(addr4).swapExactTokensForTokens("1000000000000000000000", "9000000000000000000", path2, addr4.address, 1654341846);
+        }
+
+        console.log("Earnings Manager for pair: ", EMforPair);
+        console.log("GFI Balance of Earnings Manager: ", Number((await mockGFI.balanceOf(EMforPair)).toString())/10**18);
+        console.log("DAI Balance of Earnings Manager: ", Number((await mockDAI.balanceOf(EMforPair)).toString())/10**18);
+        
+        let EM = await ethers.getContractFactory("EarningsManager");
+        let em = await EM.attach(EMforPair);
+
+        await pair.updateEM(95);
+        console.log( (await pair.price0CumulativeLast()).toString() );
+        console.log( (await em.lastCumulative0(pairAddress)).toString() );
+        await network.provider.send("evm_mine");
+        console.log("Advance time by 400 seconds");
+        await network.provider.send("evm_increaseTime", [400]);
+        await network.provider.send("evm_mine");
+        pair.sync();
+        console.log(await em.swapPath(0), " -> ", await em.swapPath(1), " -> ", await em.swapPath(2), " -> ", await em.swapPath(3));
+        let minAmount = (await em.calculateMinAmount("0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9", "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9", "5010320822948010000")).toString();
+        console.log(minAmount);
+        pair.handleFees();
+
+        console.log( (await pair.price1CumulativeLast()).toString() );
+        console.log( (await em.lastCumulative1(pairAddress)).toString() );
+        console.log(Number(await em.lastTimeStamp()));
+        console.log(Number(await em.lastTimeStamp()) + 400);
+
+
+        console.log("WETH Balance of Governor: ", Number((await mockWETH.balanceOf(governance.address)).toString())/10**18);
+        console.log("WBTC Balance of Governor: ", Number((await mockWBTC.balanceOf(governance.address)).toString())/10**18);
 
     });
 
