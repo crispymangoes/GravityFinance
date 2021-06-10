@@ -52,7 +52,7 @@ beforeEach(async function () {
    await locking.addUser(addr2.address, "195000000000000000000000000");
 
    //Just to remove wETH bal for addr4
-   await mockWETH.connect(addr4).transfer(owner.address, "10000000000000000000");
+   await mockWETH.connect(addr4).transfer(owner.address, "100000000000000000000000");
 
    await locking.setGovenorAddress(governance.address);
    await mockWETH.connect(addr2).approve(governance.address, "10000000000000000000");
@@ -110,6 +110,8 @@ describe("Locking Contract functional test", function() {
         await locking.connect(addr5).updateWithdrawableFee();
         await locking.connect(addr4).collectFee();
         await locking.connect(addr2).collectFee();
+
+        console.log("Address 4 wETH Balance: ", (await mockWETH.balanceOf(addr4.address)).toString());
     });
 
 

@@ -139,7 +139,7 @@ contract Governance is Initializable, OwnableUpgradeable {
         //Add any extra fees they need to collect
         feeAllocation = feeAllocation + feeBalance[msg.sender];
         feeBalance[msg.sender] = 0;
-        require(WETH.transfer(msg.sender, feeAllocation));
+        require(WETH.transfer(msg.sender, feeAllocation),"Failed to delegate wETH to caller");
         return feeAllocation;
     }
 
@@ -173,14 +173,14 @@ contract Governance is Initializable, OwnableUpgradeable {
         //Add any extra fees they need to collect
         feeAllocation = feeAllocation + feeBalance[msg.sender];
         feeBalance[msg.sender] = 0;
-        require(WETH.transfer(reciever, feeAllocation));
+        require(WETH.transfer(reciever, feeAllocation), "Failed to delegate wETH to reciever");
         return feeAllocation;
     }
 
     function withdrawFee() external {
         uint256 feeAllocation = feeBalance[msg.sender];
         feeBalance[msg.sender] = 0;
-        require(WETH.transfer(msg.sender, feeAllocation));
+        require(WETH.transfer(msg.sender, feeAllocation), "Failed to delegate wETH to caller");
     }
 
     function govAuthTransfer(

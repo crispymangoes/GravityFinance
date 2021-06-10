@@ -26,13 +26,25 @@
     "type": "function"
   },
   {
-    "inputs": [
+    "inputs": [],
+    "name": "checkPricing",
+    "outputs": [
       {
-        "internalType": "address",
-        "name": "caller",
-        "type": "address"
+        "internalType": "bool",
+        "name": "allPricesValid",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxTime",
+        "type": "uint256"
       }
     ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "manageEarnings",
     "outputs": [],
     "stateMutability": "nonpayable",

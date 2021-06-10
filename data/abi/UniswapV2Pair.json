@@ -446,8 +446,13 @@
     "name": "handleEarnings",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "bool",
         "name": "priceValid",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxTime",
         "type": "uint256"
       }
     ],
@@ -459,8 +464,13 @@
     "name": "handleFees",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "bool",
         "name": "priceValid",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxTime",
         "type": "uint256"
       }
     ],
@@ -496,12 +506,22 @@
       },
       {
         "internalType": "address",
+        "name": "gfi",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
         "name": "router",
         "type": "address"
       },
       {
         "internalType": "address",
         "name": "pathOracle",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "priceOracle",
         "type": "address"
       }
     ],

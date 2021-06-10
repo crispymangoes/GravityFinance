@@ -2,46 +2,37 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "governor",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "_priceValidStart",
+        "type": "uint256"
       },
       {
-        "internalType": "address",
-        "name": "weth",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "wbtc",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "router",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "pathOracle",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "_priceValidEnd",
+        "type": "uint256"
       }
     ],
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
   {
-    "inputs": [],
-    "name": "GOVERNOR_ADDRESS",
-    "outputs": [
+    "anonymous": false,
+    "inputs": [
       {
+        "indexed": true,
         "internalType": "address",
-        "name": "",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
         "type": "address"
       }
     ],
-    "stateMutability": "view",
-    "type": "function"
+    "name": "OwnershipTransferred",
+    "type": "event"
   },
   {
     "inputs": [],
@@ -57,58 +48,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "ROUTER_ADDRESS",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "SWAP_ADDRESS",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "WBTC_ADDRESS",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "WETH_ADDRESS",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -116,14 +55,19 @@
         "type": "address"
       },
       {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "slippage",
+        "type": "uint256"
       },
       {
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "pairAddress",
+        "type": "address"
       }
     ],
     "name": "calculateMinAmount",
@@ -132,28 +76,7 @@
         "internalType": "uint256",
         "name": "minAmount",
         "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_slippage",
-        "type": "uint256"
-      }
-    ],
-    "name": "changeSlippage",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "checkPrice",
-    "outputs": [
+      },
       {
         "internalType": "uint256",
         "name": "timeTillValid",
@@ -167,16 +90,39 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "pairAddress",
         "type": "address"
       }
     ],
-    "name": "lastCumulative0",
+    "name": "getPrice",
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "price0Average",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "price1Average",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timeTillValid",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -190,7 +136,20 @@
         "type": "address"
       }
     ],
-    "name": "lastCumulative1",
+    "name": "priceOracles",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "index",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "priceValidEnd",
     "outputs": [
       {
         "internalType": "uint256",
@@ -203,20 +162,7 @@
   },
   {
     "inputs": [],
-    "name": "lastTimeStamp",
-    "outputs": [
-      {
-        "internalType": "uint32",
-        "name": "",
-        "type": "uint32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "slippage",
+    "name": "priceValidStart",
     "outputs": [
       {
         "internalType": "uint256",
@@ -229,34 +175,40 @@
   },
   {
     "inputs": [],
-    "name": "swapCount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "_priceValidStart",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_priceValidEnd",
         "type": "uint256"
       }
     ],
-    "name": "swapPath",
-    "outputs": [
+    "name": "setTimingReq",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "newOwner",
         "type": "address"
       }
     ],
-    "stateMutability": "view",
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]

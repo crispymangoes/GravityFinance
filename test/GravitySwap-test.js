@@ -63,14 +63,20 @@ before(async function () {
     Governance = await ethers.getContractFactory("Governance");
     governance = await upgrades.deployProxy(Governance, [mockGFI.address, mockWETH.address, mockWBTC.address], { initializer: 'initialize' });
     await governance.deployed();
+    await mockGFI.setGovernanceAddress(governance.address);
+    await mockGFI.changeGovernanceForwarding(true);
     
     PathOracle = await ethers.getContractFactory("PathOracle");
     pathOracle = await PathOracle.deploy([mockWETH.address, mockWBTC.address, mockGFI.address, mockUSDC.address, mockDAI.address], 5, mockWETH.address, mockWBTC.address);
     await pathOracle.deployed();
     await pathOracle.alterPath(WETH, WBTC);
 
+    PriceOracle = await ethers.getContractFactory("PriceOracle");
+    priceOracle = await PriceOracle.deploy(300, 600);
+    await priceOracle.deployed();
+
     SwapFactory = await ethers.getContractFactory("UniswapV2Factory");
-    swapFactory = await SwapFactory.deploy(owner.address, governance.address, mockWETH.address, mockWBTC.address, pathOracle.address);
+    swapFactory = await SwapFactory.deploy(owner.address, governance.address, mockWETH.address, mockWBTC.address, mockGFI.address, pathOracle.address, priceOracle.address);
     await swapFactory.deployed();
 
     await pathOracle.setFactory(swapFactory.address);
@@ -271,6 +277,11 @@ describe("Swap Exchange Contracts functional test", function () {
         EMforPair = await pair.EM_ADDRESS();
         let EM = await ethers.getContractFactory("EarningsManager");
         let em = await EM.attach(EMforPair);
+
+        let Oracle = await ethers.getContractFactory("PriceOracle");
+        let oracle = await Oracle.attach(priceOracle.address);
+
+
         console.log("Earnings Manager for pair: ", EMforPair);
         console.log("GFI Balance of Earnings Manager: ", Number((await mockGFI.balanceOf(EMforPair)).toString())/10**18);
         console.log("DAI Balance of Earnings Manager: ", Number((await mockDAI.balanceOf(EMforPair)).toString())/10**18);
@@ -290,25 +301,12 @@ describe("Swap Exchange Contracts functional test", function () {
         console.log("DAI Balance of Earnings Manager: ", Number((await mockDAI.balanceOf(EMforPair)).toString())/10**18);
         
 
-        await pair.updateEM(95);;
+        await pair.updateEM(95);
+        await em.checkPricing();
 
-        console.log("Advance time by 400 seconds");
-        await network.provider.send("evm_increaseTime", [400]);
+        console.log("Advance time by 300 seconds");
+        await network.provider.send("evm_increaseTime", [300]);
         await network.provider.send("evm_mine");
-        //pair.sync();
-
-        console.log(await em.swapPath(0), " -> ", await em.swapPath(1), " -> ", await em.swapPath(2), " -> ", await em.swapPath(3));
-        let amount = await em.calculateMinAmount("0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9", "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9", "5010000000000000000");
-        let amountFinal = (Number(amount)/10**18) / 0.95;
-        console.log("Min Amount 5.01 DAI for GFI: ", amountFinal);
-
-        amount = await em.calculateMinAmount("0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9", "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512", "9970000000000000000");
-        amountFinal = (Number(amount)/10**18) / 0.95;
-        console.log("Min Amount 9.97 GFI for wBTC: ", amountFinal);
-
-        amount = await em.calculateMinAmount("0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512", "0x5FbDB2315678afecb367f032d93F642f64180aa3", "1000000000000000000");
-        amountFinal = (Number(amount)/10**18) / 0.95;
-        console.log("Min Amount 1 wBTC for wETH: ", amountFinal);
 
         pair.handleFees();
 
@@ -320,6 +318,54 @@ describe("Swap Exchange Contracts functional test", function () {
 
     //ADD TEST TO CHECK IF REQUIRE STATEMENT ON LINE 257(Pair contract) works
     //ADD TEST TO SEE IF PAUSING WORKS
+
+    it("Check Earnings Logic", async function () {
+        
+        //Create wETH/GFI Pair
+        let pairAddress;
+        await mockGFI.transfer(addr1.address, "100000000000000000000000000");
+        await mockGFI.connect(addr1).approve(swapRouter.address, "100000000000000000000000000");
+        await mockWETH.connect(addr1).approve(swapRouter.address, "1000000000000000000000");
+        await swapRouter.connect(addr1).addLiquidity(mockGFI.address, mockWETH.address, "100000000000000000000000000", "1000000000000000000000", "990000000000000000000", "990000000000000000000", addr1.address, 1654341846);
+        pairAddress = await swapFactory.getPair(mockGFI.address, mockWETH.address);
+        console.log("Created  GFI/wETH at: ", pairAddress);
+
+        let Pair = await ethers.getContractFactory("UniswapV2Pair");
+        let pair = await Pair.attach(pairAddress);
+        EMforPair = await pair.EM_ADDRESS();
+        let EM = await ethers.getContractFactory("EarningsManager");
+        let em = await EM.attach(EMforPair);
+
+        await governance.updateFee(pairAddress);
+        await mockWETH.connect(addr1).approve(governance.address, "12000000000000000000"); 
+        await governance.connect(addr1).depositFee("12000000000000000000", "0"); //Deposit 12 wETH into governance contract
+
+        await pair.updateEM(95);
+        await em.checkPricing();
+        console.log("Advance time by 300 seconds");
+        await network.provider.send("evm_increaseTime", [300]);
+        await network.provider.send("evm_mine");
+        console.log( (await em.swapPath(0)).toString(), " -> ", (await em.swapPath(1)).toString(), " -> ", (await em.swapPath(2)).toString(), " -> ", (await em.swapPath(3)).toString(), " -> ", (await em.swapPath(4)).toString())
+        console.log( (await em.swapCount()).toString());
+        
+        console.log("Swap Pair wETH Balance: ",(await mockWETH.balanceOf(pairAddress)).toString());
+        console.log("Swap Pair GFI Balance: ",(await mockGFI.balanceOf(pairAddress)).toString());
+        console.log("Earnings Manager LP token balance: ", (await pair.balanceOf(EMforPair)).toString());
+        console.log("Earnings Manager wETH Balance: ",(await mockWETH.balanceOf(EMforPair)).toString());
+        console.log("Earnings Manager GFI Balance: ",(await mockGFI.balanceOf(EMforPair)).toString());
+        console.log("");
+        console.log("Convert GFI earnings into pool assets, deposit them, then burn LP tokens");
+        await pair.handleEarnings();
+        console.log("");
+        console.log("Swap Pair wETH Balance: ",(await mockWETH.balanceOf(pairAddress)).toString());
+        console.log("Swap Pair GFI Balance: ",(await mockGFI.balanceOf(pairAddress)).toString());
+        console.log("Earnings Manager LP token balance: ", (await pair.balanceOf(EMforPair)).toString());
+        console.log("Earnings Manager wETH Balance: ",(await mockWETH.balanceOf(EMforPair)).toString());
+        console.log("Earnings Manager GFI Balance: ",(await mockGFI.balanceOf(EMforPair)).toString());
+
+
+    });
+
 
 
 

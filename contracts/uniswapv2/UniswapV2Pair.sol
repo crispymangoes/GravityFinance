@@ -40,12 +40,13 @@ contract UniswapV2Pair is UniswapV2ERC20 {
     uint private unlocked = 1;
 
     //NEW VARS
-    address public GFI_ADDRESS = 0x874e178A2f3f3F9d34db862453Cd756E7eAb0381;
+    address public GFI_ADDRESS;
     iEarningsManager EM;
     address public EM_ADDRESS;
     iGovernance Governor;
     bool public paused;
     address public router;
+    IUniswapV2Factory Factory;
 
     modifier lock() {
         require(unlocked == 1, 'UniswapV2: LOCKED');
@@ -82,58 +83,59 @@ contract UniswapV2Pair is UniswapV2ERC20 {
 
     constructor() public {
         factory = msg.sender;
+        Factory = IUniswapV2Factory(msg.sender);
     }
 
     // called once by the factory at time of deployment
-    function initialize(address _token0, address _token1, address governor, address weth, address wbtc, address router, address pathOracle) external {
+    function initialize(address _token0, address _token1, address governor, address weth, address wbtc, address gfi, address router, address pathOracle, address priceOracle) external {
         require(msg.sender == factory, 'UniswapV2: FORBIDDEN'); // sufficient check
         token0 = _token0;
         token1 = _token1;
         //NEW CODE
         Governor = iGovernance(governor);
-        EarningsManager EMtmp = new EarningsManager(governor, weth, wbtc, router, pathOracle);
+        EarningsManager EMtmp = new EarningsManager(governor, weth, wbtc, router, pathOracle, priceOracle);//, Factory.feeToSetter());
         EM_ADDRESS = address(EMtmp);
         EM = iEarningsManager(EM_ADDRESS);
         emit EarningsManagerCreation(address(this), EM_ADDRESS);
+        GFI_ADDRESS = gfi;
     }
 
     function changePause(bool _bool) external {
-        require(msg.sender == IUniswapV2Factory(factory).feeToSetter(), "Only Factory Owner can call this function!");
+        require(msg.sender == Factory.feeToSetter(), "Only Factory Owner can call this function!");
         paused = _bool;
     }
 
     //TODO ADD ABILITY FOR OWNER TO CHANGE FEE MANAGER
     function changeEarningsManager(address _address) external {
-        require(msg.sender == IUniswapV2Factory(factory).feeToSetter(), "Only Factory Owner can call this function!");
+        require(msg.sender == Factory.feeToSetter(), "Only Factory Owner can call this function!");
         EM_ADDRESS = _address;
         EM = iEarningsManager(EM_ADDRESS);
     }
 
     //TODO ADD FUNCTION THAT CALLS THE GOVERNANCE CONTRACT DELEGATEFEE() AND THEN CALLS A FUNCTION IN THE FEE MANAGER TO HANDLE THAT FEE
-    function handleEarnings() external returns(uint priceValid){
-        if(IUniswapV2Factory(factory).feeToSetter() != address(0)){require(msg.sender == IUniswapV2Factory(factory).feeToSetter(), "Only Factory Owner can call this function!");}
+    function handleEarnings() external returns(bool priceValid, uint maxTime){
+        if(Factory.feeToSetter() != address(0)){require(msg.sender == Factory.feeToSetter(), "Only Factory Owner can call this function!");}
         require(token0 == GFI_ADDRESS || token1 == GFI_ADDRESS, "Swap contract must have GFI as one of it's assets to claim earnings");
         Governor.delegateFee(EM_ADDRESS); //Calculates WETH fees earned by GFI in contract
-        //TODO need to check if checkPrice returns a zero
-        priceValid = EM.checkPrice();
-        if(priceValid == 0){
-            EM.manageEarnings(msg.sender);
+        (priceValid, maxTime) = EM.checkPricing();
+        if(priceValid){
+            EM.manageEarnings();
         }
     }
 
     //TODO function that calls manageFee() in EarningsManager contract
-    function handleFees() external returns(uint priceValid){
-        if(IUniswapV2Factory(factory).feeToSetter() != address(0)){require(msg.sender == IUniswapV2Factory(factory).feeToSetter(), "Only Factory Owner can call this function!");}
+    function handleFees() external returns(bool priceValid, uint maxTime){
+        if(Factory.feeToSetter() != address(0)){require(msg.sender == Factory.feeToSetter(), "Only Factory Owner can call this function!");}
         //TODO need to check if checkPrice returns a zero
-        priceValid = EM.checkPrice();
-        if(priceValid == 0){
+        (priceValid, maxTime) = EM.checkPricing();
+        if(priceValid){
             EM.manageFees();
         }
     }
 
     //TODO add in a function to change EM parameters like the slippage
     function updateEM(uint _slippage) external {
-        if(IUniswapV2Factory(factory).feeToSetter() != address(0)){require(msg.sender == IUniswapV2Factory(factory).feeToSetter(), "Only Factory Owner can call this function!");}
+        if(Factory.feeToSetter() != address(0)){require(msg.sender == Factory.feeToSetter(), "Only Factory Owner can call this function!");}
         EM.changeSlippage(_slippage);
         EM.updateSwapPath();
     }
@@ -163,10 +165,9 @@ contract UniswapV2Pair is UniswapV2ERC20 {
         uint amount0 = balance0.sub(_reserve0);
         uint amount1 = balance1.sub(_reserve1);
 
-        bool feeOn;
         uint _totalSupply = totalSupply; // gas savings, must be defined here since totalSupply can update in _mintFee
         if (_totalSupply == 0) {
-            address migrator = IUniswapV2Factory(factory).migrator();
+            address migrator = Factory.migrator();
             if (msg.sender == migrator) {
                 liquidity = IMigrator(migrator).desiredLiquidity();
                 require(liquidity > 0 && liquidity != uint256(-1), "Bad desired liquidity");
@@ -182,7 +183,6 @@ contract UniswapV2Pair is UniswapV2ERC20 {
         _mint(to, liquidity);
 
         _update(balance0, balance1, _reserve0, _reserve1);
-        if (feeOn) kLast = uint(reserve0).mul(reserve1); // reserve0 and reserve1 are up-to-date
         emit Mint(msg.sender, amount0, amount1);
     }
 
@@ -195,7 +195,6 @@ contract UniswapV2Pair is UniswapV2ERC20 {
         uint balance1 = IERC20Uniswap(_token1).balanceOf(address(this));
         uint liquidity = balanceOf[address(this)];
 
-        bool feeOn;
         uint _totalSupply = totalSupply; // gas savings, must be defined here since totalSupply can update in _mintFee
         amount0 = liquidity.mul(balance0) / _totalSupply; // using balances ensures pro-rata distribution
         amount1 = liquidity.mul(balance1) / _totalSupply; // using balances ensures pro-rata distribution
@@ -207,7 +206,6 @@ contract UniswapV2Pair is UniswapV2ERC20 {
         balance1 = IERC20Uniswap(_token1).balanceOf(address(this));
 
         _update(balance0, balance1, _reserve0, _reserve1);
-        if (feeOn) kLast = uint(reserve0).mul(reserve1); // reserve0 and reserve1 are up-to-date
         emit Burn(msg.sender, amount0, amount1, to);
     }
 

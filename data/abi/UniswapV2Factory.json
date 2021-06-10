@@ -23,7 +23,17 @@
       },
       {
         "internalType": "address",
+        "name": "_gfi",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
         "name": "_pathOracle",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_priceOracle",
         "type": "address"
       }
     ],
@@ -169,6 +179,19 @@
   },
   {
     "inputs": [],
+    "name": "gfi",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "governor",
     "outputs": [
       {
@@ -209,6 +232,19 @@
   {
     "inputs": [],
     "name": "pathOracle",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "priceOracle",
     "outputs": [
       {
         "internalType": "address",

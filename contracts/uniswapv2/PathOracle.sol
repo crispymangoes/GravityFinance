@@ -62,7 +62,7 @@ contract PathOracle is Ownable {
                 swapCount++;
             }
             else {
-                swapPath[i] = address(0);
+                swapPath[i] = address(0);// was i + 1
             }
             i++;
         }
