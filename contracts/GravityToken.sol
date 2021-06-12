@@ -6,10 +6,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract GravityToken is ERC20, Ownable {
-    address constant CONTRACT_OWNER =
-        0xeb678812778B68a48001B4A9A4A04c4924c33598;
     address public GOVERNANCE_ADDRESS;
-    iGovernance private govenor;
+    iGovernance private governor;
     bool public applyGovernanceForwarding;
 
     constructor(string memory _name, string memory _symbol)
@@ -20,10 +18,10 @@ contract GravityToken is ERC20, Ownable {
 
     function setGovernanceAddress(address _address) external onlyOwner {
         GOVERNANCE_ADDRESS = _address;
-        govenor = iGovernance(GOVERNANCE_ADDRESS);
+        governor = iGovernance(GOVERNANCE_ADDRESS);
     }
 
-    function changeGovernanceForwarding(bool _bool) public onlyOwner {
+    function changeGovernanceForwarding(bool _bool) external onlyOwner {
         applyGovernanceForwarding = _bool;
     }
 
@@ -33,7 +31,7 @@ contract GravityToken is ERC20, Ownable {
         returns (bool)
     {
         if (applyGovernanceForwarding) {
-            govenor.govAuthTransfer(msg.sender, recipient, amount);
+            require(governor.govAuthTransfer(msg.sender, recipient, amount), "Governor transfer failed!");
         }
 
         _transfer(_msgSender(), recipient, amount);
@@ -46,12 +44,12 @@ contract GravityToken is ERC20, Ownable {
         uint256 amount
     ) public override returns (bool) {
         if (applyGovernanceForwarding) {
-            govenor.govAuthTransferFrom(msg.sender, sender, recipient, amount);
+            require(governor.govAuthTransferFrom(msg.sender, sender, recipient, amount), "Governor transferFrom failed!");
         }
 
         _transfer(sender, recipient, amount);
-        uint256 currentAllowance = allowance(sender, _msgSender()); //Had to change this because erro thrown with _allowances
-        //uint256 currentAllowance = _allowances[sender][_msgSender()];
+        uint256 currentAllowance = allowance(sender, _msgSender()); //Had to change this because error thrown with _allowances
+        //uint256 currentAllowance = _allowances[sender][_msgSender()]; //Original OpenZeppelin Line
         require(
             currentAllowance >= amount,
             "ERC20: transfer amount exceeds allowance"

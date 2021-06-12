@@ -180,7 +180,7 @@
           {
             "contract": "Governance",
             "label": "GFI",
-            "type": "t_contract(iGravityToken)3903",
+            "type": "t_contract(iGravityToken)3904",
             "src": "contracts/Governance.sol:21"
           },
           {
@@ -226,7 +226,7 @@
               }
             ]
           },
-          "t_contract(iGravityToken)3903": {
+          "t_contract(iGravityToken)3904": {
             "label": "contract iGravityToken"
           },
           "t_contract(IERC20)916": {

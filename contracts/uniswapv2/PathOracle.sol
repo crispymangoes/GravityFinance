@@ -17,6 +17,10 @@ contract PathOracle is Ownable {
     address public WETH_ADDRESS;
     address public WBTC_ADDRESS;
 
+    struct node{
+        address token;
+        bool notLeaf;
+    }
 
     constructor(address[] memory _favored, uint _favoredLength, address weth, address wbtc) {
         favoredAssets = _favored;
@@ -29,7 +33,7 @@ contract PathOracle is Ownable {
         pathMap[fromAsset] = toAsset;
     }
 
-    function stepPath(address from) internal view returns(address to){
+    function stepPath(address from) public view returns(address to){
         to = pathMap[from];
     }
 

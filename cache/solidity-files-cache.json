@@ -332,8 +332,8 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/GravityToken.sol": {
-      "lastModificationDate": 1621529611250,
-      "contentHash": "b26ff28bdde03134261cd96b716d86b2",
+      "lastModificationDate": 1623343159740,
+      "contentHash": "6f99efbee85fc5544e2309cbad4f5845",
       "sourceName": "contracts/GravityToken.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -631,8 +631,8 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/libraries/UniswapV2Library.sol": {
-      "lastModificationDate": 1623282914180,
-      "contentHash": "e9793b012a2d49900b9a6d03d4b712d8",
+      "lastModificationDate": 1623429542150,
+      "contentHash": "f1c9a0c89a78595dc9791185e44c0717",
       "sourceName": "contracts/uniswapv2/libraries/UniswapV2Library.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -1231,11 +1231,11 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/interfaces/iGovernance.sol": {
-      "lastModificationDate": 1622755749450,
-      "contentHash": "63c104489db281152657f3b8018ceabf",
+      "lastModificationDate": 1623429372370,
+      "contentHash": "6195c8ce7709135ddcda2d04eb9b0972",
       "sourceName": "contracts/uniswapv2/interfaces/iGovernance.sol",
       "solcConfig": {
-        "version": "0.6.12",
+        "version": "0.8.4",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1258,7 +1258,7 @@
       },
       "imports": [],
       "versionPragmas": [
-        "^0.6.0"
+        ">=0.6.0"
       ],
       "artifacts": [
         "iGovernance"
@@ -1484,8 +1484,8 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/PathOracle.sol": {
-      "lastModificationDate": 1623275480200,
-      "contentHash": "a71dbb21c7d0671101c509d25a9cb587",
+      "lastModificationDate": 1623384413359,
+      "contentHash": "7ce2b40affb0400f9df80a870f229ccf",
       "sourceName": "contracts/uniswapv2/PathOracle.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -1521,11 +1521,11 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/interfaces/IPathOracle.sol": {
-      "lastModificationDate": 1623183227380,
-      "contentHash": "cf3879606c6c94b91127c2e92b1779a5",
+      "lastModificationDate": 1623385277419,
+      "contentHash": "dc3f6913caf4d659898a2c3085479b1c",
       "sourceName": "contracts/uniswapv2/interfaces/IPathOracle.sol",
       "solcConfig": {
-        "version": "0.6.12",
+        "version": "0.8.4",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1548,7 +1548,7 @@
       },
       "imports": [],
       "versionPragmas": [
-        "^0.6.0"
+        ">=0.6.0"
       ],
       "artifacts": [
         "IPathOracle"
@@ -1595,11 +1595,11 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/interfaces/IPriceOracle.sol": {
-      "lastModificationDate": 1623258759370,
-      "contentHash": "a3eddf620f8bdd297ef1871131ed6145",
+      "lastModificationDate": 1623385256999,
+      "contentHash": "0124814d608850f3ae051382f695ce2f",
       "sourceName": "contracts/uniswapv2/interfaces/IPriceOracle.sol",
       "solcConfig": {
-        "version": "0.6.12",
+        "version": "0.8.4",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1622,10 +1622,52 @@
       },
       "imports": [],
       "versionPragmas": [
-        "^0.6.0"
+        ">=0.6.0"
       ],
       "artifacts": [
         "IPriceOracle"
+      ]
+    },
+    "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/FeeManager.sol": {
+      "lastModificationDate": 1623429480510,
+      "contentHash": "6cfdd479e172d05352048bb0a7741e38",
+      "sourceName": "contracts/uniswapv2/FeeManager.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../interfaces/OZ_IERC20.sol",
+        "./interfaces/IPathOracle.sol",
+        "./interfaces/IPriceOracle.sol",
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "./interfaces/IUniswapV2Factory.sol",
+        "./interfaces/IUniswapV2Router02.sol",
+        "./interfaces/iGovernance.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "FeeManager"
       ]
     }
   }
