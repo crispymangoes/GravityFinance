@@ -1744,8 +1744,8 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/EarningsManager.sol": {
-      "lastModificationDate": 1623724642940,
-      "contentHash": "15f14d2273e64e2c9f1ceb631c849f46",
+      "lastModificationDate": 1623729396410,
+      "contentHash": "716705b1eb303d5e50273d09ded092ea",
       "sourceName": "contracts/uniswapv2/EarningsManager.sol",
       "solcConfig": {
         "version": "0.8.4",

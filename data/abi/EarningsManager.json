@@ -184,7 +184,7 @@
       },
       {
         "internalType": "uint256[2]",
-        "name": "amounts",
+        "name": "minAmounts",
         "type": "uint256[2]"
       }
     ],

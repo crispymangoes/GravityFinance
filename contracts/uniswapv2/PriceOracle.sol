@@ -106,6 +106,10 @@ contract PriceOracle is Ownable{
         }
     }
 
+    function getOracle(address pairAddress) external view returns(oracle memory Oracle){
+        Oracle = priceOracles[pairAddress];
+    }
+
     function calculateMinAmount(
         address from,
         uint256 slippage,
