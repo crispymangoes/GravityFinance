@@ -56,7 +56,7 @@ contract PriceOracle is Ownable{
         else {
             otherIndex = 0;
         }
-        //Check if other index 
+        //Check if current index is expired
         if (priceOracles[pairAddress].timeStamp[index] + priceValidEnd < currentBlockTimestamp()) {
             (
                 priceOracles[pairAddress].price0Cumulative[index],

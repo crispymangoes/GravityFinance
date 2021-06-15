@@ -9,9 +9,9 @@ import './interfaces/IERC20.sol';
 import '../interfaces/OZ_IERC20.sol'; // OpenZeppelin Version
 import './interfaces/IUniswapV2Factory.sol';
 import './interfaces/IUniswapV2Callee.sol';
-import {EarningsManager} from './earningsManager.sol';
+import {Holding} from './Holding.sol';
 import './interfaces/iGovernance.sol';
-import './interfaces/iEarningsManager.sol';
+import './interfaces/IHolding.sol';
 
 interface IMigrator {
     // Return the desired amount of liquidity token that the migrator wants.
@@ -41,11 +41,8 @@ contract UniswapV2Pair is UniswapV2ERC20 {
 
     //NEW VARS
     address public GFI_ADDRESS;
-    iEarningsManager EM;
-    address public EM_ADDRESS;
-    iGovernance Governor;
-    bool public paused;
-    address public router;
+    Holding holder;
+    address public HOLDING_ADDRESS;
     IUniswapV2Factory Factory;
 
     modifier lock() {
@@ -53,6 +50,11 @@ contract UniswapV2Pair is UniswapV2ERC20 {
         unlocked = 0;
         _;
         unlocked = 1;
+    }
+
+    modifier onlyEarningsManager() {
+        require(msg.sender == Factory.earningsManager(), "Gravity Finance: FORBBIDDEN");
+        _;
     }
 
     function getReserves() public view returns (uint112 _reserve0, uint112 _reserve1, uint32 _blockTimestampLast) {
@@ -87,58 +89,34 @@ contract UniswapV2Pair is UniswapV2ERC20 {
     }
 
     // called once by the factory at time of deployment
-    function initialize(address _token0, address _token1, address governor, address weth, address wbtc, address gfi, address router, address pathOracle, address priceOracle) external {
+    function initialize(address _token0, address _token1, address gfi) external {
         require(msg.sender == factory, 'UniswapV2: FORBIDDEN'); // sufficient check
         token0 = _token0;
         token1 = _token1;
         //NEW CODE
-        Governor = iGovernance(governor);
-        EarningsManager EMtmp = new EarningsManager(governor, weth, wbtc, router, pathOracle, priceOracle);//, Factory.feeToSetter());
-        EM_ADDRESS = address(EMtmp);
-        EM = iEarningsManager(EM_ADDRESS);
-        emit EarningsManagerCreation(address(this), EM_ADDRESS);
+        holder = new Holding();
+        HOLDING_ADDRESS = address(holder);
         GFI_ADDRESS = gfi;
     }
 
-    function changePause(bool _bool) external {
-        require(msg.sender == Factory.feeToSetter(), "Only Factory Owner can call this function!");
-        paused = _bool;
-    }
-
-    //TODO ADD ABILITY FOR OWNER TO CHANGE FEE MANAGER
-    function changeEarningsManager(address _address) external {
-        require(msg.sender == Factory.feeToSetter(), "Only Factory Owner can call this function!");
-        EM_ADDRESS = _address;
-        EM = iEarningsManager(EM_ADDRESS);
-    }
 
     //TODO ADD FUNCTION THAT CALLS THE GOVERNANCE CONTRACT DELEGATEFEE() AND THEN CALLS A FUNCTION IN THE FEE MANAGER TO HANDLE THAT FEE
-    function handleEarnings() external returns(bool priceValid, uint maxTime){
-        if(Factory.feeToSetter() != address(0)){require(msg.sender == Factory.feeToSetter(), "Only Factory Owner can call this function!");}
-        require(token0 == GFI_ADDRESS || token1 == GFI_ADDRESS, "Swap contract must have GFI as one of it's assets to claim earnings");
-        Governor.delegateFee(EM_ADDRESS); //Calculates WETH fees earned by GFI in contract
-        (priceValid, maxTime) = EM.checkPricing();
-        if(priceValid){
-            EM.manageEarnings();
-        }
+    function handleEarnings() external onlyEarningsManager returns(uint amount){
+        require(token0 == GFI_ADDRESS || token1 == GFI_ADDRESS, "Swap contract must have GFI as one of it's assets to claim earnings"); //Require statement not really needed
+        uint amount = iGovernance(Factory.governor()).delegateFee(HOLDING_ADDRESS); //Calculates WETH fees earned by GFI in contract
+        holder.approveEM(Factory.weth(), Factory.earningsManager(), amount);
+        
     }
 
     //TODO function that calls manageFee() in EarningsManager contract
-    function handleFees() external returns(bool priceValid, uint maxTime){
-        if(Factory.feeToSetter() != address(0)){require(msg.sender == Factory.feeToSetter(), "Only Factory Owner can call this function!");}
-        //TODO need to check if checkPrice returns a zero
-        (priceValid, maxTime) = EM.checkPricing();
-        if(priceValid){
-            EM.manageFees();
-        }
-    }
-
-    //TODO add in a function to change EM parameters like the slippage
-    function updateEM(uint _slippage) external {
-        if(Factory.feeToSetter() != address(0)){require(msg.sender == Factory.feeToSetter(), "Only Factory Owner can call this function!");}
-        EM.changeSlippage(_slippage);
-        EM.updateSwapPath();
-    }
+    //function handleFees() external returns(bool priceValid, uint maxTime){
+    //    if(Factory.feeToSetter() != address(0)){require(msg.sender == Factory.feeToSetter(), "Only Factory Owner can call this function!");}
+    //    //TODO need to check if checkPrice returns a zero
+    //    (priceValid, maxTime) = EM.checkPricing();
+    //    if(priceValid){
+    //        EM.manageFees();
+    //    }
+    //}
 
     // update reserves and, on the first call per block, price accumulators
     function _update(uint balance0, uint balance1, uint112 _reserve0, uint112 _reserve1) private {
@@ -158,7 +136,7 @@ contract UniswapV2Pair is UniswapV2ERC20 {
 
     // this low-level function should be called from a contract which performs important safety checks
     function mint(address to) external lock returns (uint liquidity) {
-        require(!paused, "Swap contract is paused, users can only remove liquidity");
+        require(!Factory.paused(), "Swap contract is paused, users can only remove liquidity");
         (uint112 _reserve0, uint112 _reserve1,) = getReserves(); // gas savings
         uint balance0 = IERC20Uniswap(token0).balanceOf(address(this));
         uint balance1 = IERC20Uniswap(token1).balanceOf(address(this));
@@ -211,7 +189,7 @@ contract UniswapV2Pair is UniswapV2ERC20 {
 
     // this low-level function should be called from a contract which performs important safety checks
     function swap(uint amount0Out, uint amount1Out, address to, bytes calldata data) external lock {
-        require(!paused, "Swap contract is paused, users can only remove liquidity");
+        require(!Factory.paused(), "Swap contract is paused, users can only remove liquidity");
         require(amount0Out > 0 || amount1Out > 0, 'UniswapV2: INSUFFICIENT_OUTPUT_AMOUNT');
         (uint112 _reserve0, uint112 _reserve1,) = getReserves(); // gas savings
         require(amount0Out < _reserve0 && amount1Out < _reserve1, 'UniswapV2: INSUFFICIENT_LIQUIDITY');
@@ -226,12 +204,12 @@ contract UniswapV2Pair is UniswapV2ERC20 {
         if (amount0Out > 0){
             uint old_amount0Out = amount0Out;
             amount0Out = amount0Out.mul(9995) / (10000); //Remove 0.05% gov fee
-             _safeTransfer(_token0, EM_ADDRESS, old_amount0Out.sub(amount0Out)); // optimistically transfer tokens
+             _safeTransfer(_token0, Factory.feeManager(), old_amount0Out.sub(amount0Out)); // optimistically transfer tokens
         }
         if (amount1Out > 0){
             uint old_amount1Out = amount1Out;
             amount1Out = amount1Out.mul(9995) / (10000); //Remove 0.05% gov fee
-             _safeTransfer(_token1, EM_ADDRESS, old_amount1Out.sub(amount1Out)); // optimistically transfer tokens
+             _safeTransfer(_token1, Factory.feeManager(), old_amount1Out.sub(amount1Out)); // optimistically transfer tokens
         }
 
         require(to != _token0 && to != _token1, 'UniswapV2: INVALID_TO');

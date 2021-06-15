@@ -1,17 +1,6 @@
 [
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_priceOracle",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_pathOracle",
-        "type": "address"
-      }
-    ],
+    "inputs": [],
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
@@ -203,7 +192,37 @@
       }
     ],
     "name": "processAssetsIntowETH",
-    "outputs": [],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "lastIndex",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "tokenAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "stopAddress",
+        "type": "address"
+      }
+    ],
+    "name": "refreshPricePath",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "success",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },

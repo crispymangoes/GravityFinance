@@ -206,7 +206,7 @@
   },
   {
     "inputs": [],
-    "name": "EM_ADDRESS",
+    "name": "GFI_ADDRESS",
     "outputs": [
       {
         "internalType": "address",
@@ -219,7 +219,7 @@
   },
   {
     "inputs": [],
-    "name": "GFI_ADDRESS",
+    "name": "HOLDING_ADDRESS",
     "outputs": [
       {
         "internalType": "address",
@@ -367,32 +367,6 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_address",
-        "type": "address"
-      }
-    ],
-    "name": "changeEarningsManager",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bool",
-        "name": "_bool",
-        "type": "bool"
-      }
-    ],
-    "name": "changePause",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "decimals",
     "outputs": [
@@ -446,31 +420,8 @@
     "name": "handleEarnings",
     "outputs": [
       {
-        "internalType": "bool",
-        "name": "priceValid",
-        "type": "bool"
-      },
-      {
         "internalType": "uint256",
-        "name": "maxTime",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "handleFees",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "priceValid",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint256",
-        "name": "maxTime",
+        "name": "amount",
         "type": "uint256"
       }
     ],
@@ -491,37 +442,7 @@
       },
       {
         "internalType": "address",
-        "name": "governor",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "weth",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "wbtc",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
         "name": "gfi",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "router",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "pathOracle",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "priceOracle",
         "type": "address"
       }
     ],
@@ -595,19 +516,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "paused",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -671,19 +579,6 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "router",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -839,19 +734,6 @@
         "type": "bool"
       }
     ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_slippage",
-        "type": "uint256"
-      }
-    ],
-    "name": "updateEM",
-    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   }

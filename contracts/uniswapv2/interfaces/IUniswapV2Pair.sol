@@ -12,6 +12,7 @@ interface IUniswapV2Pair {
     function totalSupply() external view returns (uint);
     function balanceOf(address owner) external view returns (uint);
     function allowance(address owner, address spender) external view returns (uint);
+    function HOLDING_ADDRESS() external view returns (address);
 
     function approve(address spender, uint value) external returns (bool);
     function transfer(address to, uint value) external returns (bool);
@@ -51,4 +52,6 @@ interface IUniswapV2Pair {
     function sync() external;
 
     function initialize(address, address) external;
+
+    function handleEarnings() external returns(uint amount);
 }

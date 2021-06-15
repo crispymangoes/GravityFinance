@@ -9,13 +9,17 @@ contract UniswapV2Factory is IUniswapV2Factory {
     address public override feeTo;
     address public override feeToSetter;
     address public override migrator;
-    address public router;
-    address public governor;
-    address public weth;
+    address public override router;
+    address public override governor;
+    address public override weth;
     address public wbtc;
-    address public gfi;
+    address public override gfi;
     address public pathOracle;
     address public priceOracle;
+    address public override earningsManager;
+    address public override feeManager;
+    bool public override paused;
+    uint public override slippage;
 
     mapping(address => mapping(address => address)) public override getPair;
     address[] public override allPairs;
@@ -51,7 +55,7 @@ contract UniswapV2Factory is IUniswapV2Factory {
         assembly {
             pair := create2(0, add(bytecode, 32), mload(bytecode), salt)
         }
-        UniswapV2Pair(pair).initialize(token0, token1, governor, weth, wbtc, gfi, router, pathOracle, priceOracle);
+        UniswapV2Pair(pair).initialize(token0, token1, gfi);
         getPair[token0][token1] = pair;
         getPair[token1][token0] = pair; // populate mapping in the reverse direction
         allPairs.push(pair);

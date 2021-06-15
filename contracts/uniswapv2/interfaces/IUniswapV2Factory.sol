@@ -8,6 +8,14 @@ interface IUniswapV2Factory {
     function feeTo() external view returns (address);
     function feeToSetter() external view returns (address);
     function migrator() external view returns (address);
+    function weth() external view returns (address);
+    function gfi() external view returns (address);
+    function earningsManager() external view returns (address);
+    function feeManager() external view returns (address);
+    function governor() external view returns (address);
+    function router() external view returns (address);
+    function paused() external view returns (bool);
+    function slippage() external view returns (uint);
 
     function getPair(address tokenA, address tokenB) external view returns (address pair);
     function allPairs(uint) external view returns (address pair);
