@@ -9,122 +9,119 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./interfaces/IUniswapV2Factory.sol";
 import "./interfaces/IUniswapV2Router02.sol";
 import "./interfaces/iGovernance.sol";
+
 //TODO instead of success bool, have it return the longest time till valid for the swap path
 //TODO change logic so that instead of trying to swap an asset all the way to wETH, just step it one more asset along
 // Then set up some beastly while loop that scans through all the assets, and swaps them if the price is valid, and updates price if necessary
 // function will need to be called multiple times to work, and should really just swap everything into wETH and wBTC, then at the end swap the wBTC into wETH, and then swap half back into wBTC, or we could probs do the math
-contract FeeManager is Ownable{
+contract FeeManager is Ownable {
     address[] public tokenList;
-    mapping(address => uint) public tokenIndex;
-    address public WETH_ADDRESS;
-    address public WBTC_ADDRESS;
-    address public FACTORY_ADDRESS;
-    address public GOVERNOR_ADDRESS;
-    address public ROUTER_ADDRESS;
-    address public GOVERNANCE_ADDRESS;
-    address public PATHORACLE_ADDRESS;
-    address public PRICEORACLE_ADDRESS;
-    uint public slippage;
+    mapping(address => uint256) public tokenIndex;
+    address public factory;
+    mapping(address => bool) public whitelist;
+    IUniswapV2Factory Factory;
 
-
-    constructor() {
-        tokenList.push(address(0)); //populate the 0 index with the zero address
-
-    }   
-
-    /**
-    * @dev Allows owner to manually convert tokens into wETH
-    **/
-    function convertTowETH(address tokenAddress) external onlyOwner{
-        _convertTill(tokenAddress, WETH_ADDRESS);
+    modifier onlyWhitelist() {
+        require(whitelist[msg.sender], "Caller is not in whitelist!");
+        _;
     }
+
+    constructor(address _factory) {
+        tokenList.push(address(0)); //populate the 0 index with the zero address
+        factory = _factory;
+        Factory = IUniswapV2Factory(factory);
+    }
+
+    function adjustWhitelist(address _address, bool _bool) external onlyOwner {
+        whitelist[_address] = _bool;
+    }
+
     /**
-    * @dev When swap pairs are created, add their tokens to the tokenList if not already in it
-    **/
+     * @dev When swap pairs are created, add their tokens to the tokenList if not already in it
+     **/
     function catalougeTokens(address token0, address token1) external {
-        if(tokenIndex[token0] == 0){
+        if (tokenIndex[token0] == 0) {
             tokenList.push(token0);
             tokenIndex[token0] = tokenList.length - 1;
         }
 
-        if(tokenIndex[token1] == 0){
+        if (tokenIndex[token1] == 0) {
             tokenList.push(token1);
             tokenIndex[token1] = tokenList.length - 1;
         }
     }
-    function _convertTill(address tokenAddress, address stopAddress) internal returns(bool success){
-        address currentAsset = tokenAddress;
-        address nextAsset;
-        address pairAddress;
-        uint minAmount;
-        uint timeTillValid;
-        uint tokenBal;
+
+    function deposit() external onlyWhitelist {
+        uint256 amountWETH = OZ_IERC20(Factory.weth()).balanceOf(address(this));
+        uint256 amountWBTC = OZ_IERC20(Factory.wbtc()).balanceOf(address(this));
+        iGovernance(Factory.governor()).depositFee(amountWETH, amountWBTC);
+    }
+
+    function validTimeWindow(address asset) external returns(uint valid, uint expiration){
+        IPriceOracle PriceOracle = IPriceOracle(Factory.priceOracle());
+        address nextAsset = IPathOracle(Factory.pathOracle()).stepPath(asset);
+        address pairAddress = Factory.getPair(asset, nextAsset);
+        
+        //Call get price
+        PriceOracle.getPrice(pairAddress);
+
+        (uint pairCurrentTime,) = PriceOracle.getOracleTime(pairAddress);
+        
+        expiration = pairCurrentTime + PriceOracle.priceValidEnd();
+        valid = pairCurrentTime + PriceOracle.priceValidStart();
+    }
+
+    function oracleStepSwap(address asset, bool half) external onlyWhitelist{
+        uint tokenBal = OZ_IERC20(asset).balanceOf(address(this));
+        if(half){
+            tokenBal / 2;
+        }
         address[] memory path = new address[](2);
-        success = refreshPricePath(tokenAddress, stopAddress);
-        if(success){
-            while(currentAsset != stopAddress){//Should be capped to a max of 4 swaps based off current PathOracle.sol
-                nextAsset = IPathOracle(PATHORACLE_ADDRESS).stepPath(currentAsset);
-                pairAddress = IUniswapV2Factory(FACTORY_ADDRESS).getPair(currentAsset, nextAsset);
-                tokenBal = OZ_IERC20(currentAsset).balanceOf(address(this));
-                (minAmount, timeTillValid) = IPriceOracle(PRICEORACLE_ADDRESS).calculateMinAmount(currentAsset, slippage, tokenBal, pairAddress);
-                require(timeTillValid == 0, "Price(s) not valid Call checkPrice()");
-                OZ_IERC20(currentAsset).approve(ROUTER_ADDRESS, tokenBal);
-                path[0] = currentAsset;
-                path[1] = nextAsset;
-                IUniswapV2Router02(ROUTER_ADDRESS).swapExactTokensForTokens(
-                    tokenBal,
-                    minAmount,
-                    path,
-                    address(this),
-                    block.timestamp
-                );
-                currentAsset = nextAsset; //Move to the next one
-            }
-        }
+        address nextAsset = IPathOracle(Factory.pathOracle()).stepPath(asset);
+        address pairAddress = Factory.getPair(asset, nextAsset);
+        (uint minAmount, uint timeTillValid) = IPriceOracle(Factory.priceOracle())
+            .calculateMinAmount(asset, Factory.slippage(), tokenBal, pairAddress);
+        require(timeTillValid == 0, "Price(s) not valid Call checkPrice()");
+        OZ_IERC20(asset).approve(Factory.router(), tokenBal);
+        path[0] = asset;
+        path[1] = nextAsset;
+        IUniswapV2Router02(Factory.router()).swapExactTokensForTokens(
+            tokenBal,
+            minAmount,
+            path,
+            address(this),
+            block.timestamp
+        );
     }
 
-    //TODO add an internal function that checks the entire path is valid before trying to swap
+    /**
+    * @dev just like oracleStepSwap, but caller manually enters the minAmount, must be called by a whitelisted address
+    * Potential Exploit: If malicous address is on whitelist, they can set a low minAmount, and then force contract to make bad swaps for their gain
+    **/
+    function manualStepSwap(address asset, bool half, uint minAmount) external onlyWhitelist{
 
-    function refreshPricePath(address tokenAddress, address stopAddress) public returns(bool success){
-        address currentAsset = tokenAddress;
-        address nextAsset;
-        address pairAddress;
-        uint minAmount;
-        uint timeTillValid;
-        uint tokenBal;
+        uint tokenBal = OZ_IERC20(asset).balanceOf(address(this));
+        if(half){
+            tokenBal / 2;
+        }
+        tokenBal = OZ_IERC20(asset).balanceOf(address(this));
         address[] memory path = new address[](2);
-        success = true;
-        while(currentAsset != stopAddress){//Should be capped to a max of 4 swaps based off current PathOracle.sol
-            nextAsset = IPathOracle(PATHORACLE_ADDRESS).stepPath(currentAsset);
-            pairAddress = IUniswapV2Factory(FACTORY_ADDRESS).getPair(currentAsset, nextAsset);
-            (,,timeTillValid) = IPriceOracle(PRICEORACLE_ADDRESS).getPrice(pairAddress);
-            if (timeTillValid > 0){
-                success = false;
-            }
-            currentAsset = nextAsset; //Move to the next one
-        }
-    }
-    //Only owner?
-    function processAssetsIntowETH(uint startIndex, uint endIndex) external returns(uint lastIndex){
-        bool success;
-        require(startIndex > 0, "Gravity Finance: Start index must be greater than zero");
-        for (uint i=startIndex; i < endIndex; i++){
-            success = _convertTill(tokenList[i], WETH_ADDRESS);
-            if(!success){
-                lastIndex = i;
-                break;
-            }
-        }
+        address nextAsset = IPathOracle(Factory.pathOracle()).stepPath(asset);
+        OZ_IERC20(asset).approve(Factory.router(), tokenBal);
+        path[0] = asset;
+        path[1] = nextAsset;
+        IUniswapV2Router02(Factory.router()).swapExactTokensForTokens(
+            tokenBal,
+            minAmount,
+            path,
+            address(this),
+            block.timestamp
+        );
     }
 
-    function finalConvertAndDeposit() external onlyOwner {
-        bool success = refreshPricePath(WETH_ADDRESS, WBTC_ADDRESS);
-
-        _convertTill(WETH_ADDRESS, WBTC_ADDRESS);
-        uint amountWETH = OZ_IERC20(WETH_ADDRESS).balanceOf(address(this));
-        uint amountWBTC = OZ_IERC20(WBTC_ADDRESS).balanceOf(address(this));
-        iGovernance(GOVERNANCE_ADDRESS).depositFee(amountWETH, amountWBTC);
+    function adminWithdraw(address asset) external onlyOwner{
+        //emit an event letting everyone know this was used
+        OZ_IERC20 token = OZ_IERC20(asset);
+        token.transfer(msg.sender, token.balanceOf(address(this)));
     }
-
-    //TODO add a function that allows whitelisted addresses to manually swap fees into wETH, setting their own min amounts
 }

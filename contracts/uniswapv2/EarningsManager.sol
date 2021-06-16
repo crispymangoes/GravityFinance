@@ -14,16 +14,13 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 //TODO make it so that the governance address is passed into the factory on craetion, then it is relayed to the pair contract and to this contract, and initialized in the
 //TODO before any thing using the current pair cumulative, make sure getReserves() LastTimeStamp is equal to the current block.timestamp
 //TODO maybe make it a modifier????
+//Add events so that The graph can track earnings going into the pool
 contract EarningsManager is Ownable {
     address public factory;
     IUniswapV2Factory Factory;
     address[] public swapPairs;
     mapping(address => uint256) public swapIndex;
     mapping(address => bool) public whitelist;
-    address public PATHORACLE_ADDRESS;
-    address public PRICEORACLE_ADDRESS;
-    address public WBTC_ADDRESS;
-    address public WETH_ADDRESS;
 
     struct oracle {
         uint[2] price0Cumulative;
@@ -58,8 +55,8 @@ contract EarningsManager is Ownable {
         whitelist[_address] = _bool;
     }
 
-    function checkPrices(address pairAddress) public {
-        IPriceOracle PriceOracle = IPriceOracle(PRICEORACLE_ADDRESS);
+    function validTimeWindow(address pairAddress) public returns (uint valid, uint expires){
+        IPriceOracle PriceOracle = IPriceOracle(Factory.priceOracle());
         //Assume there are only two swaps to get to the pool assets
         // swap wETH to GFI, and swap 1/2 GFI to Other
 
@@ -72,30 +69,52 @@ contract EarningsManager is Ownable {
 
         //*****CHECK IF WE NEED TO LOOK AT ALTs
         //MAYBE THIS SHOULD JUST RETURN THE FULL ORACLE CUZ I ALSO NEED A WAY TO GET THE OTEHR INDEX TIMESTAMP
-         oracle memory pairAOracle = PriceOracle.getOracle(firstAddress);
-         oracle memory pairBOracle = PriceOracle.getOracle(pairAddress);
-         uint pairATimeTillValid = pairAOracle.timeStamp[pairAOracle.index] + PriceOracle.priceValidStart();
-         uint pairBTimeTillExpire = pairBOracle.timeStamp[pairBOracle.index] + PriceOracle.priceValidEnd();
-
-         uint pairBTimeTillValid = pairBOracle.timeStamp[pairBOracle.index] + PriceOracle.priceValidStart();
-         uint pairATimeTillExpire = pairAOracle.timeStamp[pairAOracle.index] + PriceOracle.priceValidEnd();
-         //Check if weth/gfi price time till valid is greater than pairAddress time till expires
-         if ( pairATimeTillValid > pairBTimeTillExpire) {
-             //look at pairAddress other, and this should be less than 5 min till expiration, so report the max and min times
-            //If that still doesn't work I think you can look at weth/gfi alt, not sure if you would ever make it here
-         }
-         // Check if pairAddress price time till valid is greater than weth/gfi time till expires
-        else if ( pairBTimeTillValid > pairATimeTillExpire){
-            //Now do all the previous logic above but swap the pairAddresses so
-            //....
+        (uint pairACurrentTime, uint pairAOtherTime) = PriceOracle.getOracleTime(firstAddress);
+        (uint pairBCurrentTime, uint pairBOtherTime) = PriceOracle.getOracleTime(pairAddress);
+        
+        uint pairATimeTillExpire = pairACurrentTime + PriceOracle.priceValidEnd();
+        uint pairATimeTillValid = pairACurrentTime + PriceOracle.priceValidStart();
+        uint pairBTimeTillExpire = pairBCurrentTime + PriceOracle.priceValidEnd();
+        uint pairBTimeTillValid = pairBCurrentTime + PriceOracle.priceValidStart();
+        //Check if weth/gfi price time till valid is greater than pairAddress time till expires
+        if ( pairATimeTillValid > pairBTimeTillExpire) {
+            //Check if pairBs other time till valid is less than pairAs current time till expire
+            if (pairBOtherTime + PriceOracle.priceValidStart() < pairATimeTillExpire){
+                //If this is true, then we want to use pairBs other saved timestamp
+                pairBTimeTillExpire = pairBOtherTime + PriceOracle.priceValidEnd();
+                pairBTimeTillValid = pairBOtherTime + PriceOracle.priceValidStart();
+            }
+            //potentially add an else statment, not sure if you would ever make it here though
         }
-       
-
-        //finally, if both the if and else if above fail, I think you can just use the max time till valid, and the min time till expiration from the active prices and not need to look at alts
+        // Check if pairAddress price time till valid is greater than weth/gfi time till expires
+        else if ( pairBTimeTillValid > pairATimeTillExpire){
+            //Check if pairAs other time till valid is less than pairBs current time till expire
+            if (pairAOtherTime + PriceOracle.priceValidStart() < pairBTimeTillExpire){
+                //If this is true, then we want to use pairAs other saved timestamp
+                pairATimeTillExpire = pairAOtherTime + PriceOracle.priceValidEnd();
+                pairATimeTillValid = pairAOtherTime + PriceOracle.priceValidStart();
+            }
+            //potentially add an else statment, not sure if you would ever make it here though
+        }
+        //Now set the min time till valid, and max time till expire
+        if (pairATimeTillValid > pairBTimeTillValid){
+            valid = pairATimeTillValid;
+        }
+        else {
+            valid = pairBTimeTillValid;
+        }
+        if (pairATimeTillExpire < pairBTimeTillExpire){
+            expires = pairATimeTillExpire;
+        }
+        else {
+            expires = pairBTimeTillExpire;
+        }
     }
 
-    function _processEarnings(address pairAddress) internal {
-        uint256 tokenBal;
+    /**
+    * @dev Will revert if prices are not valid, validTimeWindow() should be called before calling any functions that use price oracles to get min amounts
+    **/
+    function oracleProcessEarnings(address pairAddress) external onlyWhitelist {
         address token0 = IUniswapV2Pair(pairAddress).token0();
         address token1 = IUniswapV2Pair(pairAddress).token1();
         uint256 minAmount;
@@ -111,20 +130,18 @@ contract EarningsManager is Ownable {
             ),
             "Failed to transfer wETH from holding to EM"
         );
-
-        //So don't even need to call checkPrice here, this will fail if one of the prices isn't valid, so should make a seperate function that makes sure
         uint256[] memory amounts = new uint256[](2);
         //First swap wETH into GFI
         address firstPairAddress =
             Factory.getPair(Factory.weth(), Factory.gfi());
-        (minAmount, timeTillValid) = IPriceOracle(PRICEORACLE_ADDRESS)
+        (minAmount, timeTillValid) = IPriceOracle(Factory.priceOracle())
             .calculateMinAmount(
             Factory.weth(),
             slippage,
             earnings,
             firstPairAddress
         );
-        require(timeTillValid == 0, "Price(s) not valid Call checkPrices()");
+        require(timeTillValid == 0, "Price(s) not valid Call validTimeWindow()");
         path[0] = Factory.weth();
         path[1] = Factory.gfi();
         amounts = IUniswapV2Router02(Factory.router()).swapExactTokensForTokens(
@@ -136,18 +153,17 @@ contract EarningsManager is Ownable {
         );
 
         //Swap 1/2 GFI into other asset
-        tokenBal = amounts[1] / 2;
-        (minAmount, timeTillValid) = IPriceOracle(PRICEORACLE_ADDRESS)
-            .calculateMinAmount(Factory.gfi(), slippage, tokenBal, pairAddress);
-        require(timeTillValid == 0, "Price(s) not valid Call checkPrice()");
+        (minAmount, timeTillValid) = IPriceOracle(Factory.priceOracle())
+            .calculateMinAmount(Factory.gfi(), slippage, (amounts[1] / 2), pairAddress);
+        require(timeTillValid == 0, "Price(s) not valid Call validTimeWindow()");
         path[0] = Factory.gfi();
-        if (IUniswapV2Pair(pairAddress).token0() == Factory.gfi()) {
-            path[1] = IUniswapV2Pair(pairAddress).token1();
+        if (token0 == Factory.gfi()) {
+            path[1] = token1;
         } else {
-            path[1] = IUniswapV2Pair(pairAddress).token0();
+            path[1] = token0;
         }
         amounts = IUniswapV2Router02(Factory.router()).swapExactTokensForTokens(
-            tokenBal,
+            (amounts[1] / 2),
             minAmount,
             path,
             address(this),
@@ -162,7 +178,7 @@ contract EarningsManager is Ownable {
         Token0.approve(Factory.router(), amounts[0]);
         Token1.approve(Factory.router(), amounts[1]);
 
-        IUniswapV2Router02(Factory.router()).addLiquidity(
+        /*(uint amountA, uint amountB,) = */IUniswapV2Router02(Factory.router()).addLiquidity(
             token0,
             token1,
             amounts[0],
@@ -178,36 +194,14 @@ contract EarningsManager is Ownable {
             LPtoken.burn(LPtoken.balanceOf(address(this))),
             "Failed to burn LP tokens"
         );
+        //Send remaining dust to dust pan
+        //Token0.transfer(Factory.dustPan(), (amounts[0] - amountA));
+        //Token1.transfer(Factory.dustPan(), (amounts[1] - amountB));
     }
 
-    function processEarningsIntoLiquidity(address pairAddress)
-        external
-    /*Make a white list of addresses that can call this */
-    {
-        _processEarnings(pairAddress);
-    }
 
-    function processAssetsIntoLiquidity(uint256 startIndex, uint256 endIndex)
-        external
-        returns (uint256 lastIndex)
-    {
-        bool success;
-        require(
-            startIndex > 0,
-            "Gravity Finance: Start index must be greater than zero"
-        );
-        for (uint256 i = startIndex; i < endIndex; i++) {
-            _processEarnings(swapPairs[i]);
-            if (!success) {
-                lastIndex = i;
-                break;
-            }
-        }
-    }
 
-    //TODO add function like _processEarnings, but make it use the minAmount as an input, so whitelist can call it even if pricing fails
-
-    function processEarnings(address pairAddress, uint[2] memory minAmounts) external onlyWhitelist{
+    function manualProcessEarnings(address pairAddress, uint[2] memory minAmounts) external onlyWhitelist{
         uint256 tokenBal;
         address token0 = IUniswapV2Pair(pairAddress).token0();
         address token1 = IUniswapV2Pair(pairAddress).token1();
@@ -260,7 +254,7 @@ contract EarningsManager is Ownable {
         Token0.approve(Factory.router(), amounts[0]);
         Token1.approve(Factory.router(), amounts[1]);
 
-        IUniswapV2Router02(Factory.router()).addLiquidity(
+        (uint amountA, uint amountB,) = IUniswapV2Router02(Factory.router()).addLiquidity(
             token0,
             token1,
             amounts[0],
@@ -276,5 +270,18 @@ contract EarningsManager is Ownable {
             LPtoken.burn(LPtoken.balanceOf(address(this))),
             "Failed to burn LP tokens"
         );
+        //Send remaining dust to dust pan
+        Token0.transfer(Factory.dustPan(), (amounts[0] - amountA));
+        Token1.transfer(Factory.dustPan(), (amounts[1] - amountB));
+    }
+
+    /**
+    * @dev should rarely be used, intended use is to collect dust and redistribute it to appropriate swap pools
+    * Needed bc the price oracle earnings method has stack too deep errors when adding in transfer to Dust pan
+    **/
+    function adminWithdraw(address asset) external onlyOwner{
+        //emit an event letting everyone know this was used
+        OZ_IERC20 token = OZ_IERC20(asset);
+        token.transfer(msg.sender, token.balanceOf(address(this)));
     }
 }

@@ -106,8 +106,16 @@ contract PriceOracle is Ownable{
         }
     }
 
-    function getOracle(address pairAddress) external view returns(oracle memory Oracle){
-        Oracle = priceOracles[pairAddress];
+    function getOracleTime(address pairAddress) external view returns(uint currentTimestamp, uint otherTimestamp){
+        oracle memory tmp = priceOracles[pairAddress];
+        if (tmp.index == 0){
+            currentTimestamp = tmp.timeStamp[0];
+            otherTimestamp = tmp.timeStamp[1];
+        }
+        else {
+            currentTimestamp = tmp.timeStamp[1];
+            otherTimestamp = tmp.timeStamp[0];
+        }
     }
 
     function calculateMinAmount(

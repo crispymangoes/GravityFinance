@@ -19,7 +19,7 @@ interface IPriceOracle {
 
     function calculateMinAmount(address from, uint256 slippage, uint256 amount, address pairAddress) external returns (uint minAmount, uint timeTillValid);
 
-    function getOracle(address pairAddress) external view returns(oracle memory Oracle);
+    function getOracleTime(address pairAddress) external view returns(uint currentTimestamp, uint otherTimestamp);
 
     function priceValidStart() external view returns(uint);
     function priceValidEnd() external view returns(uint);

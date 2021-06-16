@@ -76,7 +76,7 @@ before(async function () {
     await priceOracle.deployed();
 
     SwapFactory = await ethers.getContractFactory("UniswapV2Factory");
-    swapFactory = await SwapFactory.deploy(owner.address, governance.address, mockWETH.address, mockWBTC.address, mockGFI.address, pathOracle.address, priceOracle.address);
+    swapFactory = await SwapFactory.deploy(owner.address);
     await swapFactory.deployed();
 
     await pathOracle.setFactory(swapFactory.address);
@@ -85,7 +85,28 @@ before(async function () {
     swapRouter = await SwapRouter.deploy(swapFactory.address, mockWMATIC.address);
     await swapRouter.deployed();
 
+    FeeManager = await ethers.getContractFactory("FeeManager");
+    feeManager = await FeeManager.deploy(swapFactory.address);
+    await feeManager.deployed;
+
+    EarningsManager = await ethers.getContractFactory("EarningsManager");
+    earningsManager = await EarningsManager.deploy(swapFactory.address);
+    await earningsManager.deployed;
+
     await swapFactory.setRouter(swapRouter.address);
+
+    await swapFactory.setRouter(swapRouter.address);
+    await swapFactory.setGovernor(governance.address);
+    await swapFactory.setWETH(mockWETH.address);
+    await swapFactory.setWBTC(mockWBTC.address);
+    await swapFactory.setGFI(mockGFI.address);
+    await swapFactory.setPathOracle(pathOracle.address);
+    await swapFactory.setPriceOracle(priceOracle.address);
+    await swapFactory.setEarningsManager(earningsManager.address);
+    await swapFactory.setFeeManager(feeManager.address);
+    await swapFactory.setDustPan(addr5.address);
+    await swapFactory.setPaused(false);
+    await swapFactory.setSlippage(95);
 
 });
 
@@ -134,7 +155,7 @@ describe("Swap Exchange Contracts functional test", function () {
         pairAddress = await swapFactory.getPair(mockWETH.address, mockWBTC.address);
         let Pair = await ethers.getContractFactory("UniswapV2Pair");
         let pair = await Pair.attach(pairAddress);
-        let EMforPair = await pair.EM_ADDRESS();
+        let holderPair = await pair.HOLDING_ADDRESS();
         await mockWBTC.connect(addr2).approve(swapRouter.address, "1000000000000000000000");
         let path = [mockWBTC.address, mockWETH.address];
         console.log("Swap wBTC for wETH");
@@ -143,9 +164,9 @@ describe("Swap Exchange Contracts functional test", function () {
         await swapRouter.connect(addr2).swapExactTokensForTokens("1000000000000000000", "9000000000000000000", path, addr2.address, 1654341846);
         let kAfter = await mockWETH.balanceOf(pairAddress) * await mockWBTC.balanceOf(pairAddress);
         console.log("K after swap: ", kAfter);
-        console.log("Earnings Manager for pair: ", EMforPair);
-        console.log("WBTC Balance of Earnings Manager: ", (await mockWBTC.balanceOf(EMforPair)).toString());
-        console.log("WETH Balance of Earnings Manager: ", (await mockWETH.balanceOf(EMforPair)).toString());
+        console.log("Earnings Manager for pair: ", holderPair);
+        console.log("WBTC Balance of Earnings Manager: ", (await mockWBTC.balanceOf(holderPair)).toString());
+        console.log("WETH Balance of Earnings Manager: ", (await mockWETH.balanceOf(holderPair)).toString());
         
     });
 
@@ -156,7 +177,7 @@ describe("Swap Exchange Contracts functional test", function () {
         pairAddress1 = await swapFactory.getPair(mockUSDC.address, mockWBTC.address);
         let Pair = await ethers.getContractFactory("UniswapV2Pair");
         let pair = await Pair.attach(pairAddress);
-        let EMforPair = await pair.EM_ADDRESS();
+        let holderPair = await pair.HOLDING_ADDRESS();
         await mockWETH.connect(addr2).approve(swapRouter.address, "1000000000000000000000");
         let path = [mockWETH.address, mockWBTC.address, mockUSDC.address];
         console.log("Swap wETH for USDC");
@@ -173,17 +194,17 @@ describe("Swap Exchange Contracts functional test", function () {
 
         console.log("K value increased by: ", ( ((kAfter_wETH_wBTC/kBefore_wETH_wBTC) - 1)*100 ).toFixed(8) );
 
-        console.log("Earnings Manager for pair: ", EMforPair);
-        console.log("WBTC Balance of Earnings Manager: ", (await mockWBTC.balanceOf(EMforPair)).toString());
-        console.log("WETH Balance of Earnings Manager: ", (await mockWETH.balanceOf(EMforPair)).toString());
+        console.log("Earnings Manager for pair: ", holderPair);
+        console.log("WBTC Balance of Earnings Manager: ", (await mockWBTC.balanceOf(holderPair)).toString());
+        console.log("WETH Balance of Earnings Manager: ", (await mockWETH.balanceOf(holderPair)).toString());
 
         pairAddress = await swapFactory.getPair(mockUSDC.address, mockWBTC.address);
         Pair = await ethers.getContractFactory("UniswapV2Pair");
         pair = await Pair.attach(pairAddress);
-        EMforPair = await pair.EM_ADDRESS();
-        console.log("Earnings Manager for pair: ", EMforPair);
-        console.log("USDC Balance of Earnings Manager: ", (await mockUSDC.balanceOf(EMforPair)).toString());
-        console.log("WBTC Balance of Earnings Manager: ", (await mockWBTC.balanceOf(EMforPair)).toString());
+        holderPair = await pair.HOLDING_ADDRESS();
+        console.log("Earnings Manager for pair: ", holderPair);
+        console.log("USDC Balance of Earnings Manager: ", (await mockUSDC.balanceOf(holderPair)).toString());
+        console.log("WBTC Balance of Earnings Manager: ", (await mockWBTC.balanceOf(holderPair)).toString());
 
         console.log("Address 2 balances:");
         console.log("WETH Balance: ", (await mockWETH.balanceOf(addr2.address)).toString());

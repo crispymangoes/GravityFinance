@@ -206,19 +206,6 @@
   },
   {
     "inputs": [],
-    "name": "GFI_ADDRESS",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "HOLDING_ADDRESS",
     "outputs": [
       {
@@ -438,11 +425,6 @@
       {
         "internalType": "address",
         "name": "_token1",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "gfi",
         "type": "address"
       }
     ],

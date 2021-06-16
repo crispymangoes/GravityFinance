@@ -6,18 +6,20 @@ import './interfaces/IUniswapV2Factory.sol';
 import './UniswapV2Pair.sol';
 
 contract UniswapV2Factory is IUniswapV2Factory {
-    address public override feeTo;
+
+    //Global Variables used by all swap pairs, managers, and oracles
     address public override feeToSetter;
     address public override migrator;
     address public override router;
-    address public override governor;
-    address public override weth;
-    address public wbtc;
-    address public override gfi;
-    address public pathOracle;
-    address public priceOracle;
+    address public override governor;//Should never change
+    address public override weth;//Should never change
+    address public override wbtc;//Should never change
+    address public override gfi;//Should never change
+    address public override pathOracle;
+    address public override priceOracle;
     address public override earningsManager;
     address public override feeManager;
+    address public override dustPan;
     bool public override paused;
     uint public override slippage;
 
@@ -26,14 +28,8 @@ contract UniswapV2Factory is IUniswapV2Factory {
 
     event PairCreated(address indexed token0, address indexed token1, address pair, uint);
 
-    constructor(address _feeToSetter, address _governor, address _weth, address _wbtc, address _gfi, address _pathOracle, address _priceOracle) public {
+    constructor(address _feeToSetter) public {
         feeToSetter = _feeToSetter;
-        governor = _governor;
-        weth = _weth;
-        wbtc = _wbtc;
-        gfi = _gfi;
-        pathOracle = _pathOracle;
-        priceOracle = _priceOracle;
     }
 
     function allPairsLength() external override view returns (uint) {
@@ -55,7 +51,7 @@ contract UniswapV2Factory is IUniswapV2Factory {
         assembly {
             pair := create2(0, add(bytecode, 32), mload(bytecode), salt)
         }
-        UniswapV2Pair(pair).initialize(token0, token1, gfi);
+        UniswapV2Pair(pair).initialize(token0, token1);
         getPair[token0][token1] = pair;
         getPair[token1][token0] = pair; // populate mapping in the reverse direction
         allPairs.push(pair);
@@ -75,6 +71,51 @@ contract UniswapV2Factory is IUniswapV2Factory {
     function setRouter(address _router) external {
         require(msg.sender == feeToSetter, 'UniswapV2: FORBIDDEN');
         router = _router;
+    }
+
+    function setGovernor(address _governor) external {
+        require(msg.sender == feeToSetter, 'UniswapV2: FORBIDDEN');
+        governor = _governor;
+    }
+    function setWETH(address _weth) external {
+        require(msg.sender == feeToSetter, 'UniswapV2: FORBIDDEN');
+        weth = _weth;
+    }
+    function setWBTC(address _wbtc) external {
+        require(msg.sender == feeToSetter, 'UniswapV2: FORBIDDEN');
+        wbtc = _wbtc;
+    }
+    function setGFI(address _gfi) external {
+        require(msg.sender == feeToSetter, 'UniswapV2: FORBIDDEN');
+        gfi = _gfi;
+    }
+    function setPathOracle(address _pathOracle) external {
+        require(msg.sender == feeToSetter, 'UniswapV2: FORBIDDEN');
+        pathOracle = _pathOracle;
+    }
+    function setPriceOracle(address _priceOracle) external {
+        require(msg.sender == feeToSetter, 'UniswapV2: FORBIDDEN');
+        priceOracle = _priceOracle;
+    }
+    function setEarningsManager(address _earningsManager) external {
+        require(msg.sender == feeToSetter, 'UniswapV2: FORBIDDEN');
+        earningsManager = _earningsManager;
+    }
+    function setFeeManager(address _feeManager) external {
+        require(msg.sender == feeToSetter, 'UniswapV2: FORBIDDEN');
+        feeManager = _feeManager;
+    }
+    function setDustPan(address _dustPan) external {
+        require(msg.sender == feeToSetter, 'UniswapV2: FORBIDDEN');
+        dustPan = _dustPan;
+    }
+    function setPaused(bool _paused) external {
+        require(msg.sender == feeToSetter, 'UniswapV2: FORBIDDEN');
+        paused = _paused;
+    }
+    function setSlippage(uint _slippage) external {
+        require(msg.sender == feeToSetter, 'UniswapV2: FORBIDDEN');
+        slippage = _slippage;
     }
 
 }

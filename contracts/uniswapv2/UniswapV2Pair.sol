@@ -40,7 +40,6 @@ contract UniswapV2Pair is UniswapV2ERC20 {
     uint private unlocked = 1;
 
     //NEW VARS
-    address public GFI_ADDRESS;
     Holding holder;
     address public HOLDING_ADDRESS;
     IUniswapV2Factory Factory;
@@ -89,34 +88,22 @@ contract UniswapV2Pair is UniswapV2ERC20 {
     }
 
     // called once by the factory at time of deployment
-    function initialize(address _token0, address _token1, address gfi) external {
+    function initialize(address _token0, address _token1) external {
         require(msg.sender == factory, 'UniswapV2: FORBIDDEN'); // sufficient check
         token0 = _token0;
         token1 = _token1;
         //NEW CODE
         holder = new Holding();
         HOLDING_ADDRESS = address(holder);
-        GFI_ADDRESS = gfi;
     }
 
 
-    //TODO ADD FUNCTION THAT CALLS THE GOVERNANCE CONTRACT DELEGATEFEE() AND THEN CALLS A FUNCTION IN THE FEE MANAGER TO HANDLE THAT FEE
     function handleEarnings() external onlyEarningsManager returns(uint amount){
-        require(token0 == GFI_ADDRESS || token1 == GFI_ADDRESS, "Swap contract must have GFI as one of it's assets to claim earnings"); //Require statement not really needed
-        uint amount = iGovernance(Factory.governor()).delegateFee(HOLDING_ADDRESS); //Calculates WETH fees earned by GFI in contract
+        require(token0 == Factory.gfi() || token1 == Factory.gfi(), "Swap contract must have GFI as one of it's assets to claim earnings"); //Require statement not really needed
+        amount = iGovernance(Factory.governor()).delegateFee(HOLDING_ADDRESS); //Calculates WETH fees earned by GFI in contract
         holder.approveEM(Factory.weth(), Factory.earningsManager(), amount);
         
     }
-
-    //TODO function that calls manageFee() in EarningsManager contract
-    //function handleFees() external returns(bool priceValid, uint maxTime){
-    //    if(Factory.feeToSetter() != address(0)){require(msg.sender == Factory.feeToSetter(), "Only Factory Owner can call this function!");}
-    //    //TODO need to check if checkPrice returns a zero
-    //    (priceValid, maxTime) = EM.checkPricing();
-    //    if(priceValid){
-    //        EM.manageFees();
-    //    }
-    //}
 
     // update reserves and, on the first call per block, price accumulators
     function _update(uint balance0, uint balance1, uint112 _reserve0, uint112 _reserve1) private {
