@@ -9,7 +9,7 @@ import './interfaces/IUniswapV2Router02.sol';
 import './interfaces/IUniswapV2Factory.sol';
 import './interfaces/IERC20.sol';
 import './interfaces/IWETH.sol';
-
+//TODO adjust the amounts[-1] variable for all swap actions, see swapExactTokensForTokens function
 contract UniswapV2Router02 is IUniswapV2Router02 {
     using SafeMathUniswap for uint;
 
@@ -235,6 +235,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
             path[0], msg.sender, UniswapV2Library.pairFor(factory, path[0], path[1]), amounts[0]
         );
         _swap(amounts, path, to);
+        amounts[amounts.length - 1] = amounts[amounts.length - 1] * 9995/10000;
     }
     function swapTokensForExactTokens(
         uint amountOut,

@@ -168,7 +168,7 @@ contract EarningsManager is Ownable {
         } else {
             path[1] = token0;
         }
-        amounts[1] = amounts[1] * 9995 / 10000;
+        //amounts[1] = amounts[1] * 9995 / 10000;
         OZ_IERC20(Factory.gfi()).approve(Factory.router(), (amounts[1] / 2));
         amounts = IUniswapV2Router02(Factory.router()).swapExactTokensForTokens(
             (amounts[1] / 2),
@@ -183,7 +183,7 @@ contract EarningsManager is Ownable {
         uint256 minToken1 = (slippage * amounts[1]) / 100;
         OZ_IERC20(path[0]).approve(Factory.router(), amounts[0]);
         OZ_IERC20(path[1]).approve(Factory.router(), amounts[1]);
-        amounts[1] = amounts[1] * 9995 / 10000;
+        //amounts[1] = amounts[1] * 9995 / 10000;
         amounts0 = amounts[0];
         amounts1 = amounts[1];
         IUniswapV2Router02(Factory.router()).addLiquidity(
@@ -191,8 +191,8 @@ contract EarningsManager is Ownable {
             token1,
             amounts[0],
             amounts[1],
-            minToken0,
-            minToken1,
+            0,//minToken0,
+            0,//minToken1,
             address(this),
             block.timestamp
         );
