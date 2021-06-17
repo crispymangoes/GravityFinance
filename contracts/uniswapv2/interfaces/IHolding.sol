@@ -7,5 +7,5 @@ interface IHolding {
     /**
      * Assume claimFee uses msg.sender, and returns the amount of WETH sent to the caller
      */
-    function approve(address TOKEN_ADDRESS, address EM_ADDRESS, uint amount) external;
+    function approveEM(address TOKEN_ADDRESS, address EM_ADDRESS, uint amount) external;
 }

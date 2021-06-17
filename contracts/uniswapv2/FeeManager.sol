@@ -52,8 +52,12 @@ contract FeeManager is Ownable {
     }
 
     function deposit() external onlyWhitelist {
-        uint256 amountWETH = OZ_IERC20(Factory.weth()).balanceOf(address(this));
-        uint256 amountWBTC = OZ_IERC20(Factory.wbtc()).balanceOf(address(this));
+        OZ_IERC20 weth = OZ_IERC20(Factory.weth());
+        OZ_IERC20 wbtc = OZ_IERC20(Factory.wbtc());
+        uint256 amountWETH = weth.balanceOf(address(this));
+        uint256 amountWBTC = wbtc.balanceOf(address(this));
+        weth.approve(Factory.governor(), amountWETH);
+        wbtc.approve(Factory.governor(), amountWBTC);
         iGovernance(Factory.governor()).depositFee(amountWETH, amountWBTC);
     }
 

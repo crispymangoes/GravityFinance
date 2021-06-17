@@ -4,6 +4,9 @@ pragma solidity =0.6.12;
 
 import './interfaces/IUniswapV2Factory.sol';
 import './UniswapV2Pair.sol';
+import './interfaces/IPathOracle.sol';
+import './interfaces/IEarningsManager.sol';
+import './interfaces/IFeeManager.sol';
 
 contract UniswapV2Factory is IUniswapV2Factory {
 
@@ -52,6 +55,9 @@ contract UniswapV2Factory is IUniswapV2Factory {
             pair := create2(0, add(bytecode, 32), mload(bytecode), salt)
         }
         UniswapV2Pair(pair).initialize(token0, token1);
+        IPathOracle(pathOracle).appendPath(token0, token1);
+        IFeeManager(feeManager).catalougeTokens(token0, token1);
+        IEarningsManager(earningsManager).addSwapPair(pair);
         getPair[token0][token1] = pair;
         getPair[token1][token0] = pair; // populate mapping in the reverse direction
         allPairs.push(pair);

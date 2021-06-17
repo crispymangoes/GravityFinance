@@ -21,6 +21,8 @@ contract EarningsManager is Ownable {
     address[] public swapPairs;
     mapping(address => uint256) public swapIndex;
     mapping(address => bool) public whitelist;
+    uint public amounts0;
+    uint public amounts1;
 
     struct oracle {
         uint[2] price0Cumulative;
@@ -113,7 +115,10 @@ contract EarningsManager is Ownable {
 
     /**
     * @dev Will revert if prices are not valid, validTimeWindow() should be called before calling any functions that use price oracles to get min amounts
+    * known inefficiency if target pair is wETH/GFI, it will trade all the wETH for GFI, then swap half the GFI back into wETH
+    * I added in a 0.05% reduction to the amounts variables and that seemed to make things signifigantly closer to what they should be, much like the vanilla uniswap amounts were really close to the actual amounts you got
     **/
+    //TODO add in check to see if it is the wETH GFI pair, then only do 1 1/2 swap m,aybe use a for loop for 2 iterations
     function oracleProcessEarnings(address pairAddress) external onlyWhitelist {
         address token0 = IUniswapV2Pair(pairAddress).token0();
         address token1 = IUniswapV2Pair(pairAddress).token1();
@@ -144,6 +149,7 @@ contract EarningsManager is Ownable {
         require(timeTillValid == 0, "Price(s) not valid Call validTimeWindow()");
         path[0] = Factory.weth();
         path[1] = Factory.gfi();
+        OZ_IERC20(Factory.weth()).approve(Factory.router(), earnings);
         amounts = IUniswapV2Router02(Factory.router()).swapExactTokensForTokens(
             earnings,
             minAmount,
@@ -162,6 +168,8 @@ contract EarningsManager is Ownable {
         } else {
             path[1] = token0;
         }
+        amounts[1] = amounts[1] * 9995 / 10000;
+        OZ_IERC20(Factory.gfi()).approve(Factory.router(), (amounts[1] / 2));
         amounts = IUniswapV2Router02(Factory.router()).swapExactTokensForTokens(
             (amounts[1] / 2),
             minAmount,
@@ -170,15 +178,15 @@ contract EarningsManager is Ownable {
             block.timestamp
         );
 
-        OZ_IERC20 Token0 = OZ_IERC20(path[0]);
-        OZ_IERC20 Token1 = OZ_IERC20(path[1]);
 
         uint256 minToken0 = (slippage * amounts[0]) / 100;
         uint256 minToken1 = (slippage * amounts[1]) / 100;
-        Token0.approve(Factory.router(), amounts[0]);
-        Token1.approve(Factory.router(), amounts[1]);
-
-        /*(uint amountA, uint amountB,) = */IUniswapV2Router02(Factory.router()).addLiquidity(
+        OZ_IERC20(path[0]).approve(Factory.router(), amounts[0]);
+        OZ_IERC20(path[1]).approve(Factory.router(), amounts[1]);
+        amounts[1] = amounts[1] * 9995 / 10000;
+        amounts0 = amounts[0];
+        amounts1 = amounts[1];
+        IUniswapV2Router02(Factory.router()).addLiquidity(
             token0,
             token1,
             amounts[0],
@@ -197,10 +205,11 @@ contract EarningsManager is Ownable {
         //Send remaining dust to dust pan
         //Token0.transfer(Factory.dustPan(), (amounts[0] - amountA));
         //Token1.transfer(Factory.dustPan(), (amounts[1] - amountB));
+        
     }
 
 
-
+    //Need to add same modifiations to this one that I added to the oracle one
     function manualProcessEarnings(address pairAddress, uint[2] memory minAmounts) external onlyWhitelist{
         uint256 tokenBal;
         address token0 = IUniswapV2Pair(pairAddress).token0();

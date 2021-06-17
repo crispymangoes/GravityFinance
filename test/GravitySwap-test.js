@@ -108,6 +108,9 @@ before(async function () {
     await swapFactory.setPaused(false);
     await swapFactory.setSlippage(95);
 
+    await feeManager.adjustWhitelist(owner.address, true);
+    await earningsManager.adjustWhitelist(owner.address, true);
+
 });
 
 describe("Swap Exchange Contracts functional test", function () {
@@ -219,7 +222,7 @@ describe("Swap Exchange Contracts functional test", function () {
         pairAddress = await swapFactory.getPair(mockUSDC.address, mockWBTC.address);
         let Pair = await ethers.getContractFactory("UniswapV2Pair");
         let pair = await Pair.attach(pairAddress);
-        let EMforPair = await pair.EM_ADDRESS();
+        let holderPair = await pair.HOLDING_ADDRESS();
         await mockUSDC.connect(addr2).approve(swapRouter.address, "1000000000000000000000");
         let path = [mockUSDC.address, mockWBTC.address];
         console.log("Swap USDC for wBTC");
@@ -290,22 +293,17 @@ describe("Swap Exchange Contracts functional test", function () {
         let pairAddress;
         let Pair;
         let pair;
-        let EMforPair;
+        let holderPair;
 
         pairAddress = await swapFactory.getPair(mockDAI.address, mockGFI.address);
         Pair = await ethers.getContractFactory("UniswapV2Pair");
         pair = await Pair.attach(pairAddress);
-        EMforPair = await pair.EM_ADDRESS();
-        let EM = await ethers.getContractFactory("EarningsManager");
-        let em = await EM.attach(EMforPair);
-
-        let Oracle = await ethers.getContractFactory("PriceOracle");
-        let oracle = await Oracle.attach(priceOracle.address);
+        holderPair = await pair.HOLDING_ADDRESS();
 
 
-        console.log("Earnings Manager for pair: ", EMforPair);
-        console.log("GFI Balance of Earnings Manager: ", Number((await mockGFI.balanceOf(EMforPair)).toString())/10**18);
-        console.log("DAI Balance of Earnings Manager: ", Number((await mockDAI.balanceOf(EMforPair)).toString())/10**18);
+        console.log("Fee Manager: ", feeManager.address);
+        console.log("GFI Balance of Fee Manager: ", Number((await mockGFI.balanceOf(feeManager.address)).toString())/10**18);
+        console.log("DAI Balance of Fee Manager: ", Number((await mockDAI.balanceOf(feeManager.address)).toString())/10**18);
         await mockGFI.transfer(addr4.address, "1000000000000000000000");
         await mockGFI.connect(addr4).approve(swapRouter.address, "10000000000000000000000000");
         await mockDAI.connect(addr4).approve(swapRouter.address, "10000000000000000000000000");
@@ -317,20 +315,23 @@ describe("Swap Exchange Contracts functional test", function () {
             await swapRouter.connect(addr4).swapExactTokensForTokens("100000000000000000000", "9000000000000000000", path2, addr4.address, 1654341846);
         }
 
-        console.log("Earnings Manager for pair: ", EMforPair);
-        console.log("GFI Balance of Earnings Manager: ", Number((await mockGFI.balanceOf(EMforPair)).toString())/10**18);
-        console.log("DAI Balance of Earnings Manager: ", Number((await mockDAI.balanceOf(EMforPair)).toString())/10**18);
+        console.log("Fee Manager: ", feeManager.address);
+        console.log("GFI Balance of Fee Manager: ", Number((await mockGFI.balanceOf(feeManager.address)).toString())/10**18);
+        console.log("DAI Balance of Fee Manager: ", Number((await mockDAI.balanceOf(feeManager.address)).toString())/10**18);
         
 
-        await pair.updateEM(95);
-        await em.checkPricing();
+        await feeManager.validTimeWindow(mockDAI.address);//Doing this returns the time range for when a swap is valid
+        await feeManager.validTimeWindow(mockGFI.address);//Doing this returns the time range for when a swap is valid
+        await feeManager.validTimeWindow(mockWETH.address);//Doing this returns the time range for when a swap is valid
 
         console.log("Advance time by 300 seconds");
         await network.provider.send("evm_increaseTime", [300]);
         await network.provider.send("evm_mine");
 
-        pair.handleFees();
-
+        feeManager.oracleStepSwap(mockDAI.address, false);
+        feeManager.oracleStepSwap(mockGFI.address, false);
+        feeManager.oracleStepSwap(mockWBTC.address, true);
+        feeManager.deposit();
 
         console.log("WETH Balance of Governor: ", Number((await mockWETH.balanceOf(governance.address)).toString())/10**18);
         console.log("WBTC Balance of Governor: ", Number((await mockWBTC.balanceOf(governance.address)).toString())/10**18);
@@ -339,7 +340,7 @@ describe("Swap Exchange Contracts functional test", function () {
 
     //ADD TEST TO CHECK IF REQUIRE STATEMENT ON LINE 257(Pair contract) works
     //ADD TEST TO SEE IF PAUSING WORKS
-
+    
     it("Check Earnings Logic", async function () {
         
         //Create wETH/GFI Pair
@@ -353,40 +354,46 @@ describe("Swap Exchange Contracts functional test", function () {
 
         let Pair = await ethers.getContractFactory("UniswapV2Pair");
         let pair = await Pair.attach(pairAddress);
-        EMforPair = await pair.EM_ADDRESS();
-        let EM = await ethers.getContractFactory("EarningsManager");
-        let em = await EM.attach(EMforPair);
+        holderPair = await pair.HOLDING_ADDRESS();
 
         await governance.updateFee(pairAddress);
         await mockWETH.connect(addr1).approve(governance.address, "12000000000000000000"); 
         await governance.connect(addr1).depositFee("12000000000000000000", "0"); //Deposit 12 wETH into governance contract
 
-        await pair.updateEM(95);
-        await em.checkPricing();
+        await earningsManager.validTimeWindow(pairAddress);
+
+
         console.log("Advance time by 300 seconds");
         await network.provider.send("evm_increaseTime", [300]);
         await network.provider.send("evm_mine");
-        console.log( (await em.swapPath(0)).toString(), " -> ", (await em.swapPath(1)).toString(), " -> ", (await em.swapPath(2)).toString(), " -> ", (await em.swapPath(3)).toString(), " -> ", (await em.swapPath(4)).toString())
-        console.log( (await em.swapCount()).toString());
         
-        console.log("Swap Pair wETH Balance: ",(await mockWETH.balanceOf(pairAddress)).toString());
-        console.log("Swap Pair GFI Balance: ",(await mockGFI.balanceOf(pairAddress)).toString());
-        console.log("Earnings Manager LP token balance: ", (await pair.balanceOf(EMforPair)).toString());
-        console.log("Earnings Manager wETH Balance: ",(await mockWETH.balanceOf(EMforPair)).toString());
-        console.log("Earnings Manager GFI Balance: ",(await mockGFI.balanceOf(EMforPair)).toString());
+        console.log("Swap Pair wETH Balance: ",(await mockWETH.balanceOf(pairAddress)).toString()/10**18);
+        console.log("Swap Pair GFI Balance: ",(await mockGFI.balanceOf(pairAddress)).toString()/10**18);
+        console.log("Earnings Manager LP token balance: ", (await pair.balanceOf(earningsManager.address)).toString());
+        console.log("Earnings Manager wETH Balance: ",(await mockWETH.balanceOf(earningsManager.address)).toString());
+        console.log("Earnings Manager GFI Balance: ",(await mockGFI.balanceOf(earningsManager.address)).toString());
         console.log("");
         console.log("Convert GFI earnings into pool assets, deposit them, then burn LP tokens");
-        await pair.handleEarnings();
+        await earningsManager.oracleProcessEarnings(pairAddress);
         console.log("");
-        console.log("Swap Pair wETH Balance: ",(await mockWETH.balanceOf(pairAddress)).toString());
-        console.log("Swap Pair GFI Balance: ",(await mockGFI.balanceOf(pairAddress)).toString());
-        console.log("Earnings Manager LP token balance: ", (await pair.balanceOf(EMforPair)).toString());
-        console.log("Earnings Manager wETH Balance: ",(await mockWETH.balanceOf(EMforPair)).toString());
-        console.log("Earnings Manager GFI Balance: ",(await mockGFI.balanceOf(EMforPair)).toString());
+        console.log("Swap Pair wETH Balance: ",(await mockWETH.balanceOf(pairAddress)).toString()/10**18);
+        console.log("Swap Pair GFI Balance: ",(await mockGFI.balanceOf(pairAddress)).toString()/10**18);
+        console.log("Earnings Manager LP token balance: ", (await pair.balanceOf(earningsManager.address)).toString()/10**18);
+        console.log("Earnings Manager wETH Balance: ",(await mockWETH.balanceOf(earningsManager.address)).toString()/10**18);
+        console.log("Earnings Manager GFI Balance: ",(await mockGFI.balanceOf(earningsManager.address)).toString()/10**18);
+
+        console.log("Amounts[1]: ", (await earningsManager.amounts1()).toString()/10**18);
+        console.log("Amounts[0]: ", (await earningsManager.amounts0()).toString()/10**18);
+
+        console.log("Amounts aren't matching up but I think they should be matching up... Also worried bc they don't match up by 0.1004016% which is kinda double the gov fee")
+
+        console.log(((await mockWETH.balanceOf(pairAddress)).toString()/10**18)/((await earningsManager.amounts1()).toString()/10**18));
 
 
     });
 
+
+    //TODO add a test that tests a really long swap path and make sure it works
 
 
 
