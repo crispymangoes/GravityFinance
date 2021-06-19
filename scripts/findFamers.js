@@ -13,7 +13,7 @@ async function main() {
     let amount;
     let address;
     let total = 0;
-    for(let i=1; i<128; i++){
+    for(let i=1; i<93; i++){
         address = data['data']['farmers'][i]['user'];
         amount =  Number(data['data']['farmers'][i]['amount'])/10**18;
         reward = Number(await farm.pendingReward(address)) /10**18;

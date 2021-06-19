@@ -375,6 +375,7 @@ describe("Swap Exchange Contracts functional test", function () {
         console.log("");
         console.log("Convert GFI earnings into pool assets, deposit them, then burn LP tokens");
         await earningsManager.oracleProcessEarnings(pairAddress);
+        //await earningsManager.manualProcessEarnings(pairAddress, [0,0]); <- Works!
         console.log("");
         console.log("Swap Pair wETH Balance: ",(await mockWETH.balanceOf(pairAddress)).toString()/10**18);
         console.log("Swap Pair GFI Balance: ",(await mockGFI.balanceOf(pairAddress)).toString()/10**18);
@@ -382,12 +383,8 @@ describe("Swap Exchange Contracts functional test", function () {
         console.log("Earnings Manager wETH Balance: ",(await mockWETH.balanceOf(earningsManager.address)).toString()/10**18);
         console.log("Earnings Manager GFI Balance: ",(await mockGFI.balanceOf(earningsManager.address)).toString()/10**18);
 
-        console.log("Amounts[1]: ", (await earningsManager.amounts1()).toString()/10**18);
-        console.log("Amounts[0]: ", (await earningsManager.amounts0()).toString()/10**18);
-
-        console.log("Amounts aren't matching up but I think they should be matching up... Also worried bc they don't match up by 0.1004016% which is kinda double the gov fee")
-
-        console.log(((await mockWETH.balanceOf(pairAddress)).toString()/10**18)/((await earningsManager.amounts1()).toString()/10**18));
+        console.log("Dust Pan wETH Balance: ",(await mockWETH.balanceOf(addr5.address)).toString()/10**18);
+        console.log("Dust Pan GFI Balance: ",(await mockGFI.balanceOf(addr5.address)).toString()/10**18);
 
 
     });

@@ -21,8 +21,6 @@ contract EarningsManager is Ownable {
     address[] public swapPairs;
     mapping(address => uint256) public swapIndex;
     mapping(address => bool) public whitelist;
-    uint public amounts0;
-    uint public amounts1;
 
     struct oracle {
         uint[2] price0Cumulative;
@@ -178,33 +176,35 @@ contract EarningsManager is Ownable {
             block.timestamp
         );
 
-
-        uint256 minToken0 = (slippage * amounts[0]) / 100;
-        uint256 minToken1 = (slippage * amounts[1]) / 100;
+        //amounts[1] = amounts[1] * 9995 / 10000;
+        if(amounts[0] > OZ_IERC20(path[0]).balanceOf(address(this))){
+            amounts[0] = OZ_IERC20(path[0]).balanceOf(address(this));
+        }
+        if(amounts[1] > OZ_IERC20(path[1]).balanceOf(address(this))){
+            amounts[1] = OZ_IERC20(path[1]).balanceOf(address(this));
+        }
+        uint256 token0Var = (slippage * amounts[0]) / 100;
+        uint256 token1Var = (slippage * amounts[1]) / 100;
         OZ_IERC20(path[0]).approve(Factory.router(), amounts[0]);
         OZ_IERC20(path[1]).approve(Factory.router(), amounts[1]);
-        //amounts[1] = amounts[1] * 9995 / 10000;
-        amounts0 = amounts[0];
-        amounts1 = amounts[1];
-        IUniswapV2Router02(Factory.router()).addLiquidity(
-            token0,
-            token1,
+        (token0Var, token1Var,) = IUniswapV2Router02(Factory.router()).addLiquidity(//reuse tokenVars to avoid stack to deep errors
+            path[0],
+            path[1],
             amounts[0],
             amounts[1],
-            0,//minToken0,
-            0,//minToken1,
+            token0Var,
+            token1Var,
             address(this),
             block.timestamp
         );
-
+        
         IUniswapV2ERC20 LPtoken = IUniswapV2ERC20(pairAddress);
         require(
             LPtoken.burn(LPtoken.balanceOf(address(this))),
             "Failed to burn LP tokens"
         );
-        //Send remaining dust to dust pan
-        //Token0.transfer(Factory.dustPan(), (amounts[0] - amountA));
-        //Token1.transfer(Factory.dustPan(), (amounts[1] - amountB));
+        if((amounts[0] - token0Var) > 0){OZ_IERC20(path[0]).transfer(Factory.dustPan(), (amounts[0] - token0Var));}
+        if((amounts[1] - token1Var) > 0){OZ_IERC20(path[1]).transfer(Factory.dustPan(), (amounts[1] - token1Var));}
         
     }
 
@@ -231,6 +231,7 @@ contract EarningsManager is Ownable {
         //First swap wETH into GFI
         path[0] = Factory.weth();
         path[1] = Factory.gfi();
+        OZ_IERC20(Factory.weth()).approve(Factory.router(), earnings);
         amounts = IUniswapV2Router02(Factory.router()).swapExactTokensForTokens(
             earnings,
             minAmounts[0],
@@ -247,6 +248,7 @@ contract EarningsManager is Ownable {
         } else {
             path[1] = IUniswapV2Pair(pairAddress).token0();
         }
+        OZ_IERC20(Factory.gfi()).approve(Factory.router(), (amounts[1] / 2));
         amounts = IUniswapV2Router02(Factory.router()).swapExactTokensForTokens(
             tokenBal,
             minAmounts[1],
@@ -264,8 +266,8 @@ contract EarningsManager is Ownable {
         Token1.approve(Factory.router(), amounts[1]);
 
         (uint amountA, uint amountB,) = IUniswapV2Router02(Factory.router()).addLiquidity(
-            token0,
-            token1,
+            path[0],
+            path[1],
             amounts[0],
             amounts[1],
             minToken0,

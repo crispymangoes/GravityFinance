@@ -162,11 +162,6 @@
         "user": "0x68c838ccdd83b4826a0d3dc3288a10d214224534"
       },
       {
-        "amount": "24000000000000000000000",
-        "id": "0x69b8a24edc9053b3d007710e7b986df40a0bc7eb",
-        "user": "0x69b8a24edc9053b3d007710e7b986df40a0bc7eb"
-      },
-      {
         "amount": "5000000000000000000000",
         "id": "0x6bb7193cdb9c1f5340970b80e79915c9284d3154",
         "user": "0x6bb7193cdb9c1f5340970b80e79915c9284d3154"
@@ -352,11 +347,6 @@
         "user": "0xbf5f0998226bd8e6270997bc713e6fe0bb5c8237"
       },
       {
-        "amount": "5000000000000000000000",
-        "id": "0xc523f9f48e00a8f5680fcb7d6eeca28dca00c419",
-        "user": "0xc523f9f48e00a8f5680fcb7d6eeca28dca00c419"
-      },
-      {
         "amount": "5067892523325000000000",
         "id": "0xc55a4db389fec03beee8cf64f330b227e1d9596e",
         "user": "0xc55a4db389fec03beee8cf64f330b227e1d9596e"
@@ -382,11 +372,6 @@
         "user": "0xd43770dbc8b1122b01c39ec951db6613c0271b9d"
       },
       {
-        "amount": "4000000000000000000000",
-        "id": "0xd6cee4f5f5ee3c3d81d629d5bd6d525883114a31",
-        "user": "0xd6cee4f5f5ee3c3d81d629d5bd6d525883114a31"
-      },
-      {
         "amount": "15000000000000000000000",
         "id": "0xd7ba3bbbc7e8c0ed8d0986ee4bf441505b5f668f",
         "user": "0xd7ba3bbbc7e8c0ed8d0986ee4bf441505b5f668f"
@@ -400,11 +385,6 @@
         "amount": "5000000000000000000000",
         "id": "0xda59e40c7bd1d961d4c54c0ad55ac13c4927b73a",
         "user": "0xda59e40c7bd1d961d4c54c0ad55ac13c4927b73a"
-      },
-      {
-        "amount": "16000000000000000000000",
-        "id": "0xdd45f56bd7b0390a31e3c5ee88a200a9591bc361",
-        "user": "0xdd45f56bd7b0390a31e3c5ee88a200a9591bc361"
       },
       {
         "amount": "20037674423760000000000",
@@ -452,11 +432,6 @@
         "user": "0xf483a8d99950fd4f3da79e89c3a09297705574c1"
       },
       {
-        "amount": "5000000000000000000000",
-        "id": "0xf54db272ad228e8dbe8659a7aa5f56ee8a285ae2",
-        "user": "0xf54db272ad228e8dbe8659a7aa5f56ee8a285ae2"
-      },
-      {
         "amount": "20000000000000000000000",
         "id": "0xf60050df91d4f7730c21fd230bb67427aa091de5",
         "user": "0xf60050df91d4f7730c21fd230bb67427aa091de5"
@@ -475,11 +450,6 @@
         "amount": "5000000000000000000000",
         "id": "0xf8fc775a17e980ae0d66798d2fd737c37d4b5450",
         "user": "0xf8fc775a17e980ae0d66798d2fd737c37d4b5450"
-      },
-      {
-        "amount": "5000000000000000000000",
-        "id": "0xf9e633bfe5209dce5e2b28f2bf981748af2a2d95",
-        "user": "0xf9e633bfe5209dce5e2b28f2bf981748af2a2d95"
       },
       {
         "amount": "2000000000000000000000",
