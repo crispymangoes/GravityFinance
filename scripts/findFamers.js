@@ -18,11 +18,11 @@ async function main() {
         amount =  Number(data['data']['farmers'][i]['amount'])/10**18;
         reward = Number(await farm.pendingReward(address)) /10**18;
         rows.push([address, amount, reward]);
-        //console.log(address, amount, reward);
+        console.log(address, amount, reward);
         total = total + amount;
-        if(reward < 10){
-            console.log(reward);
-        }
+        //if(reward < 10){
+        //    console.log(reward);
+        //}
     }
     console.log("Total Amount in Farm: ", total);
 
