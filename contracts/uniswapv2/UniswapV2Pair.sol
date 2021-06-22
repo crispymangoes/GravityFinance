@@ -39,10 +39,11 @@ contract UniswapV2Pair is UniswapV2ERC20 {
 
     uint private unlocked = 1;
 
-    //NEW VARS
+    /*--------------------------------START NEW VARS--------------------------------*/
     Holding holder;
     address public HOLDING_ADDRESS;
     IUniswapV2Factory Factory;
+    /*--------------------------------END  NEW VARS--------------------------------*/
 
     modifier lock() {
         require(unlocked == 1, 'UniswapV2: LOCKED');
@@ -78,9 +79,6 @@ contract UniswapV2Pair is UniswapV2ERC20 {
         address indexed to
     );
     event Sync(uint112 reserve0, uint112 reserve1);
-
-    //NEW event
-    event EarningsManagerCreation(address _SWAP_ADDRESS, address _EM_ADDRESS);
 
     constructor() public {
         factory = msg.sender;
@@ -187,7 +185,7 @@ contract UniswapV2Pair is UniswapV2ERC20 {
         address _token0 = token0;
         address _token1 = token1;
 
-        //TODO CALL transfer function to transfer gov fee to feeManager contract, not sure if I need to update the amounts, I might need to remove the 0.05%
+        /*START NEW CODE*/
         if (amount0Out > 0){
             uint old_amount0Out = amount0Out;
             amount0Out = amount0Out.mul(9995) / (10000); //Remove 0.05% gov fee
@@ -198,6 +196,7 @@ contract UniswapV2Pair is UniswapV2ERC20 {
             amount1Out = amount1Out.mul(9995) / (10000); //Remove 0.05% gov fee
              _safeTransfer(_token1, Factory.feeManager(), old_amount1Out.sub(amount1Out)); // optimistically transfer tokens
         }
+        /*END NEW CODE*/
 
         require(to != _token0 && to != _token1, 'UniswapV2: INVALID_TO');
         if (amount0Out > 0) _safeTransfer(_token0, to, amount0Out); // optimistically transfer tokens

@@ -235,7 +235,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
             path[0], msg.sender, UniswapV2Library.pairFor(factory, path[0], path[1]), amounts[0]
         );
         _swap(amounts, path, to);
-        amounts[amounts.length - 1] = amounts[amounts.length - 1] * 9995/10000;
+        amounts[amounts.length - 1] = amounts[amounts.length - 1] * 9995/10000; //Added this line to account for the 0.05% gov fee not being subtracted from the final output amount
     }
     function swapTokensForExactTokens(
         uint amountOut,

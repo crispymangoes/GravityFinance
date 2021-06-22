@@ -11,23 +11,14 @@ import "./interfaces/IPathOracle.sol";
 import "./interfaces/IPriceOracle.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-//TODO make it so that the governance address is passed into the factory on craetion, then it is relayed to the pair contract and to this contract, and initialized in the
-//TODO before any thing using the current pair cumulative, make sure getReserves() LastTimeStamp is equal to the current block.timestamp
-//TODO maybe make it a modifier????
 //Add events so that The graph can track earnings going into the pool
+//TODO look at swap funciton in pair to see how they added scope for some variables in order to avoid stack to deep errors
 contract EarningsManager is Ownable {
     address public factory;
     IUniswapV2Factory Factory;
     address[] public swapPairs;
     mapping(address => uint256) public swapIndex;
     mapping(address => bool) public whitelist;
-
-    struct oracle {
-        uint[2] price0Cumulative;
-        uint[2] price1Cumulative;
-        uint32[2] timeStamp;
-        uint8 index; // 0 or 1
-    }
 
     modifier onlyFactory() {
         require(msg.sender == factory, "Gravity Finance: FORBIDDEN");
@@ -68,7 +59,6 @@ contract EarningsManager is Ownable {
         PriceOracle.getPrice(firstAddress);
 
         //*****CHECK IF WE NEED TO LOOK AT ALTs
-        //MAYBE THIS SHOULD JUST RETURN THE FULL ORACLE CUZ I ALSO NEED A WAY TO GET THE OTEHR INDEX TIMESTAMP
         (uint pairACurrentTime, uint pairAOtherTime) = PriceOracle.getOracleTime(firstAddress);
         (uint pairBCurrentTime, uint pairBOtherTime) = PriceOracle.getOracleTime(pairAddress);
         
@@ -114,9 +104,7 @@ contract EarningsManager is Ownable {
     /**
     * @dev Will revert if prices are not valid, validTimeWindow() should be called before calling any functions that use price oracles to get min amounts
     * known inefficiency if target pair is wETH/GFI, it will trade all the wETH for GFI, then swap half the GFI back into wETH
-    * I added in a 0.05% reduction to the amounts variables and that seemed to make things signifigantly closer to what they should be, much like the vanilla uniswap amounts were really close to the actual amounts you got
     **/
-    //TODO add in check to see if it is the wETH GFI pair, then only do 1 1/2 swap m,aybe use a for loop for 2 iterations
     function oracleProcessEarnings(address pairAddress) external onlyWhitelist {
         address token0 = IUniswapV2Pair(pairAddress).token0();
         address token1 = IUniswapV2Pair(pairAddress).token1();
@@ -212,8 +200,6 @@ contract EarningsManager is Ownable {
     //Need to add same modifiations to this one that I added to the oracle one
     function manualProcessEarnings(address pairAddress, uint[2] memory minAmounts) external onlyWhitelist{
         uint256 tokenBal;
-        address token0 = IUniswapV2Pair(pairAddress).token0();
-        address token1 = IUniswapV2Pair(pairAddress).token1();
         uint256 slippage = Factory.slippage();
         address[] memory path = new address[](2);
         uint256 earnings = IUniswapV2Pair(pairAddress).handleEarnings(); //Delegates Earnings to a holding contract, and holding approves earnings manager to spend earnings

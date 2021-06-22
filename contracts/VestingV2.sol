@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {iGovernance} from "./interfaces/iGovernance.sol";
 
 contract VestingV2 is Ownable {
     mapping(address => uint256) public GFIbalance;
@@ -149,11 +150,4 @@ contract VestingV2 is Ownable {
             "Failed to transfer leftover GFI to Owner!"
         );
     }
-}
-
-interface iGovernance {
-    /**
-     * Assume claimFee uses msg.sender, and returns the amount of WETH sent to the caller
-     */
-    function claimFee() external returns (uint256);
 }

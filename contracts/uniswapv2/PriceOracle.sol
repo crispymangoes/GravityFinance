@@ -4,7 +4,6 @@ pragma solidity ^0.8.0;
 
 import "../interfaces/OZ_IERC20.sol";
 import "./interfaces/IUniswapV2Pair.sol";
-import "./interfaces/IUniswapV2Factory.sol";
 import "./libraries/UQ112x112.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
@@ -28,6 +27,13 @@ contract PriceOracle is Ownable{
     uint public priceValidStart;
     uint public priceValidEnd;
 
+    /**
+    * @dev emitted when owner calls setTimingReq
+    * @param priceValidStart how long it takes for a price to become valid from when it is logged
+    * @param priceValidEnd how long it takes for the price to expire from when it is logged
+    **/
+    event priceWindowChanged(uint priceValidStart, uint priceValidEnd);
+
 
 
     constructor(uint _priceValidStart, uint _priceValidEnd) {
@@ -38,14 +44,25 @@ contract PriceOracle is Ownable{
         priceValidEnd = _priceValidEnd;
     }
 
+    /**
+    * @dev called by owner to change the price valid window
+    * @param _priceValidStart how many seconds it takes for the price to become valid
+    * @param _priceValidEnd hwo many seconds it takes for a price to expire from when it is logged
+    **/
     function setTimingReq(uint _priceValidStart, uint _priceValidEnd) external onlyOwner{
         require(_priceValidStart >= 300, "Price maturity must be greater than 300 seconds");
         require(_priceValidStart <= 3600, "Price maturity must be less than 3600 seconds");
         require(_priceValidStart * 2 == _priceValidEnd, "Price expiration must be equal to 2x price maturity");
-        priceValidStart = _priceValidStart;
+        priceValidStart = _priceValidStart; 
         priceValidEnd = _priceValidEnd;
+        emit priceWindowChanged(priceValidStart, priceValidEnd);
     }
 
+    /** 
+    * @dev called to get the current prices for a swap pair, if not valid, then it logs the current price so that it can become valid
+    * @param pairAddress the pair address caller wants the pair prices for
+    * @return price0Average , price1Average, timeTillValid 3 uints the average price for asset 0 to asset 1 and vice versa, and the timeTillValid which is how many seconds until prices are valid
+    **/
     function getPrice(address pairAddress) public returns (uint price0Average, uint price1Average, uint timeTillValid) {
         uint8 index = priceOracles[pairAddress].index;
         uint8 otherIndex;
@@ -106,6 +123,11 @@ contract PriceOracle is Ownable{
         }
     }
 
+    /**
+    * @dev get the current timestamp from the price oracle, as well as the alternate timestamp
+    * @param pairAddress the pair address you want to check the timestamps for
+    * @return currentTimestamp otherTimestamp, the current and the alternate timestamps
+    **/
     function getOracleTime(address pairAddress) external view returns(uint currentTimestamp, uint otherTimestamp){
         oracle memory tmp = priceOracles[pairAddress];
         if (tmp.index == 0){
@@ -118,6 +140,14 @@ contract PriceOracle is Ownable{
         }
     }
 
+    /**
+    * @dev used to calculate the minimum amount to recieve from a swap
+    * @param from the token you want to swap for another token
+    * @param slippage number from 0 to 100 that represents a percent, will revert if greater than 100
+    * @param amount the amount of from tokens you want swapped into the other token
+    * @param pairAddress the pairAddress you want to use for swapping
+    * @return minAmount timeTillValid the minimum amount to expect for a trade, and the time until the price is valid. If timeTillValid is greater than 0 DO NOT USE THE minAmount variable, it will be 0
+    **/
     function calculateMinAmount(
         address from,
         uint256 slippage,
@@ -144,11 +174,17 @@ contract PriceOracle is Ownable{
         }
     }
 
+    /** 
+    * @dev internal function used to make the block.timestamp into a uint32
+    **/
     function currentBlockTimestamp() internal view returns (uint32) {
         return uint32(block.timestamp % 2**32);
     }
 
-    // produces the cumulative price using counterfactuals to save gas and avoid a call to sync.
+    /**
+    * @dev produces the cumulative price using counterfactuals to save gas and avoid a call to sync.
+    * @param pair the pair address you want the prices for
+    **/
     function currentCumulativePrices(address pair)
         internal
         view

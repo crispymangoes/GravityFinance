@@ -64,25 +64,6 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "_SWAP_ADDRESS",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "_EM_ADDRESS",
-        "type": "address"
-      }
-    ],
-    "name": "EarningsManagerCreation",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
         "indexed": true,
         "internalType": "address",
         "name": "sender",

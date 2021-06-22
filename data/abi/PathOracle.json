@@ -10,16 +10,6 @@
         "internalType": "uint256",
         "name": "_favoredLength",
         "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "weth",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "wbtc",
-        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -45,43 +35,42 @@
     "type": "event"
   },
   {
-    "inputs": [],
-    "name": "FACTORY_ADDRESS",
-    "outputs": [
+    "anonymous": false,
+    "inputs": [
       {
+        "indexed": false,
         "internalType": "address",
-        "name": "",
+        "name": "fromAsset",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "toAsset",
         "type": "address"
       }
     ],
-    "stateMutability": "view",
-    "type": "function"
+    "name": "pathAltered",
+    "type": "event"
   },
   {
-    "inputs": [],
-    "name": "WBTC_ADDRESS",
-    "outputs": [
+    "anonymous": false,
+    "inputs": [
       {
+        "indexed": false,
         "internalType": "address",
-        "name": "",
+        "name": "leaf",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "branch",
         "type": "address"
       }
     ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "WETH_ADDRESS",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
+    "name": "pathAppended",
+    "type": "event"
   },
   {
     "inputs": [
@@ -117,6 +106,19 @@
     "name": "appendPath",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "factory",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -233,35 +235,6 @@
     "name": "transferOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "token0",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "token1",
-        "type": "address"
-      }
-    ],
-    "name": "updateSwapPath",
-    "outputs": [
-      {
-        "internalType": "address[10]",
-        "name": "swapPath",
-        "type": "address[10]"
-      },
-      {
-        "internalType": "uint256",
-        "name": "swapCount",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   }
 ]

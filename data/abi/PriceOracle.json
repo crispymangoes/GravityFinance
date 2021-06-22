@@ -35,6 +35,25 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "priceValidStart",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "priceValidEnd",
+        "type": "uint256"
+      }
+    ],
+    "name": "priceWindowChanged",
+    "type": "event"
+  },
+  {
     "inputs": [],
     "name": "RESOLUTION",
     "outputs": [
