@@ -9,7 +9,7 @@ import {iGovernance} from "./interfaces/iGovernance.sol";
 contract VestingV2 is Ownable {
     mapping(address => uint256) public GFIbalance;
     mapping(address => uint256) public withdrawableFee;
-    uint256 callersShare = 100; //Caller of update fee get 1/1000 of the collected fee
+    uint256 callersShare = 100; //Caller of update fee get 1/100 of the collected fee
     address[] public users;
     uint256 public userCount;
     uint256 public totalBalance;

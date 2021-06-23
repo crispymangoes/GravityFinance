@@ -50,9 +50,9 @@ contract FarmTimeLock is Ownable {
     **/
     event withdraw(uint valid, address token, address to);
 
-    constructor(){
-        lockLength = 604800; // 1 week by default
-        graceLength = 86400; //owner has 1 day to call the function once it is valid
+    constructor(uint _lockLength, uint _graceLength){
+        lockLength = _lockLength; // 1 week by default
+        graceLength = _graceLength; //owner has 1 day to call the function once it is valid
     }
 
     /**

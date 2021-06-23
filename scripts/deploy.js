@@ -1,55 +1,87 @@
+const { getChainId, ethers } = require("hardhat");
+
 async function main() {
     const CONTRACT_OWNER = "0xeb678812778B68a48001B4A9A4A04c4924c33598";
-    const WETH_ADDRESS = "0x3C68CE8504087f89c640D02d133646d98e64ddd9";
+    const chainId = await getChainId();
+
     [deployer] = await ethers.getSigners();
     console.log("Deployer address:", deployer.address);
     console.log("");
-    /**
-     * @dev Deploy the Gravity Token Contract
-     */
-    const GravityToken = await ethers.getContractFactory("GravityToken");
-    console.log("Deploying GravityToken...");
-    const gravityToken = await GravityToken.deploy("Gravity Finance", "GFI");
-    await gravityToken.deployed();
-    console.log("GravityToken deployed to:", gravityToken.address);
-    console.log("");
-    /**
-     * @dev Deploy the IDO contract with default 40,000,000 GFI allocation, and start it in 5 min
-     */
-    const GravityIDO = await ethers.getContractFactory("GravityIDO");
-    console.log("Deploying GravityIDO...");
-    const gravityIDO = await GravityIDO.deploy(WETH_ADDRESS, gravityToken.address, 0, true);
-    await gravityIDO.deployed();
-    console.log("GravityIDO deployed to:", gravityIDO.address);
-    console.log("");
 
-   const Locking = await ethers.getContractFactory("Locking");
-   console.log("Deploying Locking...");
-   const locking = await Locking.deploy(gravityToken.address, WETH_ADDRESS, WETH_ADDRESS); //final mockWETH address is just subbing in for the Goverance contract
-   await locking.deployed();
-   console.log("Locking deployed to:", locking.address);
-   console.log("");
+    let GFI_ADDRESS = "0x874e178A2f3f3F9d34db862453Cd756E7eAb0381";
+    let WETH_ADDRESS = "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619";
+    let WBTC_ADDRESS = "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6";
+    let wETH;
+    let wBTC;
+    let GFI;
+    let startTime;
+    let subPeriodLength;
+    
+    if (chainId == 137){//Main net addresses
+        GFI_ADDRESS = "0x874e178A2f3f3F9d34db862453Cd756E7eAb0381";
+        WETH_ADDRESS = "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619";
+        WBTC_ADDRESS = "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6";
 
-    console.log("Transferring sale tokens to IDO...");
-    await gravityToken.transfer(gravityIDO.address, "40000000000000000000000000"); //Send 40,000,000 GFI to IDO address
-    console.log("Transferring remaining token balance to contract owner...");
-    await gravityToken.transfer(CONTRACT_OWNER, "1160000000000000000000000000"); //Transfer remaining tokens to CONTRACT_OWNER
-    console.log("Transferring token owenership to contract owner...");
-    await gravityToken.transferOwnership(CONTRACT_OWNER);
-    console.log("Transferring IDO ownership to contract owner...");
-    await gravityIDO.transferOwnership(CONTRACT_OWNER);
-    console.log("Transferring Locking ownership to contract owner...");
-    await locking.transferOwnership(CONTRACT_OWNER);
-    console.log("");
-    console.log("Summary");
-    console.log("Gravity Token Address:", gravityToken.address);
-    console.log("WETH Address:", WETH_ADDRESS);
-    console.log("Gravity IDO Address:", gravityIDO.address);
-    console.log("IDO IOU Token Address: ", await gravityIDO.getIOUAddress());
-    console.log("Locking Address: ", locking.address);
-    console.log("Contract Owner Address: ", CONTRACT_OWNER);
+        const WETH = await ethers.getContractFactory("MockWETH");
+        wETH = await WETH.attach(WETH_ADDRESS);
+        
 
-  }
+        const WBTC = await ethers.getContractFactory("MockWBTC");
+        wBTC = await WBTC.attach(WBTC_ADDRESS);
+        
+
+        const GravityToken = await ethers.getContractFactory("GravityToken");
+        GFI = await GravityToken.attach(GFI_ADDRESS);
+        
+        startTime = 1622530800;
+        subPeriodLength = 2592000;
+        
+    }
+    else{
+        const WETH = await ethers.getContractFactory("MockWETH");
+        wETH = await WETH.deploy();
+        await wETH.deployed();
+        console.log("wETH deployed to: ", wETH.address);
+
+        const WBTC = await ethers.getContractFactory("MockWBTC");
+        wBTC = await WBTC.deploy();
+        await wBTC.deployed();
+        console.log("wBTC deployed to: ", wBTC.address);
+
+        const GravityToken = await ethers.getContractFactory("GravityToken");
+        GFI = await GravityToken.deploy("Mock GFI", "mGFI");
+        await GFI.deployed();
+        console.log("mGFI deployed to: ", GFI.address);
+
+        GFI_ADDRESS = GFI.address;
+        WETH_ADDRESS = wETH.address;
+        WBTC_ADDRESS = wBTC.address;
+
+        let bal = await GFI.balanceOf(deployer.address);
+        await GFI.transfer("0xa5E5860B34ac0C55884F2D0E9576d545e1c7Dfd4", bal);
+
+        startTime = 1624467600; //June 23rd @10AM PST
+        subPeriodLength = 900; //15 min
+    }
+
+    const Governance = await ethers.getContractFactory("Governance");
+    const governance = await upgrades.deployProxy(Governance, [GFI_ADDRESS, WETH_ADDRESS, WBTC_ADDRESS], { initializer: 'initialize' });
+    console.log("Governance deployed to: ", governance.address);
+
+    //REMOVE THIS LINE FOR MAINNET DEPLOYMENT IT WILL FAIL A REQUIRE
+    await GFI.setGovernanceAddress(governance.address);
+    await GFI.changeGovernanceForwarding(true);
+    await GFI.transferOwnership(CONTRACT_OWNER);
+    //--------------------------------------------------------------
+
+    const VestingV2 = await ethers.getContractFactory("VestingV2");
+    const vestingV2 = await VestingV2.deploy(GFI_ADDRESS, WETH_ADDRESS, governance.address, startTime, subPeriodLength);
+    await vestingV2.deployed();
+    console.log("VestingV2 deployed to: ", vestingV2.address);
+
+    await vestingV2.transferOwnership("0xa5E5860B34ac0C55884F2D0E9576d545e1c7Dfd4");
+
+}
   
   main()
     .then(() => process.exit(0))
