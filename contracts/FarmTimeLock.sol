@@ -7,11 +7,11 @@ import "./interfaces/IFarm.sol";
 
 contract FarmTimeLock is Ownable {
 
-    uint public lockLength;
+    uint public lockLength; //Amount of time that needs to pass in order for a request to become valid
     uint public graceLength; //Amount of time owner has to call the function before it expires
 
-    uint public changeTimeLock_timestamp;
-    uint public changeTimeLock_lockInSec;
+    //Set up as a mapping, so that owner can interact with multipe farm contracts simutaneously without needing to wait (farm_count * 1 week)
+    //Instead owner waits 1 week
     mapping(address => uint) public transferOwnershipFromLock_timestamp;
     mapping(address => address) public transferOwnershipFromLock_newOwner;
     mapping(address => uint) public callWithdrawRewards_timestamp;
@@ -19,13 +19,6 @@ contract FarmTimeLock is Ownable {
     uint public withdrawERC20_timestamp;
     address public withdrawERC20_token;
     address public withdrawERC20_wallet;
-
-    /**
-    * @dev emitted when proposal to change lock period is made
-    * @param valid the timestamp when the proposal will become valid
-    * @param newPeriod the new lock period in seconds
-    **/
-    event lockPeriodChanged(uint valid, uint newPeriod);
 
     /**
     * @dev emitted when proposal to change farm owner is made
@@ -56,35 +49,12 @@ contract FarmTimeLock is Ownable {
     }
 
     /**
-    * @dev allows owner to change the lock period after the lock period is up, and set it anywhere from 1 day to 30 days
-    * @param lockInSec the new lock period time in seconds
-    **/
-    function changeTimeLock(uint lockInSec) external onlyOwner{
-        uint validStart = changeTimeLock_timestamp + lockLength;
-        uint validEnd = changeTimeLock_timestamp + lockLength + graceLength;
-
-        if (block.timestamp > validStart && block.timestamp < validEnd){//If request is now valid fulfill it
-            changeTimeLock_timestamp = 0; //reset the timestamp
-            lockLength = changeTimeLock_lockInSec;
-        }
-
-        else{ //Call is not valid so reset timestamp and capture input
-            if(block.timestamp > validEnd){//Only make a new timestamp if the current one is expired
-                require(lockInSec > 86400, "Locking period must be greater than 1 day!");
-                require(lockInSec < 2592000, "Locking period can not be greater than a month!");
-                changeTimeLock_timestamp = block.timestamp;
-                changeTimeLock_lockInSec = lockInSec;
-                emit lockPeriodChanged(validStart, lockInSec);
-            }
-        }
-    }
-
-    /**
     * @dev allows owner to call the transferOwnership function in any farm (that has it's owner set as this address) after the time lock period is up, and before the call expires
     * @param farm the address of the farm to call withdrawRewards on
     * @param newOwner the address of the new owner of the farm contract
     **/
     function transferOwnershipFromLock(address farm, address newOwner) external onlyOwner{
+        require(IFarm(farm).owner() == address(this), "Time lock contract does not own farm contract!");
         uint validStart = transferOwnershipFromLock_timestamp[farm] + lockLength;
         uint validEnd = transferOwnershipFromLock_timestamp[farm] + lockLength + graceLength;
 
@@ -97,7 +67,7 @@ contract FarmTimeLock is Ownable {
             if(block.timestamp > validEnd){//Only make a new timestamp if the current one is expired
                 transferOwnershipFromLock_timestamp[farm] = block.timestamp;
                 transferOwnershipFromLock_newOwner[farm] = newOwner;
-                emit transferOwnershipCalled(validStart, farm, newOwner);
+                emit transferOwnershipCalled(validStart, farm, newOwner);//emit for the world to see
             }
         }
     }
@@ -121,7 +91,7 @@ contract FarmTimeLock is Ownable {
             if(block.timestamp > validEnd){//Only make a new timestamp if the current one is expired
                 callWithdrawRewards_timestamp[farm] = block.timestamp;
                 callWithdrawRewards_amount[farm] = amount;
-                emit withdrawRewards(validStart, farm, amount);
+                emit withdrawRewards(validStart, farm, amount);//emit for the world to see
             }
         }
     }
@@ -147,7 +117,7 @@ contract FarmTimeLock is Ownable {
                 withdrawERC20_timestamp = block.timestamp;
                 withdrawERC20_wallet = wallet;
                 withdrawERC20_token = token;
-                emit withdraw(validStart, token, wallet);
+                emit withdraw(validStart, token, wallet);//emit for the world to see
             }
         }
     }

@@ -269,9 +269,11 @@ contract Farm_Contract is Ownable {
      * @param _bonusEndBlock blocknumber to stop the bonus period
      * @param _bonus bonus amount
      */
-    function init (IERC20 _rewardToken, uint256 _amount, IERC20 _lpToken, uint256 _blockReward, uint256 _startBlock, uint256 _endBlock, uint256 _bonusEndBlock, uint256 _bonus) public onlyOwner {
-        TransferHelper.safeTransferFrom(address(_rewardToken), msg.sender, address(this), _amount);
-        farmInfo.rewardToken = _rewardToken;
+    function init (address _rewardToken, uint256 _amount, address _lpToken, uint256 _blockReward, uint256 _startBlock, uint256 _endBlock, uint256 _bonusEndBlock, uint256 _bonus) public onlyOwner {
+        TransferHelper.safeTransferFrom(_rewardToken, msg.sender, address(this), _amount);
+        IERC20 rewardT = IERC20(_rewardToken);
+        IERC20 lpT = IERC20(_lpToken);
+        farmInfo.rewardToken = rewardT;
         
         farmInfo.startBlock = _startBlock;
         farmInfo.blockReward = _blockReward;
@@ -279,7 +281,7 @@ contract Farm_Contract is Ownable {
         farmInfo.bonus = _bonus;
         
         uint256 lastRewardBlock = block.number > _startBlock ? block.number : _startBlock;
-        farmInfo.lpToken = _lpToken;
+        farmInfo.lpToken = lpT;
         farmInfo.lastRewardBlock = lastRewardBlock;
         farmInfo.accRewardPerShare = 0;
         
