@@ -43,6 +43,12 @@ before(async function () {
     await mockGFI.approve(farm1.address, "1000000000000000000000000");
     await farm1.init(mockGFI.address, "1000000000000000000000000", mockLP.address, 0, 0, 0, 0, 0);
 
+    Farm2 = await ethers.getContractFactory("Farm_Contract");
+    farm2 = await Farm2.deploy();
+    await farm2.deployed();
+    await mockGFI.approve(farm2.address, "2000000000000000000000000");
+    await farm2.init(mockGFI.address, "2000000000000000000000000", mockLP.address, 0, 0, 0, 0, 0);
+
     let week = 604800;
     let day = 86400;
     TimeLock = await ethers.getContractFactory("FarmTimeLock");
@@ -127,5 +133,9 @@ describe("Farm Time Lock Contract functional test", function() {
 
         expect((await mockGFI.balanceOf(owner.address)).toString()).to.equal("1500000000000000000000000");
         expect((await mockGFI.balanceOf(addr1.address)).toString()).to.equal("0");
+    });
+
+    it("Try calling withdrawRewards on a farm the timelock doesn't own, should revert", async function() {
+        await expect(timeLock.callWithdrawRewards(farm2.address, "0")).to.be.reverted;
     });
 });
