@@ -190,7 +190,6 @@ contract FeeManager is Ownable {
     * @param asset the address of the asset to move out of fee manager
     **/
     function adminWithdraw(address asset) external onlyOwner{
-        //emit an event letting everyone know this was used
         OZ_IERC20 token = OZ_IERC20(asset);
         token.transfer(msg.sender, token.balanceOf(address(this)));
         emit AdminWithdrawCalled(asset);

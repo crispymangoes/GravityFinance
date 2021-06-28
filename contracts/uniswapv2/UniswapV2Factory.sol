@@ -57,7 +57,9 @@ contract UniswapV2Factory is IUniswapV2Factory {
         UniswapV2Pair(pair).initialize(token0, token1);
         IPathOracle(pathOracle).appendPath(token0, token1);
         IFeeManager(feeManager).catalougeTokens(token0, token1);
-        IEarningsManager(earningsManager).addSwapPair(pair);
+        if(token0 == gfi || token1 == gfi){ //Only add pairs that has GFI as one of the tokens, otehrwise they won't have any earnings
+            IEarningsManager(earningsManager).addSwapPair(pair);
+        }
         getPair[token0][token1] = pair;
         getPair[token1][token0] = pair; // populate mapping in the reverse direction
         allPairs.push(pair);

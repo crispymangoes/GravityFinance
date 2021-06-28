@@ -30,6 +30,19 @@ contract EarningsManager is Ownable {
         _;
     }
 
+    /**
+    * @dev emitted when a new pair is added to the earnings manager
+    * @param pairAddress the address of the newly added pair
+    **/
+    event pairAdded(address pairAddress);
+
+    /**
+    * @dev emitted when owner changes the whitelist
+    * @param _address the address that had its whitelist status changed
+    * @param newBool the new state of the address
+    **/
+    event whiteListChanged(address _address, bool newBool);
+
     constructor(address _factory) {
         swapPairs.push(address(0));
         factory = _factory;
@@ -40,10 +53,12 @@ contract EarningsManager is Ownable {
         require(swapIndex[pairAddress] == 0, "Already have pair catalouged");
         swapPairs.push(pairAddress);
         swapIndex[pairAddress] = swapPairs.length;
+
     }
 
     function adjustWhitelist(address _address, bool _bool) external onlyOwner {
         whitelist[_address] = _bool;
+        emit whiteListChanged(_address, _bool);
     }
 
     function validTimeWindow(address pairAddress) public returns (uint valid, uint expires){
@@ -102,8 +117,15 @@ contract EarningsManager is Ownable {
     }
 
     /**
+    * @dev emitted whenever whitelist address calls either the oracle or manual ProcessEarnings
+    * @param pairAddress the address of the pair that just had it's earnings processed
+    * @param timestamp the timestamp for when the earnings were processed
+    **/
+    event earningsProcessed(address pairAddress, uint timestamp);
+    /**
     * @dev Will revert if prices are not valid, validTimeWindow() should be called before calling any functions that use price oracles to get min amounts
     * known inefficiency if target pair is wETH/GFI, it will trade all the wETH for GFI, then swap half the GFI back into wETH
+    * @param pairAddress the address of the pair that you want to handle earnings for
     **/
     function oracleProcessEarnings(address pairAddress) external onlyWhitelist {
         address token0 = IUniswapV2Pair(pairAddress).token0();
@@ -193,11 +215,15 @@ contract EarningsManager is Ownable {
         );
         if((amounts[0] - token0Var) > 0){OZ_IERC20(path[0]).transfer(Factory.dustPan(), (amounts[0] - token0Var));}
         if((amounts[1] - token1Var) > 0){OZ_IERC20(path[1]).transfer(Factory.dustPan(), (amounts[1] - token1Var));}
-        
+        emit earningsProcessed(pairAddress, block.timestamp);
     }
 
 
-    //Need to add same modifiations to this one that I added to the oracle one
+    /**
+    * @dev to be used if on chain oracle pricing is failing, whitelist address will use their own price oracle to calc minAmounts
+    * known inefficiency if target pair is wETH/GFI, it will trade all the wETH for GFI, then swap half the GFI back into wETH
+    * @param pairAddress the address of the pair that you want to handle earnings for
+    **/
     function manualProcessEarnings(address pairAddress, uint[2] memory minAmounts) external onlyWhitelist{
         uint256 tokenBal;
         uint256 slippage = Factory.slippage();
@@ -268,8 +294,9 @@ contract EarningsManager is Ownable {
             "Failed to burn LP tokens"
         );
         //Send remaining dust to dust pan
-        Token0.transfer(Factory.dustPan(), (amounts[0] - amountA));
-        Token1.transfer(Factory.dustPan(), (amounts[1] - amountB));
+        if((amounts[0] - amountA) > 0){Token0.transfer(Factory.dustPan(), (amounts[0] - amountA));}
+        if((amounts[1] - amountB) > 0){Token1.transfer(Factory.dustPan(), (amounts[1] - amountB));}
+        emit earningsProcessed(pairAddress, block.timestamp);
     }
 
     /**

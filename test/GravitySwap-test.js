@@ -6,11 +6,9 @@ let MockERC20;
 let mockWETH;
 let MockGFI;
 let mockGFI;
-let GravityIDO;
-let gravityIDO;
-let IOU_ADDRESS;
-let IOUToken;
-let gravityIOU;
+let mockSUSHI;
+let mockLINK;
+
 
 //Test wallet addresses
 let owner; // Test contract owner
@@ -26,6 +24,8 @@ let GFI;
 let USDC;
 let DAI;
 let WMATIC;
+let LINK;
+let SUSHI;
 
 before(async function () {
     [owner, addr1, addr2, addr3, addr4, addr5] = await ethers.getSigners();
@@ -34,6 +34,17 @@ before(async function () {
     mockWETH = await MockERC20.deploy(addr1.address, addr2.address, addr3.address, addr4.address);
     await mockWETH.deployed();
     WETH = mockWETH.address;
+
+    MockERC20 = await ethers.getContractFactory("MockToken");
+    mockLINK = await MockERC20.deploy(addr1.address, addr2.address, addr3.address, addr4.address);
+    await mockLINK.deployed();
+    LINK = mockLINK.address;
+
+    MockERC20 = await ethers.getContractFactory("MockToken");
+    mockSUSHI = await MockERC20.deploy(addr1.address, addr2.address, addr3.address, addr4.address);
+    await mockSUSHI.deployed();
+    SUSHI = mockSUSHI.address;
+    
 
     MockERC20 = await ethers.getContractFactory("MockToken");
     mockWBTC = await MockERC20.deploy(addr1.address, addr2.address, addr3.address, addr4.address);
@@ -67,9 +78,10 @@ before(async function () {
     await mockGFI.changeGovernanceForwarding(true);
     
     PathOracle = await ethers.getContractFactory("PathOracle");
-    pathOracle = await PathOracle.deploy([mockWETH.address, mockWBTC.address, mockGFI.address, mockUSDC.address, mockDAI.address], 5, mockWETH.address, mockWBTC.address);
+    pathOracle = await PathOracle.deploy([mockWETH.address, mockWBTC.address, mockGFI.address, mockUSDC.address, mockDAI.address], 5);
     await pathOracle.deployed();
     await pathOracle.alterPath(WETH, WBTC);
+    await pathOracle.alterPath(WBTC, WETH);
 
     PriceOracle = await ethers.getContractFactory("PriceOracle");
     priceOracle = await PriceOracle.deploy(300, 600);
@@ -282,10 +294,28 @@ describe("Swap Exchange Contracts functional test", function () {
         expect(await pathOracle.pathMap(mockWBTC.address)).to.equal(WETH);
         expect(await pathOracle.pathMap(mockWETH.address)).to.equal(WBTC);
 
-        //Check to make sure that a completely random pair fails to create a path(use SUSHI and LINK)
-        //Then add a pool that creates a path
-        //Then update the path and see if it works
+        //Create random pair, use LINK/SUSHI
+        await mockLINK.connect(addr1).approve(swapRouter.address, "100000000000000000000");
+        await mockSUSHI.connect(addr1).approve(swapRouter.address, "10000000000000000000");
+        await swapRouter.connect(addr1).addLiquidity(mockLINK.address, mockSUSHI.address, "100000000000000000000", "10000000000000000000", "990000000000000000000", "99000000000000000000", addr1.address, 1654341846);
+        pairAddress = await swapFactory.getPair(mockLINK.address, mockSUSHI.address);
+        console.log("Created LINK/SUSHI at: ", pairAddress);
         
+        //Make sure the pathing is not complete
+        expect(Number(await pathOracle.pathMap(LINK))).to.equal(0);
+        expect(Number(await pathOracle.pathMap(SUSHI))).to.equal(0);
+        
+        //Then add a pool that creates a path
+        await mockGFI.transfer(addr1.address, "1000000000000000000000");
+        await mockLINK.connect(addr1).approve(swapRouter.address, "100000000000000000000");
+        await mockGFI.connect(addr1).approve(swapRouter.address, "10000000000000000000");
+        await swapRouter.connect(addr1).addLiquidity(mockLINK.address, mockGFI.address, "100000000000000000000", "10000000000000000000", "990000000000000000000", "99000000000000000000", addr1.address, 1654341846);
+        pairAddress = await swapFactory.getPair(mockLINK.address, mockGFI.address);
+        console.log("Created LINK/GFI at: ", pairAddress);
+
+        //Then update the path and see if it works
+        await pathOracle.alterPath(SUSHI, LINK);
+        await pathOracle.alterPath(LINK, GFI);
 
     });
 

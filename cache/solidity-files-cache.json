@@ -767,8 +767,8 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/libraries/UniswapV2Library.sol": {
-      "lastModificationDate": 1623899724380,
-      "contentHash": "668b82a328e795b871bf7bda079f2ef0",
+      "lastModificationDate": 1624836905050,
+      "contentHash": "afdbfa4a031da0cd30d61b31cf5aa3d4",
       "sourceName": "contracts/uniswapv2/libraries/UniswapV2Library.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -1036,8 +1036,8 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/UniswapV2Factory.sol": {
-      "lastModificationDate": 1623865700300,
-      "contentHash": "30769d6387d5f94701f1083ff99199de",
+      "lastModificationDate": 1624836141550,
+      "contentHash": "fa129eeeb9b3d139b22b3cc71bcb5d27",
       "sourceName": "contracts/uniswapv2/UniswapV2Factory.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -2038,8 +2038,8 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/FeeManager.sol": {
-      "lastModificationDate": 1624327662980,
-      "contentHash": "858a422e974396e7feda4436944cbb42",
+      "lastModificationDate": 1624564990463,
+      "contentHash": "3b1d55e1491d038f2bb810fb9d65d189",
       "sourceName": "contracts/uniswapv2/FeeManager.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -2088,8 +2088,8 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/EarningsManager.sol": {
-      "lastModificationDate": 1624316321040,
-      "contentHash": "6c9638b374ea57177893e0e44d4dd219",
+      "lastModificationDate": 1624836550380,
+      "contentHash": "d059f826643312e1ee07af0a356155d9",
       "sourceName": "contracts/uniswapv2/EarningsManager.sol",
       "solcConfig": {
         "version": "0.8.4",
