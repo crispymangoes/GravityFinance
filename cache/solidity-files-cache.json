@@ -2445,6 +2445,52 @@
       "artifacts": [
         "GovernanceV1"
       ]
+    },
+    "/home/crispy/SolidityRepo/GravityFinance/contracts/WalletTimeLock.sol": {
+      "lastModificationDate": 1624908577120,
+      "contentHash": "c0b7bb2a76a09927f43bfd4680a4479f",
+      "sourceName": "contracts/WalletTimeLock.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "./interfaces/IFarm.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "WalletTimeLock"
+      ]
     }
   }
 }
