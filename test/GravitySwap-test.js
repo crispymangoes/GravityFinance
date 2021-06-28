@@ -305,7 +305,7 @@ describe("Swap Exchange Contracts functional test", function () {
         expect(Number(await pathOracle.pathMap(LINK))).to.equal(0);
         expect(Number(await pathOracle.pathMap(SUSHI))).to.equal(0);
         
-        //Then add a pool that creates a path
+        //Then add a pool that creates a path LINK/GFI
         await mockGFI.transfer(addr1.address, "1000000000000000000000");
         await mockLINK.connect(addr1).approve(swapRouter.address, "100000000000000000000");
         await mockGFI.connect(addr1).approve(swapRouter.address, "10000000000000000000");
@@ -368,8 +368,6 @@ describe("Swap Exchange Contracts functional test", function () {
 
     });
 
-    //ADD TEST TO CHECK IF REQUIRE STATEMENT ON LINE 257(Pair contract) works
-    //ADD TEST TO SEE IF PAUSING WORKS
     
     it("Check Earnings Logic", async function () {
         
@@ -421,7 +419,21 @@ describe("Swap Exchange Contracts functional test", function () {
 
 
     //TODO add a test that tests a really long swap path and make sure it works
+    it("Test that a really long swap path works", async function () {
+        await mockUSDC.connect(addr2).approve(swapRouter.address, "1000000000000000000000");
+        let path = [USDC, WBTC, WETH, GFI, LINK, SUSHI];
+        console.log("Swap USDC for USDC with a 5 swap path");
+        console.log("USDC Balance: ", (await mockUSDC.balanceOf(addr2.address)).toString());
+        await swapRouter.connect(addr2).swapExactTokensForTokens("100000000000000000", "0", path, addr2.address, 1654341846);
 
 
+
+        console.log("Address 2 balances:");
+        console.log("USDC Balance: ", (await mockUSDC.balanceOf(addr2.address)).toString());
+        
+    });
+
+    //ADD TEST TO CHECK IF REQUIRE STATEMENT ON LINE 257(Pair contract) works
+    //ADD TEST TO SEE IF PAUSING WORKS
 
 });
