@@ -88,7 +88,7 @@ before(async function () {
     await priceOracle.deployed();
 
     SwapFactory = await ethers.getContractFactory("UniswapV2Factory");
-    swapFactory = await SwapFactory.deploy(owner.address);
+    swapFactory = await SwapFactory.deploy(owner.address, GFI, WETH, WBTC);
     await swapFactory.deployed();
 
     await pathOracle.setFactory(swapFactory.address);
@@ -109,9 +109,6 @@ before(async function () {
 
     await swapFactory.setRouter(swapRouter.address);
     await swapFactory.setGovernor(governance.address);
-    await swapFactory.setWETH(mockWETH.address);
-    await swapFactory.setWBTC(mockWBTC.address);
-    await swapFactory.setGFI(mockGFI.address);
     await swapFactory.setPathOracle(pathOracle.address);
     await swapFactory.setPriceOracle(priceOracle.address);
     await swapFactory.setEarningsManager(earningsManager.address);

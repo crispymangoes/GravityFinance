@@ -5,6 +5,21 @@
         "internalType": "address",
         "name": "_feeToSetter",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_gfi",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_weth",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_wbtc",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -333,19 +348,6 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_gfi",
-        "type": "address"
-      }
-    ],
-    "name": "setGFI",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
         "name": "_governor",
         "type": "address"
       }
@@ -429,32 +431,6 @@
       }
     ],
     "name": "setSlippage",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_wbtc",
-        "type": "address"
-      }
-    ],
-    "name": "setWBTC",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_weth",
-        "type": "address"
-      }
-    ],
-    "name": "setWETH",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

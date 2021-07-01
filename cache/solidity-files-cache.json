@@ -1036,8 +1036,8 @@
       ]
     },
     "/home/crispy/SolidityRepo/GravityFinance/contracts/uniswapv2/UniswapV2Factory.sol": {
-      "lastModificationDate": 1624836141550,
-      "contentHash": "fa129eeeb9b3d139b22b3cc71bcb5d27",
+      "lastModificationDate": 1625116402750,
+      "contentHash": "bb3cc7a560bab16d5d231d6a915ee0c7",
       "sourceName": "contracts/uniswapv2/UniswapV2Factory.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -2490,6 +2490,51 @@
       ],
       "artifacts": [
         "WalletTimeLock"
+      ]
+    },
+    "/home/crispy/SolidityRepo/GravityFinance/contracts/Vault_CompoundingGFI.sol": {
+      "lastModificationDate": 1625116511210,
+      "contentHash": "0d609698d453908f12819bb72dedef34",
+      "sourceName": "contracts/Vault_CompoundingGFI.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IGFIFarm",
+        "VaultCompGFI"
       ]
     }
   }
