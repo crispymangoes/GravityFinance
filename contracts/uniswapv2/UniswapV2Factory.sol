@@ -85,45 +85,39 @@ contract UniswapV2Factory is IUniswapV2Factory {
         require(msg.sender == feeToSetter, 'UniswapV2: FORBIDDEN');
         governor = _governor;
     }
-    function setWETH(address _weth) external {
-        require(msg.sender == feeToSetter, 'UniswapV2: FORBIDDEN');
-        weth = _weth;
-    }
-    function setWBTC(address _wbtc) external {
-        require(msg.sender == feeToSetter, 'UniswapV2: FORBIDDEN');
-        wbtc = _wbtc;
-    }
-    function setGFI(address _gfi) external {
-        require(msg.sender == feeToSetter, 'UniswapV2: FORBIDDEN');
-        gfi = _gfi;
-    }
+
     function setPathOracle(address _pathOracle) external {
         require(msg.sender == feeToSetter, 'UniswapV2: FORBIDDEN');
         pathOracle = _pathOracle;
     }
+
     function setPriceOracle(address _priceOracle) external {
         require(msg.sender == feeToSetter, 'UniswapV2: FORBIDDEN');
         priceOracle = _priceOracle;
     }
+
     function setEarningsManager(address _earningsManager) external {
         require(msg.sender == feeToSetter, 'UniswapV2: FORBIDDEN');
         earningsManager = _earningsManager;
     }
+
     function setFeeManager(address _feeManager) external {
         require(msg.sender == feeToSetter, 'UniswapV2: FORBIDDEN');
         feeManager = _feeManager;
     }
+
     function setDustPan(address _dustPan) external {
         require(msg.sender == feeToSetter, 'UniswapV2: FORBIDDEN');
         dustPan = _dustPan;
     }
+
     function setPaused(bool _paused) external {
         require(msg.sender == feeToSetter, 'UniswapV2: FORBIDDEN');
         paused = _paused;
     }
+
     function setSlippage(uint _slippage) external {
         require(msg.sender == feeToSetter, 'UniswapV2: FORBIDDEN');
         slippage = _slippage;
     }
-
 }
