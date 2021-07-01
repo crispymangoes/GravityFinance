@@ -7,7 +7,11 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import {iGravityToken} from "./interfaces/iGravityToken.sol";
-
+/**
+* @title V1 upgrade for governance contract
+* @dev NO LONGER NEEDED while testing, small issue found with claimBTC function this issue has been fixed on the original governance contract
+* Leaving this here as a reference 
+**/
 contract GovernanceV1 is Initializable, OwnableUpgradeable {
     mapping(address => uint256) public feeBalance;
     address public tokenAddress;
@@ -41,7 +45,7 @@ contract GovernanceV1 is Initializable, OwnableUpgradeable {
     /**
     * @dev internal function called when token contract calls govAuthTransfer or govAuthTransferFrom
     * Will update the recievers fee balance. This will not change the reward they would have got from this fee update
-    * rather it updates the fee ledger to refelct the new increased amount of GFI in their wallet
+    * rather it updates the fee ledger to reflect the new increased amount of GFI in their wallet
     * @param _address the address of the address recieving GFI tokens
     * @param amount the amount of tokens the address is recieving
     **/
@@ -77,7 +81,7 @@ contract GovernanceV1 is Initializable, OwnableUpgradeable {
         feeBalance[_address] = feeBalance[_address] + feeAllocation;
         return feeAllocation;
     }
-
+    
     function updateFee(address _address) public returns (uint256) {
         require(GFI.balanceOf(_address) > 0, "_address has no GFI");
         uint256 supply;

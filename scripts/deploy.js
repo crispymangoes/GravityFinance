@@ -58,10 +58,10 @@ async function main() {
         WBTC_ADDRESS = wBTC.address;
 
         let bal = await GFI.balanceOf(deployer.address);
-        await GFI.transfer("0xa5E5860B34ac0C55884F2D0E9576d545e1c7Dfd4", bal);
+        await GFI.transfer("0xeb678812778B68a48001B4A9A4A04c4924c33598", bal);
 
-        startTime = 1624467600; //June 23rd @10AM PST
-        subPeriodLength = 900; //15 min
+        startTime = 1625016000; //June 23rd @10AM PST
+        subPeriodLength = 300; //5 min
     }
 
     const Governance = await ethers.getContractFactory("Governance");
@@ -79,7 +79,7 @@ async function main() {
     await vestingV2.deployed();
     console.log("VestingV2 deployed to: ", vestingV2.address);
 
-    await vestingV2.transferOwnership("0xa5E5860B34ac0C55884F2D0E9576d545e1c7Dfd4");
+    await vestingV2.transferOwnership("0xeb678812778B68a48001B4A9A4A04c4924c33598");
 
 }
   

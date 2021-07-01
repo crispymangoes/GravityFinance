@@ -118,9 +118,9 @@
         }
       }
     },
-    "db618e5fa1ed10f87c741263b53a8c043a9ae432d73c2eaccebfe2a6e5fabab6": {
+    "6e85883e50f5650075b3225f6cee04ec3460d5f941bba21075489d2433fa42e6": {
       "address": "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
-      "txHash": "0xcfd9a389ed2d45b669650e0b4ae86d49b064cb6f8415f5f3e1281bd4b39885b2",
+      "txHash": "0x213dec3020dbd201d1c0f29984ac32e2edfa4a3a3d6e86b3f3e088aa714be698",
       "layout": {
         "storage": [
           {
@@ -180,7 +180,7 @@
           {
             "contract": "Governance",
             "label": "GFI",
-            "type": "t_contract(iGravityToken)5139",
+            "type": "t_contract(iGravityToken)5295",
             "src": "contracts/Governance.sol:21"
           },
           {
@@ -226,133 +226,7 @@
               }
             ]
           },
-          "t_contract(iGravityToken)5139": {
-            "label": "contract iGravityToken"
-          },
-          "t_contract(IERC20)916": {
-            "label": "contract IERC20"
-          },
-          "t_array(t_uint256)49_storage": {
-            "label": "uint256[49]"
-          },
-          "t_array(t_uint256)50_storage": {
-            "label": "uint256[50]"
-          },
-          "t_bool": {
-            "label": "bool"
-          }
-        }
-      }
-    },
-    "6e85883e50f5650075b3225f6cee04ec3460d5f941bba21075489d2433fa42e6": {
-      "address": "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
-      "txHash": "0x3d21e3681841928a45d6b55d7e9edf5d14c849e6457f894daa19f47c02cbbe7f",
-      "layout": {
-        "storage": [
-          {
-            "contract": "Initializable",
-            "label": "_initialized",
-            "type": "t_bool",
-            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:23"
-          },
-          {
-            "contract": "Initializable",
-            "label": "_initializing",
-            "type": "t_bool",
-            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:28"
-          },
-          {
-            "contract": "ContextUpgradeable",
-            "label": "__gap",
-            "type": "t_array(t_uint256)50_storage",
-            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:31"
-          },
-          {
-            "contract": "OwnableUpgradeable",
-            "label": "_owner",
-            "type": "t_address",
-            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:20"
-          },
-          {
-            "contract": "OwnableUpgradeable",
-            "label": "__gap",
-            "type": "t_array(t_uint256)49_storage",
-            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:74"
-          },
-          {
-            "contract": "GovernanceV1",
-            "label": "feeBalance",
-            "type": "t_mapping(t_address,t_uint256)",
-            "src": "contracts/GovernanceV1.sol:12"
-          },
-          {
-            "contract": "GovernanceV1",
-            "label": "tokenAddress",
-            "type": "t_address",
-            "src": "contracts/GovernanceV1.sol:13"
-          },
-          {
-            "contract": "GovernanceV1",
-            "label": "feeLedger",
-            "type": "t_mapping(t_address,t_struct(FeeLedger)2268_storage)",
-            "src": "contracts/GovernanceV1.sol:19"
-          },
-          {
-            "contract": "GovernanceV1",
-            "label": "totalFeeCollected",
-            "type": "t_uint256",
-            "src": "contracts/GovernanceV1.sol:20"
-          },
-          {
-            "contract": "GovernanceV1",
-            "label": "GFI",
-            "type": "t_contract(iGravityToken)5213",
-            "src": "contracts/GovernanceV1.sol:21"
-          },
-          {
-            "contract": "GovernanceV1",
-            "label": "WETH",
-            "type": "t_contract(IERC20)916",
-            "src": "contracts/GovernanceV1.sol:22"
-          },
-          {
-            "contract": "GovernanceV1",
-            "label": "WBTC",
-            "type": "t_contract(IERC20)916",
-            "src": "contracts/GovernanceV1.sol:23"
-          }
-        ],
-        "types": {
-          "t_mapping(t_address,t_uint256)": {
-            "label": "mapping(address => uint256)"
-          },
-          "t_address": {
-            "label": "address"
-          },
-          "t_uint256": {
-            "label": "uint256"
-          },
-          "t_mapping(t_address,t_struct(FeeLedger)2268_storage)": {
-            "label": "mapping(address => struct GovernanceV1.FeeLedger)"
-          },
-          "t_struct(FeeLedger)2268_storage": {
-            "label": "struct GovernanceV1.FeeLedger",
-            "members": [
-              {
-                "label": "totalFeeCollected_LastClaim",
-                "type": "t_uint256"
-              },
-              {
-                "label": "totalSupply_LastClaim",
-                "type": "t_uint256"
-              },
-              {
-                "label": "userBalance_LastClaim",
-                "type": "t_uint256"
-              }
-            ]
-          },
-          "t_contract(iGravityToken)5213": {
+          "t_contract(iGravityToken)5295": {
             "label": "contract iGravityToken"
           },
           "t_contract(IERC20)916": {

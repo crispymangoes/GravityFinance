@@ -51,7 +51,7 @@
           {
             "contract": "Governance",
             "label": "feeLedger",
-            "type": "t_mapping(t_address,t_struct(FeeLedger)1416_storage)",
+            "type": "t_mapping(t_address,t_struct(FeeLedger)1342_storage)",
             "src": "contracts/Governance.sol:19"
           },
           {
@@ -63,7 +63,7 @@
           {
             "contract": "Governance",
             "label": "GFI",
-            "type": "t_contract(iGravityToken)5213",
+            "type": "t_contract(iGravityToken)5286",
             "src": "contracts/Governance.sol:21"
           },
           {
@@ -89,10 +89,10 @@
           "t_uint256": {
             "label": "uint256"
           },
-          "t_mapping(t_address,t_struct(FeeLedger)1416_storage)": {
+          "t_mapping(t_address,t_struct(FeeLedger)1342_storage)": {
             "label": "mapping(address => struct Governance.FeeLedger)"
           },
-          "t_struct(FeeLedger)1416_storage": {
+          "t_struct(FeeLedger)1342_storage": {
             "label": "struct Governance.FeeLedger",
             "members": [
               {
@@ -109,7 +109,7 @@
               }
             ]
           },
-          "t_contract(iGravityToken)5213": {
+          "t_contract(iGravityToken)5286": {
             "label": "contract iGravityToken"
           },
           "t_contract(IERC20)916": {
@@ -289,6 +289,26 @@
       "address": "0xDFED0B5D3f8a7dfBF9C773f71c82E372CF98026D",
       "kind": "transparent",
       "txHash": "0xb9194f4e29f54f044bbf5662266dc99a39123de8cb8a0453af8c8b3e6c143c82"
+    },
+    {
+      "address": "0xbFD2e3A8c078D3a8c46BA71Ab1966c99604c26B8",
+      "kind": "transparent",
+      "txHash": "0xb52338471a746bb4cad0f3faca49991992336837238ddffedbc4de043845ee61"
+    },
+    {
+      "address": "0x024771eE3232705Aed140b4A4870EfAD249C7327",
+      "kind": "transparent",
+      "txHash": "0xb917940f7c1c6fc6257b06a27bfacf7b892684f23042cd3d46eefc6062943820"
+    },
+    {
+      "address": "0x7160201cd3843Bef4601CEab1A18f24E0cb623ee",
+      "kind": "transparent",
+      "txHash": "0x3bc48450989eafeeace2d9b790a159201d7714d07afb3b3fb86282f09f1dec9a"
+    },
+    {
+      "address": "0x3dc54058766ce3fc428a2EBdD91dbF45B2b8F90C",
+      "kind": "transparent",
+      "txHash": "0x1dd8c088a39a8cf8ee9110046efd3290562676a9e38af30aa9419c592b08b5b9"
     }
   ],
   "admin": {

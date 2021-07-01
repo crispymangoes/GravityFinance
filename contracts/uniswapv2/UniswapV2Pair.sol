@@ -95,12 +95,13 @@ contract UniswapV2Pair is UniswapV2ERC20 {
         HOLDING_ADDRESS = address(holder);
     }
 
-
+    /**
+    * @dev called by the earningsManager in order to have the pair claim its wETH earnings and send it to its holding contract. Then pair tells holding contract to approve earnings manager to spend its wETH
+    **/
     function handleEarnings() external onlyEarningsManager returns(uint amount){
         require(token0 == Factory.gfi() || token1 == Factory.gfi(), "Swap contract must have GFI as one of it's assets to claim earnings"); //Require statement not really needed
         amount = iGovernance(Factory.governor()).delegateFee(HOLDING_ADDRESS); //Calculates WETH fees earned by GFI in contract
         holder.approveEM(Factory.weth(), Factory.earningsManager(), amount);
-        
     }
 
     // update reserves and, on the first call per block, price accumulators

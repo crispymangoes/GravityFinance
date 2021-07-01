@@ -250,6 +250,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
             path[0], msg.sender, UniswapV2Library.pairFor(factory, path[0], path[1]), amounts[0]
         );
         _swap(amounts, path, to);
+        amounts[amounts.length - 1] = amounts[amounts.length - 1] * 9995/10000; //Added this line to account for the 0.05% gov fee not being subtracted from the final output amount
     }
     function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline)
         external
@@ -265,6 +266,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         IWETH(WETH).deposit{value: amounts[0]}();
         assert(IWETH(WETH).transfer(UniswapV2Library.pairFor(factory, path[0], path[1]), amounts[0]));
         _swap(amounts, path, to);
+        amounts[amounts.length - 1] = amounts[amounts.length - 1] * 9995/10000; //Added this line to account for the 0.05% gov fee not being subtracted from the final output amount
     }
     function swapTokensForExactETH(uint amountOut, uint amountInMax, address[] calldata path, address to, uint deadline)
         external
@@ -282,6 +284,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         _swap(amounts, path, address(this));
         IWETH(WETH).withdraw(amounts[amounts.length - 1]);
         TransferHelper.safeTransferETH(to, amounts[amounts.length - 1]);
+        amounts[amounts.length - 1] = amounts[amounts.length - 1] * 9995/10000; //Added this line to account for the 0.05% gov fee not being subtracted from the final output amount
     }
     function swapExactTokensForETH(uint amountIn, uint amountOutMin, address[] calldata path, address to, uint deadline)
         external
@@ -299,6 +302,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         _swap(amounts, path, address(this));
         IWETH(WETH).withdraw(amounts[amounts.length - 1]);
         TransferHelper.safeTransferETH(to, amounts[amounts.length - 1]);
+        amounts[amounts.length - 1] = amounts[amounts.length - 1] * 9995/10000; //Added this line to account for the 0.05% gov fee not being subtracted from the final output amount
     }
     function swapETHForExactTokens(uint amountOut, address[] calldata path, address to, uint deadline)
         external
@@ -316,6 +320,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         _swap(amounts, path, to);
         // refund dust eth, if any
         if (msg.value > amounts[0]) TransferHelper.safeTransferETH(msg.sender, msg.value - amounts[0]);
+        amounts[amounts.length - 1] = amounts[amounts.length - 1] * 9995/10000; //Added this line to account for the 0.05% gov fee not being subtracted from the final output amount
     }
 
     // **** SWAP (supporting fee-on-transfer tokens) ****
@@ -444,9 +449,5 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         returns (uint[] memory amounts)
     {
         return UniswapV2Library.getAmountsIn(factory, amountOut, path);
-    }
-    //ADDED BELOW FUNCTION FOR TESTING
-    function pairFor(address factory, address tokenA, address tokenB) public view virtual returns (address pair){
-        return UniswapV2Library.pairFor(factory, tokenA, tokenB);
     }
 }

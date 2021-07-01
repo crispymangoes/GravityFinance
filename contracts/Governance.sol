@@ -77,7 +77,11 @@ contract Governance is Initializable, OwnableUpgradeable {
         feeBalance[_address] = feeBalance[_address] + feeAllocation;
         return feeAllocation;
     }
-
+    /**
+    * @dev updates the fee ledger info for the specified address
+    * This function can be used to update the fee ledger info for any address, and is used to update the fee for the from address in transfer and transferFrom calls
+    * @param _address the address you want to update the fee ledger info for
+    **/
     function updateFee(address _address) public returns (uint256) {
         require(GFI.balanceOf(_address) > 0, "_address has no GFI");
         uint256 supply;
@@ -109,6 +113,9 @@ contract Governance is Initializable, OwnableUpgradeable {
         return feeAllocation;
     }
 
+    /**
+    * @dev updates callers fee ledger, and pays out any fee owed to caller
+    **/
     function claimFee() public returns (uint256) {
         require(GFI.balanceOf(msg.sender) > 0, "User has no GFI");
         uint256 supply;
@@ -143,6 +150,10 @@ contract Governance is Initializable, OwnableUpgradeable {
         return feeAllocation;
     }
 
+    /**
+    * @dev updates callers fee ledger, and pays out any fee owed to caller to the reciever address
+    * @param reciever the address to send callers fee balance to
+    **/
     function delegateFee(address reciever) public returns (uint256) {
         require(GFI.balanceOf(msg.sender) > 0, "User has no GFI");
         uint256 supply;
@@ -177,12 +188,18 @@ contract Governance is Initializable, OwnableUpgradeable {
         return feeAllocation;
     }
 
+    /**
+    * @dev withdraws callers fee balance without updating fee ledger
+    **/
     function withdrawFee() external {
         uint256 feeAllocation = feeBalance[msg.sender];
         feeBalance[msg.sender] = 0;
         require(WETH.transfer(msg.sender, feeAllocation), "Failed to delegate wETH to caller");
     }
 
+    /**
+    * @dev when governance forwarding is enabled in the token contract, this function is called when users call transfer
+    **/
     function govAuthTransfer(
         address caller,
         address to,
@@ -194,6 +211,9 @@ contract Governance is Initializable, OwnableUpgradeable {
         return true;
     }
 
+    /**
+    * @dev when governance forwarding is enabled in the token contract, this function is called when users call transferFrom
+    **/
     function govAuthTransferFrom(
         address caller,
         address from,
@@ -207,6 +227,9 @@ contract Governance is Initializable, OwnableUpgradeable {
         return true;
     }
 
+    /**
+    * @dev used to deposit wETH fees into the contract
+    **/
     function depositFee(uint256 amountWETH, uint256 amountWBTC) external {
         require(
             WETH.transferFrom(msg.sender, address(this), amountWETH),
@@ -219,6 +242,9 @@ contract Governance is Initializable, OwnableUpgradeable {
         totalFeeCollected = totalFeeCollected + amountWETH;
     }
 
+    /**
+    * @dev used to burn GFI and convert it into wBTC
+    **/
     function claimBTC(uint256 amount) external {
         require(
             amount > 10**18,
@@ -228,9 +254,9 @@ contract Governance is Initializable, OwnableUpgradeable {
             GFI.transferFrom(msg.sender, address(this), amount),
             "Failed to transfer GFI to governance contract!"
         );
-        require(GFI.burn(amount), "Failed to burn GFI!");
         uint256 WBTCowed =
             (amount * WBTC.balanceOf(address(this))) / GFI.totalSupply();
+        require(GFI.burn(amount), "Failed to burn GFI!");
         require(
             WBTC.transfer(msg.sender, WBTCowed),
             "Failed to transfer wBTC to caller!"

@@ -93,6 +93,10 @@ contract UniswapV2ERC20 {
         _approve(owner, spender, value);
     }
 
+    /**
+    * @dev called by the Earnings manager after wETH earnings are converted into pool assets, and deposited into the pool
+    * Note anyone can call this function and burn their LP tokens, though I don't know why they would
+    **/
     function burn(uint value) external returns(bool){
         _burn(msg.sender, value);
         return true;

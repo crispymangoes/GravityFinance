@@ -418,7 +418,6 @@ describe("Swap Exchange Contracts functional test", function () {
     });
 
 
-    //TODO add a test that tests a really long swap path and make sure it works
     it("Test that a really long swap path works", async function () {
         await mockUSDC.connect(addr2).approve(swapRouter.address, "1000000000000000000000");
         let path = [USDC, WBTC, WETH, GFI, LINK, SUSHI];
@@ -430,10 +429,39 @@ describe("Swap Exchange Contracts functional test", function () {
 
         console.log("Address 2 balances:");
         console.log("USDC Balance: ", (await mockUSDC.balanceOf(addr2.address)).toString());
-        
     });
 
-    //ADD TEST TO CHECK IF REQUIRE STATEMENT ON LINE 257(Pair contract) works
-    //ADD TEST TO SEE IF PAUSING WORKS
+    it("Test if pausing works", async function () {
 
+        await mockGFI.transfer(addr4.address, "10000000000000000000000");
+        await mockGFI.connect(addr4).approve(swapRouter.address, "100000000000000000000");
+        await mockWETH.connect(addr4).approve(swapRouter.address, "1000000000000000");
+        await swapRouter.connect(addr4).addLiquidity(mockGFI.address, mockWETH.address, "100000000000000000000", "1000000000000000", "990000000000000", "990000000000000", addr4.address, 1654341846);
+        
+        await swapFactory.setPaused(true);
+
+        await mockUSDC.connect(addr2).approve(swapRouter.address, "1000000000000000000000");
+        let path = [USDC, WBTC];
+        console.log("Swap USDC for USDC with a 5 swap path");
+        console.log("USDC Balance: ", (await mockUSDC.balanceOf(addr2.address)).toString());
+        await expect(swapRouter.connect(addr2).swapExactTokensForTokens("100000000000000000", "0", path, addr2.address, 1654341846)).to.be.reverted;
+
+
+        await mockGFI.transfer(addr1.address, "100000000000000000000000000");
+        await mockGFI.connect(addr1).approve(swapRouter.address, "1000000000000000000000000");
+        await mockWETH.connect(addr1).approve(swapRouter.address, "10000000000000000000");
+        await expect(swapRouter.connect(addr1).addLiquidity(mockGFI.address, mockWETH.address, "1000000000000000000000000", "10000000000000000000", "9900000000000000000", "9900000000000000000", addr1.address, 1654341846)).to.be.reverted;
+    
+        //Confirm liquidity can still be withdrawn even when paused
+        let pairAddress = await swapFactory.getPair(mockGFI.address, mockWETH.address);
+        let Pair = await ethers.getContractFactory("UniswapV2Pair");
+        let pair = await Pair.attach(pairAddress);
+        let lpAmount = await pair.balanceOf(addr4.address);
+        await pair.connect(addr4).approve(swapRouter.address, lpAmount);
+        console.log(lpAmount/ 10**18);
+        await swapRouter.removeLiquidity(GFI, WETH, lpAmount, 0, 0, addr4.address, 1654341846);
+
+    });
+
+ //ADD TEST TO CHECK IF REQUIRE STATEMENT ON LINE 257(Pair contract) works
 });

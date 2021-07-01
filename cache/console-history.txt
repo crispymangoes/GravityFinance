@@ -3,6 +3,10 @@ await calhash.getInitHash()
 const calhash = await CalHash.deploy()
 const CalHash = await ethers.getContractFactory("CalHash")
 .exit
+await calhash.getInitHash()
+const calhash = await CalHash.deploy()
+const CalHash = await ethers.getContractFactory("CalHash")
+.exit
 await gov.owner()
 const gov = await Gov.attach("0x24f0d64225e0bc2D5326E690972C8Aa3b186f407")
 const Gov = await ethers.getContractFactory("GovernanceV1")

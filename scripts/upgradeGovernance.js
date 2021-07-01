@@ -5,7 +5,7 @@ async function main() {
     [deployer] = await ethers.getSigners();
     console.log("Deployer address:", deployer.address);
     console.log("");
-    let proxyAddress = "0xDFED0B5D3f8a7dfBF9C773f71c82E372CF98026D";
+    let proxyAddress = "0x3dc54058766ce3fc428a2EBdD91dbF45B2b8F90C";
 
     const GovernanceV1 = await ethers.getContractFactory("GovernanceV1");
     console.log("Preparing upgrade...");
